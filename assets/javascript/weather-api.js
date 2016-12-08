@@ -8,7 +8,7 @@
 var token = "sUtCbQRELKcKTvcahYjUDGMtwcoeqrmz";
 // ajax call for city location available
 // $.ajax({
-// 	url:"https://www.ncdc.noaa.gov/cdo-web/api/v2/locations?locationcategoryid=ST&sortfield=id&sortorder=asc&limit=50",
+// 	url:"https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GSOM&datatypeid=TMAX&datatypeid=TAVG&locationid=CITY:AE000001&units=metric&startdate=2010-05-01&enddate=2010-12-31",
 // 	headers:{token:token}
 // 	}).done(function(response){
 // 		console.log("city locations:")
@@ -22,19 +22,23 @@ var dataSet = "GSOM";
 //category id's: TEMP, PRCP(precipitation), WATER, SUTEMP(summer temperature), SUPRCP(summer preciptation)
 var dataCategory = "TEMP";
 //data type
-var dataType = "TAVG";
+var dataType1 = "TMAX";
+
+var dataType2 = "TAVG";
+
+var dataType3 = "PRCP";
 //location
-var location = "FIPS:17";
+var loc = "CITY:US170002";
 //station
 var station = "GHCND:USC00110072";
 //start date
-var startDate = "2000-01-01";
+var startDate = "2010-05-01";
 //end date
-var endDate = "2009-12-31";
+var endDate = "2010-12-31";
 //AJAX query
-var queryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid="+dataType+"&stationid="+station+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit=10"
+var queryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid="+dataType1+"&datatypeid="+dataType2+"&datatypeid="+dataType3+"&locationid="+loc+"&units=metric&startdate=2010-05-01&enddate=2010-12-31&limit=1000";
 $.ajax({ url:queryURL, headers:{ token:token } }).done(function(response){
-	console.log(response);
+	// console.log(response);
     var data = response.results;
     console.log(data);
     //looping through ajax JSON to store relevant data (date, temp) in array
@@ -49,7 +53,7 @@ $.ajax({ url:queryURL, headers:{ token:token } }).done(function(response){
             tempAvg.push(tempDateObj)
         }
     }
-    console.log("Avg temp Array: " + tempAvg);
+    // console.log("Avg temp Array: " + tempAvg);
 })
 
 
