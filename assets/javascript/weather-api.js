@@ -49,7 +49,7 @@ $.ajax({ url:nameQueryURL, headers:{ token:token } }).done(function(response){
     console.log();
 });
 //AJAX query url for actual weather data
-var queryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid="+dataType2+"&locationid="+loc+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit=500";
+var queryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid="+dataType3+"&locationid="+loc+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit=500";
 $.ajax({ url:queryURL, headers:{ token:token } }).done(function(response){
     var data = response.results;
     console.log(data);
@@ -88,9 +88,24 @@ $.ajax({ url:queryURL, headers:{ token:token } }).done(function(response){
     }
     var database = firebase.database();
     var weatherData = database.ref();
-    weatherData.push({
-        weatherTemp: weatherTempObject
-    })
+    var ref = database.ref('weatherTemp/commodity/location');
+    ref.once('value')
+        .then(function(snapshot){
+            //key of relative path set by ref()
+            var key = snapshot.key;
+            console.log("key: "+ key)
+            //value of property of key
+            var value = snapshot.val();
+            console.log("value variable: "+value)
+            //boolean, true if data exists in key. doesnt work here
+            var exists = snapshot.exists();
+            console.log("exists variable bolean: "+exists);
+            //checks if data exists..doesnt work right now, because key is always null
+            if(snapshot.val() == null){
+                console.log("doesnt exist - > execute")
+            }
+        })
+
     console.log("====Constructed Object====");
     console.log(weatherTempObject);
 });
