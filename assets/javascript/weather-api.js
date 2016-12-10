@@ -89,22 +89,25 @@ $.ajax({ url:queryURL, headers:{ token:token } }).done(function(response){
     var database = firebase.database();
     var weatherData = database.ref();
     var ref = database.ref('weatherTemp/commodity/location');
-    ref.once('value')
-        .then(function(snapshot){
-            //key of relative path set by ref()
-            var key = snapshot.key;
-            console.log("key: "+ key)
-            //value of property of key
-            var value = snapshot.val();
-            console.log("value variable: "+value)
-            //boolean, true if data exists in key. doesnt work here
-            var exists = snapshot.exists();
-            console.log("exists variable bolean: "+exists);
-            //checks if data exists..doesnt work right now, because key is always null
-            if(snapshot.val() == null){
-                console.log("doesnt exist - > execute")
-            }
-        })
+    weatherData.push({
+        example: weatherTempObject
+    });
+    // ref.once('value')
+        // .then(function(snapshot){
+        //     //key of relative path set by ref()
+        //     var key = snapshot.key;
+        //     console.log("key: "+ key)
+        //     //value of property of key
+        //     var value = snapshot.val();
+        //     console.log("value variable: "+value)
+        //     //boolean, true if data exists in key. doesnt work here
+        //     var exists = snapshot.exists();
+        //     console.log("exists variable bolean: "+exists);
+        //     //checks if data exists..doesnt work right now, because key is always null
+        //     if(snapshot.val() == null){
+        //         console.log("doesnt exist - > execute")
+        //     }
+        // })
 
     console.log("====Constructed Object====");
     console.log(weatherTempObject);
