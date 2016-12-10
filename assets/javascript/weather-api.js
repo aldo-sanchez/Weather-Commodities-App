@@ -1,59 +1,115 @@
+// Initialize Firebase
+var config = {
+apiKey: "AIzaSyD5onGD-yX2IvrbzyEiNJ2Y7DfsjNQz0EA",
+authDomain: "weather-commodities-app.firebaseapp.com",
+databaseURL: "https://weather-commodities-app.firebaseio.com",
+storageBucket: "weather-commodities-app.appspot.com",
+messagingSenderId: "917117502463"
+};
+firebase.initializeApp(config);
 
-//AJAX query to get list of data types from 1000 to 1527
-// var queryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/datatypes?limit=1000&offset=1000"
-// $.ajax({ url:queryURL, headers:{ token:token } }).done(function(response){
-// 	console.log(response);
-// })
+//===============API Variables====================
 //token for accessing API
+    //hard-coded---needs to be dynamically created from user input. Use moment.js
 var token = "sUtCbQRELKcKTvcahYjUDGMtwcoeqrmz";
-// ajax call for city location available
-// $.ajax({
-// 	url:"https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GSOM&datatypeid=TMAX&datatypeid=TAVG&locationid=CITY:AE000001&units=metric&startdate=2010-05-01&enddate=2010-12-31",
-// 	headers:{token:token}
-// 	}).done(function(response){
-// 		console.log("city locations:")
-// 		console.log(response)
-// });
-
-var tempAvg = [];
-//data set: TAVG(Avg temp), TPCP(total precipitation), GSOY(global summary of the year), GSOM(global summ of month), PRECIP_15(Precipitation 15 Minute), DP10(Num of days with greater than or eq to 1 inch of precipitation)
-
+//data set is specific type of data called from NOAA api
+    //hard-coded---needs to be dynamically created from user input. Use moment.js
 var dataSet = "GSOM";
 //category id's: TEMP, PRCP(precipitation), WATER, SUTEMP(summer temperature), SUPRCP(summer preciptation)
+    //hard-coded---needs to be dynamically created from user input. Use moment.js
 var dataCategory = "TEMP";
-//data type
+//data types
+    //hard-coded---needs to be dynamically created from user input. Use moment.js
 var dataType1 = "TMAX";
-
 var dataType2 = "TAVG";
-
 var dataType3 = "PRCP";
 //location
+//hard-coded---needs to be dynamically created from user input. Use moment.js
 var loc = "CITY:US170002";
 //station
+//hard-coded---needs to be dynamically created from user input. Use moment.js
 var station = "GHCND:USC00110072";
 //start date
-var startDate = "2010-05-01";
+//hard-coded---needs to be dynamically created from user input. Use moment.js
+var startDate = "2005-05-01";
 //end date
+//hard-coded---needs to be dynamically created from user input. Use moment.js
 var endDate = "2010-12-31";
-//AJAX query
-var queryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid="+dataType1+"&datatypeid="+dataType2+"&datatypeid="+dataType3+"&locationid="+loc+"&units=metric&startdate=2010-05-01&enddate=2010-12-31&limit=1000";
+//name of commodity being searched
+//hard-coded---needs to be dynamically created from user input.
+var commodityName = "corn";
+//name of location queried for data
+var locName;
+
+//===============API AJAX Calls===================
+//AJAX url only for determining name of location
+var nameQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/locations/"+loc;
+$.ajax({ url:nameQueryURL, headers:{ token:token } }).done(function(response){
+     locName = response.name;
+    console.log();
+});
+//AJAX query url for actual weather data
+var queryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid="+dataType3+"&locationid="+loc+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit=500";
 $.ajax({ url:queryURL, headers:{ token:token } }).done(function(response){
-	// console.log(response);
     var data = response.results;
     console.log(data);
+    //API location id
+    var locationId = loc;
+    //variable for array of dates
+    var dateArray = [];
+    //dynamically created object of cleaned data for location, date, temp
+    var weatherTempObject = {
+      commodity: {
+        name: commodityName,
+        location: {
+            Name: locName,
+            date: {
+                dateArray
+            },
+        }
+      }
+    }
+    //collects temp and date data from API JSON and assigns to array index(i)
+    function collectDateInfo(){
+      for (var i = 0; i < data.length; i++){
+        dateArray[i] = {
+            date: data[i].date,
+            temp: data[i].value
+            }
+      }
+    }
     //looping through ajax JSON to store relevant data (date, temp) in array
     for(var i in data){
+        //checks if property index has value
         if(data.hasOwnProperty(i)) {
-            var date = data[i].date;
-            var temp = data[i].value;
-            var tempDateObj = {
-                "date":date,
-                "temp":temp
-            }
-            tempAvg.push(tempDateObj)
+            //call for function that populates weatherObject
+            collectDateInfo(i);
         }
     }
-    // console.log("Avg temp Array: " + tempAvg);
-})
+    var database = firebase.database();
+    var weatherData = database.ref();
+    var ref = database.ref('weatherTemp/commodity/location');
+    weatherData.push({
+        example: weatherTempObject
+    });
+    // ref.once('value')
+        // .then(function(snapshot){
+        //     //key of relative path set by ref()
+        //     var key = snapshot.key;
+        //     console.log("key: "+ key)
+        //     //value of property of key
+        //     var value = snapshot.val();
+        //     console.log("value variable: "+value)
+        //     //boolean, true if data exists in key. doesnt work here
+        //     var exists = snapshot.exists();
+        //     console.log("exists variable bolean: "+exists);
+        //     //checks if data exists..doesnt work right now, because key is always null
+        //     if(snapshot.val() == null){
+        //         console.log("doesnt exist - > execute")
+        //     }
+        // })
 
+    console.log("====Constructed Object====");
+    console.log(weatherTempObject);
+});
 
