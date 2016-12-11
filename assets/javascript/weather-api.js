@@ -75,6 +75,7 @@ var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+da
 $.ajax({ url:tempQueryURL, headers:{ token:token } }).done(function(response){
     var tempData = response.results;
     console.log(response);
+
     //API location id
     var locationId = loc;
     //variable for array of dates
@@ -169,3 +170,4 @@ $.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
     console.log("====Constructed PRECIPITATION Object====");
     console.log(precipitation);
 });
+
