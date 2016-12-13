@@ -80,8 +80,8 @@ function drawChartDual(){
 
 var data = new google.visualization.DataTable();
       data.addColumn('string', 'Month');
-      data.addColumn('number', "Average Temperature");
-      data.addColumn('number', "Average Hours of Daylight");
+      data.addColumn('number', "temperature");
+      data.addColumn('number', "precipitation");
 
       for (i = 0; i < tempData[0].length; i++) {
         chartRows[i] = [tempData[0][i], tempData[1][i], precData[1][i]];
@@ -111,29 +111,31 @@ var data = new google.visualization.DataTable();
         height: 500,
         series: {
           // Gives each series an axis name that matches the Y-axis below.
-          0: {axis: 'temperature'},
-          1: {axis: 'precipitation'}
+          0: {axis: 'temperature',
+              color: '#43459d'
+            },
+          1: {axis: 'precipitation',
+              color: '#e7711b'
+            }
         },
         axes: {
           // Adds labels to each axis; they don't have to match the axis names.
           y: {
             temperature: {label: 'Temps (Celsius)'},
             precipitation: {label: 'precipitation'}
+          },
+          gridlines:{
+            color: '#0061ff'
           }
         }
       };
-
-     
 
       function drawMaterialChart() {
         var materialChart = new google.charts.Line(document.getElementById('yAxisDual'));
         // var materialChart = new google.charts.Line(chartDiv);
         materialChart.draw(data, materialOptions);
       }
-
-      
       drawMaterialChart();
-
     }
 
 google.charts.setOnLoadCallback(drawChart);
