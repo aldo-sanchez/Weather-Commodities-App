@@ -46,19 +46,22 @@ var limit = "1000";
 //============click events=============
 /* 
 1. need to set commodityName, location, start date, end date
-2. only call API once all variables have been set
+2. only call API once all variables have been set (use submit button?)
 */
-
+var locEnetered = false;
+var commodityEntered = false;
 //click event for corn commodity
     //sets commodity name
 $("#commodity-corn-btn").on('click',function(){
+    commodityEntered = true
     //add data attribute, data-name = corn
     $(this).attr('data-name', 'corn');
 })
 //click event for location
     //sets name of station from map location
 $("#locationIllinois").on('click',function(){
-    //gets data attribute from button clicked ---> double check if code correct
+    //gets data attribute from button clicked
+    locEntered = true;
     stn = $(this).data('id');
     console.log("station id (stn)")
     console.log(stn)
@@ -68,12 +71,28 @@ $("#locationIllinois").on('click',function(){
 //click event for submit button (all data collected)
     //here coded for input-type
 $("#submit-button").on('click',function(){
-    //commodityName set from data attribute of button element
-    commodityName = $("#commodity-corn").data('name');
-    //gets input text from start date input field with id = #startDate-submit
-    startDate = moment($("#startDate-submit").val().trim(), "MM DD, YYYY").format("YYYY-MM-DD");
-    //gets input text from start date input field with id = #startDate-submit
-    endDate = moment($("#endDate-submit").val().trim(), "MM DD, YYYY").format("YYYY-MM-DD");
+    //checks if location and commodity entered
+    if (!commodityEntered) {
+        alert("choose commodity!")
+    } else if (!locEntered) {
+        alert("choose location!")
+    } else {
+        //commodityName set from data attribute of button element
+        commodityName = $("#commodity-corn-btn").data('name');
+        //gets input text from start date input field with id = #startDate-submit
+        startDate = moment($("#startDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
+        //gets input text from start date input field with id = #startDate-submit
+        endDate = moment($("#endDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
+
+        // run weather data API functions - get data and store into firebase
+        temperatureApiQuery();
+        precipitationApiQuery();
+        console.log("commodity Name variable: " + commodityName);
+        console.log("start date: " + startDate);
+        console.log("end date: " + endDate);  
+    }
+    return false; 
+
 })
 //===============API AJAX Calls===================
 function locationApiQuery() {
