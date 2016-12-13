@@ -1,0 +1,14 @@
+header {
+	height: 40px;
+	text-align: center;
+	width:100%;
+	letter-spacing: 5px;
+	color: white;
+	line-height: 20px;
+	text-shadow: ;
+}
+
+#commodities {
+
+	display: inline;
+}
