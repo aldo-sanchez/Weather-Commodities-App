@@ -37,7 +37,7 @@ var startDate = "2010-01-01";
 var endDate = "2016-12-31";
 //name of commodity being searched
 //hard-coded---needs to be dynamically created from user input.
-var commodityName = "soybean";
+var commodityName = "corn";
 //name of location queried for data
 var locName;
 //API return limit (max=1000)
@@ -68,6 +68,8 @@ function dataLocationType(){
 var nameQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/stations/GHCND:US1MOSL0050";
 $.ajax({ url:nameQueryURL, headers:{ token:token } }).done(function(response){
      locName = response.name;
+    console.log(locName);
+    locName = locName.replace(/[\.#\[\]]/g, "");
     console.log(locName);
 });
 //AJAX query url for TEMPERATURE weather data
@@ -100,26 +102,14 @@ $.ajax({ url:tempQueryURL, headers:{ token:token } }).done(function(response){
             collectDateInfo(i);
         }
     }
-        //dynamically created object of cleaned data for location, date, temp
-    var temperature = {
-      commodity: {
-        name: commodityName,
-        location: {
-            Name: locName,
-            date: {
-                dateArray
-            },
-        }
-      }
-    }
     // =======FIREBASE===========
     var database = firebase.database();
-    var weatherData = database.ref("weather/temperatureData");
+    var weatherData = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName);
     weatherData.push({
-        temperature: temperature
+        dates: dateArray
     });
-    console.log("====Constructed TEMP Object====");
-    console.log(temperature);
+    console.log("====Constructed TEMP dateArray====");
+    console.log(dateArray);
 });
 ////AJAX query url for PRECIPITATION weather data
 var prcpQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=PRCP&stationid=GHCND:USC00110764&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
@@ -130,18 +120,7 @@ $.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
     var locationId = loc;
     //variable for array of dates
     var dateArray = [];
-    //dynamically created object of cleaned data for location, date, temp
-    precipitation = {
-      commodity: {
-        name: commodityName,
-        location: {
-            Name: locName,
-            date: {
-                dateArray
-            },
-        }
-      }
-    }
+
     //collects temp and date data from API JSON and assigns to array index(i)
     function collectDateInfo(){
       for (var i = 0; i < prcpData.length; i++){
@@ -163,11 +142,11 @@ $.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
     }
     //=======FIREBASE===========
     var database = firebase.database();
-    var weatherData = database.ref("weather/precipitationData");
+    var weatherData = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName);
     weatherData.push({
-        precipitation:precipitation
+        dates:dateArray
     });
-    console.log("====Constructed PRECIPITATION Object====");
-    console.log(precipitation);
+    console.log("====Constructed PRECIPITATION dateArray====");
+    console.log(dateArray);
 });
 
