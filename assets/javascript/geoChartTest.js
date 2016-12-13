@@ -1,14 +1,16 @@
 
 console.log('map Vis')
 
-
+if(commodityName == "soybean"){
+    console.log('Im in')
+};
 
 // google.charts.load('upcoming', {'packages':['geochart']});
 google.charts.setOnLoadCallback(drawMap);
 
 function drawMap() {
     var data = google.visualization.arrayToDataTable([
-        ['State', 'Foo Factor'],
+    ['State', 'Foo Factor'],
     ['US-IL', 200],
     ['US-IN', 300],
     ['US-IA', 20],
