@@ -28,7 +28,7 @@ var dataType3 = "PRCP";
 var loc = "CITY:US170002";
 //station
 //hard-coded---needs to be dynamically created from user input. Use moment.js
-var stn = "GHCND:US1MOSL0050";
+var stn;
 //start date
 //hard-coded---needs to be dynamically created from user input. Use moment.js
 var startDate = "2010-01-01";
@@ -37,69 +37,102 @@ var startDate = "2010-01-01";
 var endDate = "2016-12-31";
 //name of commodity being searched
 //hard-coded---needs to be dynamically created from user input.
-var commodityName = "soybean";
+var commodityName;
 //name of location queried for data
 var locName;
 //API return limit (max=1000)
 var limit = "1000";
-//==============dynamic location functionality================
-var locationType;
-var locStation = false
-//click event listener for station location (API call type)
-$("#locationX").on('click',function(){
-    locStation = true;
-    dataLocationType();
+
+//============click events=============
+/*
+1. need to set commodityName, location, start date, end date
+2. only call API once all variables have been set (use submit button?)
+*/
+var locEnetered = false;
+var commodityEntered = false;
+//click event for corn commodity
+    //sets commodity name
+$("#commodity-corn-btn").on('click',function(){
+    commodityEntered = true
+    //add data attribute, data-name = corn
+    $(this).attr('data-name', 'corn');
 })
-//click event for city location (API call type)
-$("#locationX").on('click',function(){
-    locStation = true;
-    dataLocationType();
+//click event for location
+    //sets name of station from map location
+$("#locationIllinois").on('click',function(){
+    //gets data attribute from button clicked
+    locEntered = true;
+    stn = $(this).data('id');
+    console.log("station id (stn)")
+    console.log(stn)
+    locationApiQuery();
 })
-//conditional for determining location type for correct API call
-function dataLocationType(){
-    if(locStation){
-        locationType = "station"
-    } else{
-        locationType = "location"
+
+//click event for submit button (all data collected)
+    //here coded for input-type
+$("#submit-button").on('click',function(){
+    //checks if location and commodity entered
+    if (!commodityEntered) {
+        alert("choose commodity!")
+    } else if (!locEntered) {
+        alert("choose location!")
+    } else {
+        //commodityName set from data attribute of button element
+        commodityName = $("#commodity-corn-btn").data('name');
+        //gets input text from start date input field with id = #startDate-submit
+        startDate = moment($("#startDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
+        //gets input text from start date input field with id = #startDate-submit
+        endDate = moment($("#endDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
+
+        // run weather data API functions - get data and store into firebase
+        temperatureApiQuery();
+        precipitationApiQuery();
+        console.log("commodity Name variable: " + commodityName);
+        console.log("start date: " + startDate);
+        console.log("end date: " + endDate);
     }
-}
+    return false;
+
+})
 //===============API AJAX Calls===================
-//AJAX url only for determining name of location
-var nameQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/stations/GHCND:US1MOSL0050";
-$.ajax({ url:nameQueryURL, headers:{ token:token } }).done(function(response){
-     locName = response.name;
-    console.log(locName);
-    locName = locName.replace(/[\.#\[\]]/g, "");
-    console.log(locName);
-});
+function locationApiQuery() {
+    //AJAX url only for determining name of location
+    var nameQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/stations/"+stn;
+    $.ajax({ url:nameQueryURL, headers:{ token:token } }).done(function(response){
+         locName = response.name;
+        console.log(locName);
+    });
+}
 //AJAX query url for TEMPERATURE weather data
-var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=TAVG&stationid=GHCND:USC00110764&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
-$.ajax({ url:tempQueryURL, headers:{ token:token } }).done(function(response){
-    var tempData = response.results;
-    console.log(response);
+function temperatureApiQuery() {
+    var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=TAVG&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
+    $.ajax({ url:tempQueryURL, headers:{ token:token } }).done(function(response){
+        var tempData = response.results;
+        console.log(response);
 
-    //API location id
-    var locationId = loc;
-    //variable for array of dates
-    var dateArray = [];
+        //API location id
+        var locationId = loc;
+        //variable for array of dates
+        var dateArray = [];
 
-    //collects temp and date data from API JSON and assigns to array index(i)
-    function collectDateInfo(){
-      for (var i = 0; i < tempData.length; i++){
-        dateArray[i] = {
-            date: tempData[i].date,
-            temperature: {
-                temp: tempData[i].value
+        //collects temp and date data from API JSON and assigns to array index(i)
+        function collectDateInfo(){
+          for (var i = 0; i < tempData.length; i++){
+            dateArray[i] = {
+                date: tempData[i].date,
+                temperature: {
+                    temp: tempData[i].value
+                }
             }
+          }
         }
-      }
-    }
-    //looping through ajax JSON to store relevant data (date, temp) in array
-    for(var i in tempData){
-        //checks if property index has value
-        if(tempData.hasOwnProperty(i)) {
-            //call for function that populates weatherObject
-            collectDateInfo(i);
+        //looping through ajax JSON to store relevant data (date, temp) in array
+        for(var i in tempData){
+            //checks if property index has value
+            if(tempData.hasOwnProperty(i)) {
+                //call for function that populates weatherObject
+                collectDateInfo(i);
+            }
         }
     }
     // =======FIREBASE===========
@@ -111,33 +144,35 @@ $.ajax({ url:tempQueryURL, headers:{ token:token } }).done(function(response){
     console.log("====Constructed TEMP dateArray====");
     console.log(dateArray);
 });
-////AJAX query url for PRECIPITATION weather data
-var prcpQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=PRCP&stationid=GHCND:USC00110764&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
-$.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
-    var prcpData = response.results;
-    console.log(response);
-    //API location id
-    var locationId = loc;
-    //variable for array of dates
-    var dateArray = [];
 
-    //collects temp and date data from API JSON and assigns to array index(i)
-    function collectDateInfo(){
-      for (var i = 0; i < prcpData.length; i++){
-        dateArray[i] = {
-            dates: prcpData[i].date,
-            precipitation: {
-                prcp: prcpData[i].value
+//AJAX query url for PRECIPITATION weather data
+function precipitationApiQuery() {
+    var prcpQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=PRCP&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
+    $.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
+        var prcpData = response.results;
+        console.log(response);
+        //API location id
+        var locationId = loc;
+        //variable for array of dates
+        var dateArray = [];
+        //collects temp and date data from API JSON and assigns to array index(i)
+        function collectDateInfo(){
+          for (var i = 0; i < prcpData.length; i++){
+            dateArray[i] = {
+                dates: prcpData[i].date,
+                precipitation: {
+                    prcp: prcpData[i].value
+                }
             }
+          }
         }
-      }
-    }
-    //looping through ajax JSON to store relevant data (date, temp) in array
-    for(var i in prcpData){
-        //checks if property index has value
-        if(prcpData.hasOwnProperty(i)) {
-            //call for function that populates weatherObject
-            collectDateInfo(i);
+        //looping through ajax JSON to store relevant data (date, temp) in array
+        for(var i in prcpData){
+            //checks if property index has value
+            if(prcpData.hasOwnProperty(i)) {
+                //call for function that populates weatherObject
+                collectDateInfo(i);
+            }
         }
     }
     //=======FIREBASE===========
@@ -149,4 +184,5 @@ $.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
     console.log("====Constructed PRECIPITATION dateArray====");
     console.log(dateArray);
 });
+
 
