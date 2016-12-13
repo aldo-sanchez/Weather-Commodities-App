@@ -10,7 +10,7 @@ firebase.initializeApp(config);
 //===============Finance API Variables====================
 //token for accessing API
 
-var apiKey = "umJmbh6p4d37Z8soYvHB";
+var token = "umJmbh6p4d37Z8soYvHB";
 var wheat = "COM/WLD_WHEAT_US_SRW";
 var coffee = "COM/PCOFFOTM_USD";
 var corn = "COM/PMAIZMT_USD";
@@ -97,9 +97,6 @@ $("#submit-button").on('click',function(){
         //gets input text from start date input field with id = #startDate-submit
         endDate = moment($("#endDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
 
-        //=======check if data exists==========
-        dataCheck();
-
         // run weather data API functions - get data and store into firebase
         temperatureApiQuery();
         precipitationApiQuery();
@@ -154,7 +151,7 @@ function temperatureApiQuery() {
         // =======FIREBASE===========
         var database = firebase.database();
         var weatherData = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName);
-        weatherData.set({
+        weatherData.push({
             dates: dateArray
         });
         console.log("====Constructed TEMP dateArray====");
@@ -194,7 +191,7 @@ function precipitationApiQuery() {
         //=======FIREBASE===========
         var database = firebase.database();
         var weatherData = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName);
-        weatherData.set({
+        weatherData.push({
             dates:dateArray
         });
         console.log("====Constructed PRECIPITATION dateArray====");
@@ -203,7 +200,7 @@ function precipitationApiQuery() {
 };
 //AJAX query for finance data
 function financeApiQuery() {
-    var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+apiKey+"&start_date=2010-01-01&end_date=2016-01-01";
+    var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+token+"&start_date=2010-01-01&end_date=2016-01-01";
     var data = [];
     var dateArray = [];
     $.ajax({url:queryURL,method:'Get'}).done(function(response){
@@ -225,33 +222,25 @@ function financeApiQuery() {
         dateArray = dateArray.reverse();
         var database = firebase.database();
         var financeData = database.ref("finance/commodity/"+commodityName);
-        financeData.set({
+        financeData.push({
             dates:dateArray
         })
     });
 }
-var tempData = [];
-//=========Querying Firebase==========
-function firebaseTempQuery() {
-    //hard coded for now
-    var commodityName = "corn";
-    var locName = "BLOOMINGTON 5 W, IL US";
-    //reference data path, to reach date array
-        //takes snapshot of the data one, not an event listener
-    var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/dates');
-    tempRef.once('value').then(function(snapshot){
-        //store data array
-        var rawTempData = snapshot.val();
-        console.log('tempData variable')
-        console.log(rawTempData)
-        //loop through data array, creating a new 2D array
-        for(var i =0; i < rawTempData.length;i++){
-            var date = rawTempData[i].date;
-            var temp = rawTempData[i].temperature.temp;
-            tempData[i] = [date, temp]
-        }
-    })
-}
-function dataCheck(){
 
-}
+//=========Querying Firebase==========
+// function firebaseTempQuery() {
+//     var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName);
+//     tempRef.then(function(){
+//         return tempRef.once
+//         console.log("tempData Query");
+//         console.log(snapshot);
+//         var tempData = snapshot.dates.val();
+//         console.log('tempData variable')
+//         console.log(tempData)
+//         // for(var i =0; i < snapshot.length)
+
+//     })
+// }
+// firebaseTempQuery();
+
