@@ -7,8 +7,21 @@ storageBucket: "weather-commodities-app.appspot.com",
 messagingSenderId: "917117502463"
 };
 firebase.initializeApp(config);
+//===============Finance API Variables====================
+//token for accessing API
 
-//===============API Variables====================
+var token = "umJmbh6p4d37Z8soYvHB";
+var wheat = "COM/WLD_WHEAT_US_SRW";
+var coffee = "COM/PCOFFOTM_USD";
+var corn = "COM/PMAIZMT_USD";
+var cotton = "COM/COTTON";
+var timber = "COM/WLD_ITIMBER";
+var cocoa = "COM/WLD_COCOA";
+var orange = "COM/WLD_ORANGE"
+var soybean = "COM/WLD_SOYBEANS";
+var commodity = corn;
+
+//===============Weather API Variables====================
 //token for accessing API
     //hard-coded---needs to be dynamically created from user input. Use moment.js
 var token = "sUtCbQRELKcKTvcahYjUDGMtwcoeqrmz";
@@ -87,6 +100,7 @@ $("#submit-button").on('click',function(){
         // run weather data API functions - get data and store into firebase
         temperatureApiQuery();
         precipitationApiQuery();
+        financeApiQuery();
         console.log("commodity Name variable: " + commodityName);
         console.log("start date: " + startDate);
         console.log("end date: " + endDate);
@@ -119,7 +133,7 @@ function temperatureApiQuery() {
         function collectDateInfo(){
               for (var i = 0; i < tempData.length; i++){
                     dateArray[i] = {
-                        date: tempData[i].date,
+                        date: moment(tempData[i].date).format('YYYY-MM-DD'),
                         temperature: {
                             temp: tempData[i].value
                         }
@@ -159,7 +173,7 @@ function precipitationApiQuery() {
         function collectDateInfo(){
           for (var i = 0; i < prcpData.length; i++){
             dateArray[i] = {
-                dates: prcpData[i].date,
+                dates: moment(prcpData[i].date).format('YYYY-MM-DD'),
                 precipitation: {
                     prcp: prcpData[i].value
                 }
@@ -184,5 +198,49 @@ function precipitationApiQuery() {
         console.log(dateArray);
     });
 };
+//AJAX query for finance data
+function financeApiQuery() {
+    var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+token+"&start_date=2010-01-01&end_date=2016-01-01";
+    var data = [];
+    var dateArray = [];
+    $.ajax({url:queryURL,method:'Get'}).done(function(response){
+        data = response.dataset.data;
+        function collectDateInfo(){
+            for (var i = 0; i < data.length; i++){
+                dateArray[i] = {
+                    date: data[i][0],
+                    price: {
+                        price: data[i][1]
+                    }
+                }
+            }
+        }
+        for (var i in data){
+            collectDateInfo(i);
+        }
+        // dateArray.reverse();
+        dateArray = dateArray.reverse();
+        var database = firebase.database();
+        var financeData = database.ref("finance/commodity/"+commodityName);
+        financeData.push({
+            dates:dateArray
+        })
+    });
+}
 
+//=========Querying Firebase==========
+function firebaseTempQuery() {
+    var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName);
+    tempRef.then(function(){
+        return tempRef.once
+        console.log("tempData Query");
+        console.log(snapshot);
+        var tempData = snapshot.dates.val();
+        console.log('tempData variable')
+        console.log(tempData)
+        // for(var i =0; i < snapshot.length)
+
+    })
+}
+firebaseTempQuery();
 
