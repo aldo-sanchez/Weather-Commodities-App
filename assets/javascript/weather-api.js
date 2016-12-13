@@ -56,7 +56,7 @@ $("#commodity-corn-btn").on('click',function(){
     commodityEntered = true
     //add data attribute, data-name = corn
     $(this).attr('data-name', 'corn');
-})
+});
 //click event for location
     //sets name of station from map location
 $("#locationIllinois").on('click',function(){
@@ -66,7 +66,7 @@ $("#locationIllinois").on('click',function(){
     console.log("station id (stn)")
     console.log(stn)
     locationApiQuery();
-})
+});
 
 //click event for submit button (all data collected)
     //here coded for input-type
@@ -93,7 +93,7 @@ $("#submit-button").on('click',function(){
     }
     return false;
 
-})
+});
 //===============API AJAX Calls===================
 function locationApiQuery() {
     //AJAX url only for determining name of location
@@ -117,14 +117,14 @@ function temperatureApiQuery() {
 
         //collects temp and date data from API JSON and assigns to array index(i)
         function collectDateInfo(){
-          for (var i = 0; i < tempData.length; i++){
-            dateArray[i] = {
-                date: tempData[i].date,
-                temperature: {
-                    temp: tempData[i].value
-                }
-            }
-          }
+              for (var i = 0; i < tempData.length; i++){
+                    dateArray[i] = {
+                        date: tempData[i].date,
+                        temperature: {
+                            temp: tempData[i].value
+                        }
+                    }
+              }
         }
         //looping through ajax JSON to store relevant data (date, temp) in array
         for(var i in tempData){
@@ -134,16 +134,16 @@ function temperatureApiQuery() {
                 collectDateInfo(i);
             }
         }
-    }
-    // =======FIREBASE===========
-    var database = firebase.database();
-    var weatherData = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName);
-    weatherData.push({
-        dates: dateArray
+        // =======FIREBASE===========
+        var database = firebase.database();
+        var weatherData = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName);
+        weatherData.push({
+            dates: dateArray
+        });
+        console.log("====Constructed TEMP dateArray====");
+        console.log(dateArray);
     });
-    console.log("====Constructed TEMP dateArray====");
-    console.log(dateArray);
-});
+};
 
 //AJAX query url for PRECIPITATION weather data
 function precipitationApiQuery() {
@@ -174,15 +174,15 @@ function precipitationApiQuery() {
                 collectDateInfo(i);
             }
         }
-    }
-    //=======FIREBASE===========
-    var database = firebase.database();
-    var weatherData = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName);
-    weatherData.push({
-        dates:dateArray
+        //=======FIREBASE===========
+        var database = firebase.database();
+        var weatherData = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName);
+        weatherData.push({
+            dates:dateArray
+        });
+        console.log("====Constructed PRECIPITATION dateArray====");
+        console.log(dateArray);
     });
-    console.log("====Constructed PRECIPITATION dateArray====");
-    console.log(dateArray);
-});
+};
 
 
