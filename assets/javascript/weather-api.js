@@ -37,12 +37,12 @@ var startDate = "2010-01-01";
 var endDate = "2016-12-31";
 //name of commodity being searched
 //hard-coded---needs to be dynamically created from user input.
-var commodityName = "corn";
+var commodityName = "soybean";
 //name of location queried for data
 var locName;
 //API return limit (max=1000)
 var limit = "1000";
-
+//==============dynamic location functionality================
 var locationType;
 var locStation = false
 //click event listener for station location (API call type)
