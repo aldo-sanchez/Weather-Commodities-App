@@ -24,11 +24,14 @@ var commodity = corn;
 
 //===============API AJAX Calls===================
 
-var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+token+"&start_date=2010-01-01&end_date=2016-01-01";
 
-var data = [];
+var commodityName = "wheat";
 var dateArray = [];
-$.ajax({url:queryURL,method:'Get'})
+
+function financeApiQuery() {
+	var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+token+"&start_date=2010-01-01&end_date=2016-01-01";
+	var data = [];
+	$.ajax({url:queryURL,method:'Get'})
 		.done(function(response){
 			console.log(response);
 			data = response.dataset.data;
@@ -56,8 +59,13 @@ $.ajax({url:queryURL,method:'Get'})
 				dateArray = dateArray.reverse();
 				console.log("new");
 				console.log(dateArray);
+
+			var database = firebase.database();
+			var financeData = database.ref("finance/commodity/"+commodityName);
+			financeData.push({
+				dates:dateArray
+			})
+
 		});
 
-
-
-
+}
