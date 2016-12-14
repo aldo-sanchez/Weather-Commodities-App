@@ -1,5 +1,6 @@
 
 console.log('map Vis')
+google.charts.load('current', { 'packages': ['line'] });
 
 if(commodityName == "soybean"){
     console.log('Im in')
