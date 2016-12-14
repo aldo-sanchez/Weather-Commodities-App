@@ -11,60 +11,66 @@
  </head>
 
 <body> 
+  <div class="container">
+    <header>CommWeather</header>
 
-<header>CommWeather</header>
+    <div class="secondaryHead">
+    </div>
 
-<div class="secondaryHead">
+    <div class="row">
+      <div class="col s12">
+        <div class="summary">
+          <p>A visualization of the direct and indirect impact of weather on major commodities with in the US market</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12 worldMap">
+        <img src="world.gif">
+      </div>
+    </div>
+    
+<div class="row">
+  <div class="col s8"></div>
+  <div class="col s4">
+    <div class="fixed-action-btn horizontal click-to-toggle">
+      <a class="btn-floating btn-large yellow lighten-1" id="commodityButton"><i>
+        <img src="commodity_icon.svg" alt="Commodities Icon">
+      </i></a>
+      <ul>
+        <li><a class="btn-floating white" id="cornButton"><i>
+          <img id="cornIcon" class="commodityImage" src="corn_icon.svg" alt="Corn Commodity Icon">
+        </i></a></li>
+        <li><a class="btn-floating white" id="soybeanButton"><i>
+          <img id="soybeanIcon" class="commodityImage" src="soybean_icon.svg" alt="Soybean Commodity Icon">
+        </i></a></li>
+        <li><a class="btn-floating white" id="pecanButton"><i>
+          <img id="pecanIcon" class="commodityImage" src="pecan_icon.svg" alt="Pecan Commodity Icon">
+        </i></a></li>
+      </ul>
+    </div> 
+  </div>
 </div>
-
-<div class="summary">
-<p>A visualization of the direct and indirect impact of weather on major commodities with in the US market</p>
-</div>
-
-<style>
-body {
-    background-image: url("subtleBackground.png");
-    width: 100%;
-    height: 100%;}
-</style>
-
-   <div class="fixed-action-btn horizontal click-to-toggle">
-    <a class="btn-floating btn-large red">
-      <i class="material-icons">commodities</i>
-    </a>
-    <ul>
-      <li><a class="btn-floating red"><i class="material-icons">gas</i></a></li>
-      <li><a class="btn-floating yellow darken-1"><i class="material-icons">Corn</i></a></li>
-      <li><a class="btn-floating green"><i class="material-icons">Soybean</i></a></li>
-      <li><a class="btn-floating blue"><i class="material-icons">Coffee Bean</i></a></li>
-    </ul>
-  </div> 
+   
 <div class="row">
 
 <div class="col s12 m3">
 </div>
 
-<div class="col s12 m6">
-<div class="worldMap">
-<img src="world.gif">
-</div>
-</div>
-</div>
 
+</div>
 
 
 <div class="row">
-<div class="col s12 m3"><p>
-"A basic question for commodity traders who do not currently trade weather
-futures might be: ‘what can one infer and exploit from the implicit weather
-forecasts embedded within weather futures?"</p>
-</div>
-<div class="col s12 m5">
-</div>
-<div class="col s12 m1">
-</div>
-<div class="col s12 m3">
-</div>
+  <div class="col s12 m3">
+    <p>"A basic question for commodity traders who do not currently trade weather futures might be: ‘what can one infer and exploit from the implicit weather forecasts embedded within weather futures?"</p>
+  </div>
+  <div class="col s12 m5">
+  </div>
+  <div class="col s12 m1">
+  </div>
+  <div class="col s12 m3">
+  </div>
 </div>
 
 </div>
@@ -72,6 +78,7 @@ forecasts embedded within weather futures?"</p>
  
 
 <footer>CommWeather 2016</footer>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"
    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
