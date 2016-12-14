@@ -98,12 +98,8 @@ $("#submit-button").on('click',function(){
         endDate = moment($("#endDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
 
         //=======check if data exists==========
-        dataCheck();
+        tempDataCheck();
 
-        // run weather data API functions - get data and store into firebase
-        temperatureApiQuery();
-        precipitationApiQuery();
-        financeApiQuery();
         console.log("commodity Name variable: " + commodityName);
         console.log("start date: " + startDate);
         console.log("end date: " + endDate);
@@ -117,7 +113,7 @@ function locationApiQuery() {
     var nameQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/stations/"+stn;
     $.ajax({ url:nameQueryURL, headers:{ token:token } }).done(function(response){
          locName = response.name;
-        console.log(locName);
+        console.log("location Name: "+locName);
     });
 }
 //AJAX query url for TEMPERATURE weather data
@@ -125,7 +121,6 @@ function temperatureApiQuery() {
     var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=TAVG&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
     $.ajax({ url:tempQueryURL, headers:{ token:token } }).done(function(response){
         var tempData = response.results;
-        console.log(response);
 
         //API location id
         var locationId = loc;
@@ -157,8 +152,6 @@ function temperatureApiQuery() {
         weatherData.set({
             dates: dateArray
         });
-        console.log("====Constructed TEMP dateArray====");
-        console.log(dateArray);
     });
 };
 
@@ -167,7 +160,6 @@ function precipitationApiQuery() {
     var prcpQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=PRCP&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
     $.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
         var prcpData = response.results;
-        console.log(response);
         //API location id
         var locationId = loc;
         //variable for array of dates
@@ -197,8 +189,6 @@ function precipitationApiQuery() {
         weatherData.set({
             dates:dateArray
         });
-        console.log("====Constructed PRECIPITATION dateArray====");
-        console.log(dateArray);
     });
 };
 //AJAX query for finance data
@@ -251,7 +241,28 @@ function firebaseTempQuery() {
             tempData[i] = [date, temp]
         }
     })
+    console.log("firebase queried!:")
+    console.log(tempData)
 }
-function dataCheck(){
+function tempDataCheck(){
+    var tempExist;
+    // var commodityName = "corn";
+    // var locName = "BLOOMINGTON 5 W, IL US";
+    var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/dates');
+    tempRef.once('value').then(function(snapshot){
+        tempExist = snapshot.exists();
+        console.log("temp data exists: "+tempExist);
+        if(tempExist){
+            console.log("data found!")
+            firebaseTempQuery();
+        } else {
+            console.log("data not found, querying API!")
+            // run weather data API functions - get data and store into firebase
+            temperatureApiQuery();
+            precipitationApiQuery();
+            financeApiQuery();
+            firebaseTempQuery();
+        }
+    })
 
 }
