@@ -10,7 +10,7 @@ firebase.initializeApp(config);
 //===============Finance API Variables====================
 //token for accessing API
 
-var token = "umJmbh6p4d37Z8soYvHB";
+var apiKey = "umJmbh6p4d37Z8soYvHB";
 var wheat = "COM/WLD_WHEAT_US_SRW";
 var coffee = "COM/PCOFFOTM_USD";
 var corn = "COM/PMAIZMT_USD";
@@ -97,10 +97,9 @@ $("#submit-button").on('click',function(){
         //gets input text from start date input field with id = #startDate-submit
         endDate = moment($("#endDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
 
-        // run weather data API functions - get data and store into firebase
-        temperatureApiQuery();
-        precipitationApiQuery();
-        financeApiQuery();
+        //=======check if data exists==========
+        tempDataCheck();
+
         console.log("commodity Name variable: " + commodityName);
         console.log("start date: " + startDate);
         console.log("end date: " + endDate);
@@ -114,7 +113,7 @@ function locationApiQuery() {
     var nameQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/stations/"+stn;
     $.ajax({ url:nameQueryURL, headers:{ token:token } }).done(function(response){
          locName = response.name;
-        console.log(locName);
+        console.log("location Name: "+locName);
     });
 }
 //AJAX query url for TEMPERATURE weather data
@@ -122,7 +121,6 @@ function temperatureApiQuery() {
     var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=TAVG&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
     $.ajax({ url:tempQueryURL, headers:{ token:token } }).done(function(response){
         var tempData = response.results;
-        console.log(response);
 
         //API location id
         var locationId = loc;
@@ -151,11 +149,9 @@ function temperatureApiQuery() {
         // =======FIREBASE===========
         var database = firebase.database();
         var weatherData = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName);
-        weatherData.push({
+        weatherData.set({
             dates: dateArray
         });
-        console.log("====Constructed TEMP dateArray====");
-        console.log(dateArray);
     });
 };
 
@@ -164,7 +160,6 @@ function precipitationApiQuery() {
     var prcpQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=PRCP&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
     $.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
         var prcpData = response.results;
-        console.log(response);
         //API location id
         var locationId = loc;
         //variable for array of dates
@@ -191,16 +186,14 @@ function precipitationApiQuery() {
         //=======FIREBASE===========
         var database = firebase.database();
         var weatherData = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName);
-        weatherData.push({
+        weatherData.set({
             dates:dateArray
         });
-        console.log("====Constructed PRECIPITATION dateArray====");
-        console.log(dateArray);
     });
 };
 //AJAX query for finance data
 function financeApiQuery() {
-    var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+token+"&start_date=2010-01-01&end_date=2016-01-01";
+    var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+apiKey+"&start_date=2010-01-01&end_date=2016-01-01";
     var data = [];
     var dateArray = [];
     $.ajax({url:queryURL,method:'Get'}).done(function(response){
@@ -222,25 +215,54 @@ function financeApiQuery() {
         dateArray = dateArray.reverse();
         var database = firebase.database();
         var financeData = database.ref("finance/commodity/"+commodityName);
-        financeData.push({
+        financeData.set({
             dates:dateArray
         })
     });
 }
-
+var tempData = [];
 //=========Querying Firebase==========
-// function firebaseTempQuery() {
-//     var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName);
-//     tempRef.then(function(){
-//         return tempRef.once
-//         console.log("tempData Query");
-//         console.log(snapshot);
-//         var tempData = snapshot.dates.val();
-//         console.log('tempData variable')
-//         console.log(tempData)
-//         // for(var i =0; i < snapshot.length)
+function firebaseTempQuery() {
+    //hard coded for now
+    var commodityName = "corn";
+    var locName = "BLOOMINGTON 5 W, IL US";
+    //reference data path, to reach date array
+        //takes snapshot of the data one, not an event listener
+    var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/dates');
+    tempRef.once('value').then(function(snapshot){
+        //store data array
+        var rawTempData = snapshot.val();
+        console.log('tempData variable')
+        console.log(rawTempData)
+        //loop through data array, creating a new 2D array
+        for(var i =0; i < rawTempData.length;i++){
+            var date = rawTempData[i].date;
+            var temp = rawTempData[i].temperature.temp;
+            tempData[i] = [date, temp]
+        }
+    })
+    console.log("firebase queried!:")
+    console.log(tempData)
+}
+function tempDataCheck(){
+    var tempExist;
+    // var commodityName = "corn";
+    // var locName = "BLOOMINGTON 5 W, IL US";
+    var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/dates');
+    tempRef.once('value').then(function(snapshot){
+        tempExist = snapshot.exists();
+        console.log("temp data exists: "+tempExist);
+        if(tempExist){
+            console.log("data found!")
+            firebaseTempQuery();
+        } else {
+            console.log("data not found, querying API!")
+            // run weather data API functions - get data and store into firebase
+            temperatureApiQuery();
+            precipitationApiQuery();
+            financeApiQuery();
+            firebaseTempQuery();
+        }
+    })
 
-//     })
-// }
-// firebaseTempQuery();
-
+}
