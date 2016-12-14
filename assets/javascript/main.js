@@ -56,11 +56,7 @@ var locName;
 //API return limit (max=1000)
 var limit = "1000";
 
-//============click events=============
-/*
-1. need to set commodityName, location, start date, end date
-2. only call API once all variables have been set (use submit button?)
-*/
+//============click events for commodities=============
 var locEnetered = false;
 var commodityEntered = false;
 //click event for corn commodity
@@ -70,7 +66,36 @@ $("#commodity-corn-btn").on('click',function(){
     //add data attribute, data-name = corn
     $(this).attr('data-name', 'corn');
 });
-//click event for location
+//click event for wheat commodity
+    //sets commodity name
+$("#commodity-wheat-btn").on('click',function(){
+    commodityEntered = true
+    //add data attribute, data-name = wheat
+    $(this).attr('data-name', 'wheat');
+});
+//click event for soybean commodity
+    //sets commodity name
+$("#commodity-soybean-btn").on('click',function(){
+    commodityEntered = true
+    //add data attribute, data-name = soybean
+    $(this).attr('data-name', 'soybean');
+});
+//click event for cotton commodity
+    //sets commodity name
+$("#commodity-cotton-btn").on('click',function(){
+    commodityEntered = true
+    //add data attribute, data-name = cotton
+    $(this).attr('data-name', 'cotton');
+});
+//click event for cattle commodity
+$("#commodity-cattle-btn").on('click',function(){
+    commodityEntered = true
+    //add data attribute, data-name = cattle
+    $(this).attr('data-name', 'cattle');
+});
+
+
+//============click events for locations on Map=============
     //sets name of station from map location
 $("#locationIllinois").on('click',function(){
     //gets data attribute from button clicked
@@ -81,7 +106,7 @@ $("#locationIllinois").on('click',function(){
     locationApiQuery();
 });
 
-//click event for submit button (all data collected)
+//=========click event for submit button (all data collected)=====
     //here coded for input-type
 $("#submit-button").on('click',function(){
     //checks if location and commodity entered
