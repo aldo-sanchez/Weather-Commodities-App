@@ -10,7 +10,7 @@ google.charts.setOnLoadCallback(drawMap);
 
 function drawMap() {
     var data = google.visualization.arrayToDataTable([
-    ['State', 'Foo Factor'],
+    ['State', 'luisana'],
     ['US-IL', 200],
     ['US-IN', 300],
     ['US-IA', 20],
