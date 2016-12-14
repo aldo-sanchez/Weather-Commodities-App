@@ -1,3 +1,10 @@
+//arrays for graphing
+var tempArray = [];
+var tempDateArray = [];
+var precipDateArray = [];
+var precipArray = [];
+var priceArray = [];
+var financeDateArray = [];
 // Initialize Firebase
 var config = {
 apiKey: "AIzaSyD5onGD-yX2IvrbzyEiNJ2Y7DfsjNQz0EA",
@@ -105,6 +112,14 @@ $("#locationIllinois").on('click',function(){
     console.log(stn)
     locationApiQuery();
 });
+$("#locationMissouri").on('click',function(){
+    //gets data attribute from button clicked
+    locEntered = true;
+    stn = $(this).data('id');
+    console.log("station id (stn)")
+    console.log(stn)
+    locationApiQuery();
+});
 
 //=========click event for submit button (all data collected)=====
     //here coded for input-type
@@ -124,6 +139,8 @@ $("#submit-button").on('click',function(){
 
         //=======check if data exists==========
         tempDataCheck();
+        precipDataCheck();
+        financeDataCheck();
 
         console.log("commodity Name variable: " + commodityName);
         console.log("start date: " + startDate);
@@ -146,12 +163,8 @@ function temperatureApiQuery() {
     var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=TAVG&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
     $.ajax({ url:tempQueryURL, headers:{ token:token } }).done(function(response){
         var tempData = response.results;
-
-        //API location id
-        var locationId = loc;
         //variable for array of dates
         var dateArray = [];
-
         //collects temp and date data from API JSON and assigns to array index(i)
         function collectDateInfo(){
               for (var i = 0; i < tempData.length; i++){
@@ -177,6 +190,15 @@ function temperatureApiQuery() {
         weatherData.set({
             dates: dateArray
         });
+        //looping through dateArray, get data, construct new arrays for graphing data
+        for(var i =0; i < dateArray.length;i++){
+            tempDateArray[i] = dateArray[i].date;
+            tempArray[i] = dateArray[i].temperature.temp;
+        }
+        console.log("tempArray:");
+        console.log(tempArray);
+        console.log("tempDateArray: ");
+        console.log(tempDateArray);
     });
 };
 
@@ -185,15 +207,13 @@ function precipitationApiQuery() {
     var prcpQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=PRCP&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
     $.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
         var prcpData = response.results;
-        //API location id
-        var locationId = loc;
         //variable for array of dates
         var dateArray = [];
         //collects temp and date data from API JSON and assigns to array index(i)
         function collectDateInfo(){
           for (var i = 0; i < prcpData.length; i++){
             dateArray[i] = {
-                dates: moment(prcpData[i].date).format('YYYY-MM-DD'),
+                date: moment(prcpData[i].date).format('YYYY-MM-DD'),
                 precipitation: {
                     prcp: prcpData[i].value
                 }
@@ -214,11 +234,20 @@ function precipitationApiQuery() {
         weatherData.set({
             dates:dateArray
         });
+        //loop through data array, creating new arrays for graphing
+        for(var i =0; i < dateArray.length;i++){
+            precipDateArray[i] = dateArray[i].date;
+            precipArray[i] = dateArray[i].precipitation.prcp;
+        }
+        console.log("precipArray:");
+        console.log(precipArray);
+        console.log("precipDateArray: ");
+        console.log(precipDateArray);
     });
 };
 //AJAX query for finance data
 function financeApiQuery() {
-    var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+apiKey+"&start_date=2010-01-01&end_date=2016-01-01";
+    var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+apiKey+"&start_date="+startDate+"&end_date="+endDate;
     var data = [];
     var dateArray = [];
     $.ajax({url:queryURL,method:'Get'}).done(function(response){
@@ -238,19 +267,25 @@ function financeApiQuery() {
         }
         // dateArray.reverse();
         dateArray = dateArray.reverse();
+        //======FIREBASE data send=======
         var database = firebase.database();
         var financeData = database.ref("finance/commodity/"+commodityName);
         financeData.set({
             dates:dateArray
         })
+        //loop through data array, creating new arrays for charting
+        for(var i =0; i < dateArray.length;i++){
+            financeDateArray[i] = dateArray[i].date;
+            priceArray[i] = dateArray[i].price.price;
+        }
+        console.log("priceArray:");
+        console.log(priceArray);
+        console.log("priceDateArray: ");
+        console.log(financeDateArray);
     });
 }
-var tempData = [];
 //=========Querying Firebase==========
 function firebaseTempQuery() {
-    //hard coded for now
-    var commodityName = "corn";
-    var locName = "BLOOMINGTON 5 W, IL US";
     //reference data path, to reach date array
         //takes snapshot of the data one, not an event listener
     var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/dates');
@@ -261,19 +296,58 @@ function firebaseTempQuery() {
         console.log(rawTempData)
         //loop through data array, creating a new 2D array
         for(var i =0; i < rawTempData.length;i++){
-            var date = rawTempData[i].date;
-            var temp = rawTempData[i].temperature.temp;
-            tempData[i] = [date, temp]
+            tempDateArray[i] = rawTempData[i].date;
+            tempArray[i] = rawTempData[i].temperature.temp;
         }
     })
-    console.log("firebase queried!:")
-    console.log(tempData)
+    console.log("firebase queried!: tempDatesArray")
+    console.log(tempDateArray)
+    console.log("tempArray");
+    console.log(tempArray);
+}
+function firebasePrecipQuery() {
+    //reference data path, to reach date array
+        //takes snapshot of the data one, not an event listener
+    var precipRef = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName+'/dates');
+    precipRef.once('value').then(function(snapshot){
+        //store data array
+        var rawPrecipData = snapshot.val();
+        console.log('precipData variable')
+        console.log(rawPrecipData)
+        //loop through data array, creating a new 2D array
+        for(var i =0; i < rawPrecipData.length;i++){
+            precipDateArray[i] = rawPrecipData[i].date;
+            precipArray[i] = rawPrecipData[i].precipitation.prcp;
+        }
+    })
+    console.log("firebase queried!: precipitation precipData");
+    console.log(precipArray);
+    console.log("precipDateArray");
+    console.log(precipDateArray);
+}
+function firebaseFinanceQuery() {
+    //reference data path, to reach date array
+        //takes snapshot of the data one, not an event listener
+    var finRef = firebase.database().ref('finance/commodity/'+commodityName+'/dates');
+    finRef.once('value').then(function(snapshot){
+        //store data array
+        var rawFinData = snapshot.val();
+        console.log('rawFinData variable')
+        console.log(rawFinData)
+        //loop through data array, creating new arrays for charting
+        for(var i =0; i < rawFinData.length;i++){
+            financeDateArray[i] = rawFinData[i].date;
+            priceArray[i] = rawFinData[i].price.price;
+        }
+    })
+    console.log("firebase queried!: Price Array")
+    console.log(priceArray)
+    console.log("finance dates Array")
+    console.log(financeDateArray)
 }
 function tempDataCheck(){
     var tempExist;
-    // var commodityName = "corn";
-    // var locName = "BLOOMINGTON 5 W, IL US";
-    var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/dates');
+    var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName);
     tempRef.once('value').then(function(snapshot){
         tempExist = snapshot.exists();
         console.log("temp data exists: "+tempExist);
@@ -282,12 +356,44 @@ function tempDataCheck(){
             firebaseTempQuery();
         } else {
             console.log("data not found, querying API!")
-            // run weather data API functions - get data and store into firebase
+            // run weather data API functions
             temperatureApiQuery();
-            precipitationApiQuery();
-            financeApiQuery();
-            firebaseTempQuery();
         }
     })
-
+}
+function precipDataCheck(){
+    var precipExist;
+    // var commodityName = "corn";
+    // var locName = "BLOOMINGTON 5 W, IL US";
+    var precipRef = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName+'/dates');
+    precipRef.once('value').then(function(snapshot){
+        precipExist = snapshot.exists();
+        console.log("precipitation data exists: "+precipExist);
+        if(precipExist){
+            console.log("precipitation data found! Querying firebase")
+            firebasePrecipQuery();
+        } else {
+            console.log("data not found, querying precipitation API!")
+            // run weather data API functions
+            precipitationApiQuery();
+        }
+    })
+}
+function financeDataCheck(){
+    var finExist;
+    // var commodityName = "corn";
+    // var locName = "BLOOMINGTON 5 W, IL US";
+    var finRef = firebase.database().ref('finance/commodity/'+commodityName+'/dates');
+    finRef.once('value').then(function(snapshot){
+        finExist = snapshot.exists();
+        console.log("temp data exists: " + finExist);
+        if(finExist){
+            console.log("finance data found!")
+            firebaseFinanceQuery();
+        } else {
+            console.log("data not found, querying precipitatio API!")
+            // run weather data API functions
+            financeApiQuery();
+        }
+    })
 }
