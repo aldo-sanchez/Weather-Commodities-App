@@ -1,4 +1,9 @@
 console.log("hello world");
+
+  $(document).ready(function(){
+    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+    $('.modal').modal();
+  });
 // variables: these will be pulled from alex and fred. for now these are placeholders.
 var dates = ['2005-01-01','2005-02-01','2005-03-01','2005-04-01','2005-05-01','2005-06-01']
 
@@ -20,9 +25,27 @@ var chartDataArray = [];
 var axesArray = [];
 var labelArray = ['precipitation','price','temperature'];
 var positionArray = ['left','right','left'];
-var colorOptions = ['#70cbf4', '#05af27','#ce123e'];
-var dashOptions = [[10,10],[],[]]
-var bor
+
+var lineOpacity = .8;
+var backgroundColor = 'white';
+var gridLineColor = 'rgba(97, 97, 99, .2)';
+var pointBackgroundColor = 'rgba(255, 255, 255, .5)';
+var colorOptions = [
+  'rgba(112, 203, 244,'+lineOpacity+')', 
+  'rgba(122, 244, 111,'+lineOpacity+')',
+  'rgba(244, 111, 111,'+lineOpacity+')'];
+
+var dashOptions = [[10,10],[],[]];
+var borderDashOffset = 0.0;
+
+var borderCapStyle = 'butt';
+var borderJoinStyle = 'miter';
+var lineTension = 0.2;
+
+var pointRadius = 5;
+var pointBorderWidth = 2;
+var pointHoverRadius = 6;
+var pointHoverWidth = 3;
 
 var ctx = document.getElementById("chartjs").getContext("2d");
 for (i = 0; i < 3; i++){
@@ -31,27 +54,32 @@ for (i = 0; i < 3; i++){
     yAxisID: 'y-' + i,
     data: totalData[i],
     fill: false,
-      backgroundColor: "black",
-      borderColor: colorOptions[i],
-      borderCapStyle: 'butt',
-      borderDash: dashOptions[i],
-      borderDashOffset: 0.0,
-      borderJoinStyle: 'miter',
-      lineTension: 0.1,
-      pointBackgroundColor: "white",
-      pointBorderColor: colorOptions[i],
-      pointBorderWidth: 2,
-      pointRadius: 5,
-      pointHoverRadius: 6,
-      pointHoverBackgroundColor: colorOptions[i],
-      pointHoverBorderColor: colorOptions[i],
-      pointHoverBorderWidth: 3,
-      pointHitRadius: 10
+    backgroundColor: backgroundColor,
+    borderColor: colorOptions[i],
+    borderCapStyle: borderCapStyle,
+    borderDash: dashOptions[i],
+    borderDashOffset: borderDashOffset,
+    borderJoinStyle: borderJoinStyle,
+    lineTension: lineTension,
+    pointBackgroundColor: pointBackgroundColor,
+    pointBorderColor: colorOptions[i],
+    pointBorderWidth: pointBorderWidth,
+    pointRadius: pointRadius,
+    pointHoverRadius: pointHoverRadius,
+    pointHoverBackgroundColor: colorOptions[i],
+    pointHoverBorderColor: colorOptions[i],
+    pointHoverBorderWidth: pointHoverWidth,
+    pointHitRadius: 10
   };
+
   axesArray[i] = {
     scaleLabel: {
       display: true,
       labelString: labelArray[i]
+    },
+    gridLines: {
+      show: true,
+      color: gridLineColor
     },
     position: positionArray[i],
     'id': 'y-' + i
