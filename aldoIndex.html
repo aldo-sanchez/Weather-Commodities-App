@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
-      <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">-->
-      <link rel="stylesheet" type="text/css" href="assets/css/aldoStyle.css"
+
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">-->
+
+    <link rel="stylesheet" type="text/css" href="assets/css/aldoStyle.css">
   </head>
   <body>
 
@@ -19,50 +21,69 @@
                 <h1>test!</h1>
             </div>
         </div>
+
+        <!--Google Geo Chart-->
         <!--<div class="row">
             <div class="col s12">
                 <div id="mapVis"></div>
             </div>
         </div>-->
 
+<!--MaterializeCSS Modal-->
         <!-- Modal Trigger -->
-  <!--<a class="waves-effect waves-light btn" href="#modal1">Modal</a>-->
+  <a class="waves-effect waves-light btn" href="#modal1">Modal</a>
 
   <!-- Modal Structure -->
-        <!--<div id="modal1" class="modal modal-fixed-footer">
+        <div id="modal1" class="modal modal-fixed-footer">
             <div class="modal-content">
             <canvas id="chartjs"></canvas>
             </div>
             <div class="modal-footer">
             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
             </div>
+        </div>
+
+        <!--BootstrapModal-->
+        <!-- Modal content-->
+        <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Large modal</button>
+        <div class="modal fade" id="myModal" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <canvas id="chartjs"></canvas>   
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
         </div>-->
 
-        <div class="row">
+        <!--<div class="row">
             <div class="col s12">
                 <canvas id="chartjs"></canvas>
             </div>
-        </div>
-        <div class="row">
-            <div class="col s12">
-                <div id="yAxisDual"></div>
-            </div>
-        </div>
+        </div>-->
     </div>
     
 
     
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
           
 
     <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
 
     
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-<script type="text/javascript" src="assets/librariesJS/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="assets/librariesJS/Chart.bundle.min.js"></script>
+
+    <!--<script type="text/javascript" src="assets/librariesJS/bootstrap.min.js"></script>-->
 
     <script src="assets/javascript/weather-api.js"></script>
     <script src="assets/javascript/appCharts.js"></script>
