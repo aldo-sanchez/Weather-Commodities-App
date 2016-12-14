@@ -6,27 +6,24 @@ header {
 	letter-spacing: 5px;
 	font-size: 30px;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	height: 70px;
-}
+	height: 70px;}
 
 .secondaryHead {height:100px;
 	width: 100%;
 	background-image: url("weather.jpg");
+	border: 2px solid black;}
+
+.summary { text-align: center; }
 
 
-}
-.nav-wrapper {
-	background: #283593;
-}
-
-h1 {
-	text-align: center;
-	text-height: 20px;
-}
 .worldMap {
-
 	padding: 20px;
-	margin-top: 100px;
-}
+	margin-top: 50px;}
 
-body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
+p { font-weight: bold; }
+
+footer { 
+		text-align: center; 
+		background: black;
+		color: white;}
