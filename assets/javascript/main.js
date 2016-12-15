@@ -64,41 +64,21 @@ var limit = "1000";
 //============click events for commodities=============
 var locEnetered = false;
 var commodityEntered = false;
-//click event for corn commodity
-    //sets commodity name
-$("#commodity-corn-btn").on('click',function(){
-    commodityEntered = true
-    //add data attribute, data-name = corn
-    $(this).attr('data-name', 'corn');
-});
-//click event for wheat commodity
-    //sets commodity name
-$("#commodity-wheat-btn").on('click',function(){
-    commodityEntered = true
-    //add data attribute, data-name = wheat
-    $(this).attr('data-name', 'wheat');
-});
-//click event for soybean commodity
-    //sets commodity name
-$("#commodity-soybean-btn").on('click',function(){
-    commodityEntered = true
-    //add data attribute, data-name = soybean
-    $(this).attr('data-name', 'soybean');
-});
-//click event for cotton commodity
-    //sets commodity name
-$("#commodity-cotton-btn").on('click',function(){
-    commodityEntered = true
-    //add data attribute, data-name = cotton
-    $(this).attr('data-name', 'cotton');
-});
-//click event for cattle commodity
-$("#commodity-cattle-btn").on('click',function(){
-    commodityEntered = true
-    //add data attribute, data-name = cattle
-    $(this).attr('data-name', 'cattle');
-});
-
+//click events for commodity
+commodityClick("#commodity-corn-btn","corn");
+commodityClick("#commodity-soybean-btn","soybean");
+commodityClick("#commodity-wheat-btn","wheat");
+commodityClick("#commodity-cotton-btn","cotton");
+commodityClick("#commodity-cattle-btn","cattle");
+//click event function for commodity
+function commodityClick(id, commodity) {
+    $(id).on('click',function(){
+        //signals commodity has been chosen by user
+        commodityEntered = true;
+        // sets commodity name depending on button clicked
+        commodityName = commodity;
+    });
+}
 
 //============click events for locations on Map=============
     //sets name of station from map location
@@ -106,7 +86,7 @@ locationClick("#locationIllinois");
 locationClick("#locationMissouri");
 locationClick("#locationIowa");
 locationClick("#locationMinnesota");
-function locationClick(id,) {
+function locationClick(id) {
     $(id).on('click',function(){
         //gets data attribute from button clicked
         locEntered = true;
@@ -116,29 +96,23 @@ function locationClick(id,) {
         locationApiQuery();
     });
 }
-var mapLocation;
+var locClick;
 function detectLocation(){
-    if(mapLocation == "US-IL") {
+    if(locClick == "US-IL") {
         locEntered = true;
-        stn = "GHCND:USC00116200";
-        console.log("station id (stn)")
-        console.log(stn)
-    } else if(mapLocation == "US-MO"){
+        stn = "GHCND:USC00110764"; // 2004-2015 100% coverage
+    } else if(locClick == "US-IA"){
         locEntered = true;
-        stn = "GHCND:USW00013994";
-        console.log("station id (stn)")
-        console.log(stn)
-    } else if(mapLocation == "US-IA"){
+        stn = "GHCND:USW00014943"; //1948-2016 100% coverage
+    } else if(locClick == "US-MN"){
         locEntered = true;
-        stn = "GHCND:USC00130181";
-        console.log("station id (stn)")
-        console.log(stn)
-    } else if(mapLocation == "US-MN"){
+        stn = "GHCND:USC00219046"; //1898-2016 97% coverage
+    } else if(locClick == "US-NE"){
         locEntered = true;
-        stn = "GHCND:USC00219046";
-        console.log("station id (stn)")
-        console.log(stn)
+        stn = "GHCND:USC00259510"; //data for station from 1893-2008, 93% coverage
     }
+    console.log("station id (stn)")
+    console.log(stn)
 }
 
 //=========click event for submit button (all data collected)=====
@@ -150,16 +124,14 @@ $("#submit-button").on('click',function(){
     } else if (!locEntered) {
         alert("choose location!")
     } else {
-        //commodityName set from data attribute of button element
-        commodityName = $("#commodity-corn-btn").data('name');
         //gets input text from start date input field with id = #startDate-submit
         startDate = moment($("#startDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
         //gets input text from start date input field with id = #startDate-submit
         endDate = moment($("#endDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
-
+        //start date in month-year format
         startDateMonths = moment(startDate).format('MMM-YYYY');
         endDateMonths = moment(endDate).format('MMM-YYYY');
-        //=======check if data exists==========
+        //=======functions check if data exists==========
         tempDataCheck();
         precipDataCheck();
         financeDataCheck();
@@ -368,7 +340,7 @@ function firebaseFinanceQuery() {
         //loop through data array, creating new arrays for charting
         for(var i =startIndex; i < endIndex;i++){
             financeDateArray[i] = rawFinData[i].date;
-            priceArray[i] = rawFinData[i].price.price;
+            priceArray[i] = rawFinData[i].price;
         }
     })
     console.log("firebase queried!: Price Array")
