@@ -2,9 +2,9 @@
 console.log('map Vis')
 google.charts.load('current', { 'packages': ['line'] });
 
-if(commodityName == "soybean"){
-    console.log('Im in')
-};
+// if(commodityName == "soybean"){
+//     console.log('Im in')
+// };
 
 // google.charts.load('upcoming', {'packages':['geochart']});
 google.charts.setOnLoadCallback(drawMap);
@@ -20,8 +20,10 @@ function drawMap() {
     ]);
     
     var options = {
-      width: 556, 
-      height: 347, 
+        backgroundColor: { fill:'transparent' },
+        height: 400,
+    //   width: 556, 
+    //   height: 347, 
       region: "US", 
       resolution: "provinces"
         // dataMode: 'regions',

@@ -96,7 +96,9 @@
       </div>
       <div class="row">
         <div class="col s12 worldMap">
-          <img src="assets/images/world.gif">
+          <!--Google Geo Chart-->
+          <div id="mapVis"></div>
+          <!--<img src="assets/images/world.gif">-->
         </div>
       </div>
     </div>
@@ -139,6 +141,13 @@ $('.datepicker').pickadate({
     selectYears: 15 // Creates a dropdown of 15 years to control year
   });
 </script>
+<script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
+    
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript" src="assets/librariesJS/Chart.bundle.min.js"></script>
+
+<script src="assets/javascript/geoChartTest.js"></script> 
 
 </body>
 </html>

@@ -59,9 +59,13 @@ footer {
 }
 
 .commodityButton{
-
 	width: 130px;
 	margin-top: 1px;
+}
+
+#mapVis{
+	/*margin-left: 25%;*/
+
 }
 
 
