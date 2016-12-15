@@ -1,4 +1,6 @@
 //arrays for graphing
+var startDateMonths;
+var endDateMonths;
 var tempArray = [];
 var tempDateArray = [];
 var precipDateArray = [];
@@ -134,6 +136,8 @@ $("#submit-button").on('click',function(){
         //gets input text from start date input field with id = #startDate-submit
         endDate = moment($("#endDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
 
+        startDateMonths = moment(startDate).format('MMM-YYYY');
+        endDateMonths = moment(endDate).format('MMM-YYYY');
         //=======check if data exists==========
         tempDataCheck();
         precipDataCheck();
@@ -166,7 +170,7 @@ function temperatureApiQuery() {
         function collectDateInfo(){
               for (var i = 0; i < tempData.length; i++){
                     dateArray[i] = {
-                        date: moment(tempData[i].date).format('YYYY-MM-DD'),
+                        date: moment(tempData[i].date).format('MMM-YYYY'),
                         temperature: {
                             temp: tempData[i].value
                         }
@@ -210,7 +214,7 @@ function precipitationApiQuery() {
         function collectDateInfo(){
           for (var i = 0; i < prcpData.length; i++){
             dateArray[i] = {
-                date: moment(prcpData[i].date).format('YYYY-MM-DD'),
+                date: moment(prcpData[i].date).format('MMM-YYYY'),
                 precipitation: {
                     prcp: prcpData[i].value
                 }
@@ -249,14 +253,11 @@ function financeApiQuery() {
     var dateArray = [];
     $.ajax({url:queryURL,method:'Get'}).done(function(response){
         data = response.dataset.data;
-        console.log(data);
         function collectDateInfo(){
             for (var i = 0; i < data.length; i++){
                 dateArray[i] = {
-                    date: data[i][0],
-                    price: {
-                        price: data[i][1]
-                    }
+                    date: moment(data[i][0]).format('MMM-YYYY'),
+                    price: data[i][6];
                 }
             }
         }
