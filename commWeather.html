@@ -4,14 +4,78 @@
 	<head>
 	<title> Comm Weather </title> 
 
-	<link rel="stylesheet" type="text/css" href="assets/css/commWeather.css">
 	
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
-
+  <link rel="stylesheet" type="text/css" href="assets/css/commWeather.css">
  </head>
 
 <body> 
-  <div class="row">
+  <!--sidebar and header-->
+  <header>
+    <nav class="top-nav">
+      <div class="container">
+        <div class="nav-wrapper">
+          <a class="page-title">CommWeather</a>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <a href="#" data-activates="nav-mobile" class="button-collapse top-nav full hide-on-large-only">
+        <i class="material-icons">menu</i>
+      </a>
+    </div>
+    <ul id="nav-mobile" class="side-nav fixed" style="overflow: auto; transform translateX(0%);">
+      <li class="bold">
+        <a href="#" class="waves-effect waves-teal">About</a>
+      </li>
+    </ul>
+  </header>
+
+  <main>
+    <div class="container" id="imageContainer">
+      <div class="row" id="mainImageRow">
+        <div class="col s12" id="mainImageCol">
+          <div class="secondaryHead"></div>
+        </div>
+      </div>
+    </div>
+      <div class="container">
+        <div class="row" id="subtitleRow">
+          <div class="col s12">
+            <p>A visualization of the direct and indirect impact of weather on major commodities with in the US market</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12">
+            <div id="mapVis"></div>
+          </div>
+        </div>
+      </div>    
+  </main>
+  <footer class="page-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col s12">
+          <h4 class="white-text">Creators:</h4>
+              <ul>
+                <li><a class="grey-text text-lighten-3" href="#!">Aldo Sanchez</a></li>
+                <li><a class="grey-text text-lighten-3" href="#!">Alejandro Harb</a></li>
+                <li><a class="grey-text text-lighten-3" href="#!">Daniel Switzer</a></li>
+                <li><a class="grey-text text-lighten-3" href="#!">Fred Nguyen</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+        © 2014 Copyright Text
+      </div>
+    </div>
+  </footer>
+
+  <!--<div class="row">
 
     <div class="col s2" id="navColumnSite">
       <div class="row">
@@ -96,16 +160,16 @@
       </div>
       <div class="row">
         <div class="col s12 worldMap">
-          <!--Google Geo Chart-->
-          <div id="mapVis"></div>
+          <!Google Geo Chart-->
+          <!--<div id="mapVis"></div>-->
           <!--<img src="assets/images/world.gif">-->
-        </div>
+        <!--</div>
       </div>
     </div>
 
-  </div>
+  </div>-->
 
-  <footer class="page-footer">
+  <!--<footer class="page-footer">
       <div class="container">
         <div class="row">
           <div class="col s12">
@@ -124,7 +188,7 @@
         © 2014 Copyright Text
         </div>
       </div>
-    </footer>
+    </footer>-->
 
      
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"

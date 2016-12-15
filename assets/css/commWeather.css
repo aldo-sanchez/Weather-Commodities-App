@@ -1,3 +1,13 @@
+/*nav.top-nav{
+	height: 122px;
+	box-shadow: none;
+}
+
+nav.top-nav a.page-title{
+	line-height: 122px;
+	font-size: 48px;
+}
+
 
 #mainColumnSite{
 	background-image: url("../images/subtleBackground.png");
@@ -30,8 +40,6 @@ header {
 
 
 .worldMap {
-	/*padding: 20px;
-	margin-top: 50px;*/
 	text-align: center;
 	}
 
@@ -63,10 +71,102 @@ footer {
 	margin-top: 1px;
 }
 
-#mapVis{
-	/*margin-left: 25%;*/
+*/
 
+header, main, footer {
+  padding-left: 300px;
+	text-align: center;
+}
+
+nav.top-nav{
+  height: 60px;
+  box-shadow: none;
+	background-color: transparent;
+}
+
+nav.top-nav a.page-title {
+  line-height: 60px;
+  font-size: 48px;
+	color: black;
+}
+
+nav .nav-wrapper {
+  position: relative;
+  height: 100%;
+}
+
+a.button-collapse.top-nav i {
+	line-height: 60px;
+  font-size: 32px;
 }
 
 
+
+a.button-collapse.top-nav {
+  position: absolute;
+  text-align: center;
+  height: 48px;
+  width: 48px;
+  left: 7.5%;
+  top: 0;
+  float: none;
+  margin-left: 1.5rem;
+  color: black;
+  font-size: 36px;
+  z-index: 2;
+}
+
+main, header{
+	/*background-image: url("../images/subtleBackground.png");*/
+	/*background-image: url("../images/stardust.png")*/
+}
+
+.secondaryHead {
+	height:80px;
+	width: 100%;
+	background-image: url("../images/weather.jpg");
+	/*border: 2px solid black;*/
+	}
+	#mainImageRow, #mainImageCol, #imageContainer{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	/*text-align: center;*/
+}
+
+#subtitleRow{
+	margin-bottom: 0;
+}
+
+@media only screen and (max-width: 992px){
+	header, main, footer {
+  	padding-left: 0;
+		/*text-align: left;*/
+	}
+}
+
+@media only screen and (max-width: 992px){
+	nav .nav-wrapper a.page-title {
+		font-size: 36px;
+	}
+}
+
+@media only screen and (min-width: 601px){
+	nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
+  	height: 64px;
+  	line-height: 64px;
+	}
+}
+
+@media only screen and (min-width: 601px){
+	.container {
+  	width: 85%;
+	}
+}
+
+@media only screen and (max-width: 992px){
+	nav .nav-wrapper {
+		text-align: center;
+	}
+}
 
