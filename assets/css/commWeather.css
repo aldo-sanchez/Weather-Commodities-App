@@ -78,6 +78,8 @@ header, main, footer {
 	text-align: center;
 }
 
+
+
 nav.top-nav{
   height: 60px;
   box-shadow: none;
@@ -136,6 +138,37 @@ main, header{
 
 #subtitleRow{
 	margin-bottom: 0;
+}
+
+.buttonIconImage{
+	height: 40px;
+	vertical-align: middle;
+	margin-left: 25%;
+}
+
+.commodityButton{
+	/*padding: 3px 75px 3px 5px;*/
+	width: 130px;
+	text-align: left;
+	margin-left: 3px;
+	padding-left: 3px;
+}
+
+input[type=text], textarea.materialize-textarea{
+	text-align: center;
+	height: 1rem;
+}
+
+.locationIcon{
+	height: 100px;
+  margin-top: 5px;
+  text-align: center;
+  vertical-align: middle;
+  margin-bottom: -25px;
+}
+
+#locationLabel{
+	margin-top: 15px;
 }
 
 @media only screen and (max-width: 992px){

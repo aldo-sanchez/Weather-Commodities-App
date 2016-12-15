@@ -26,8 +26,39 @@
       </a>
     </div>
     <ul id="nav-mobile" class="side-nav fixed" style="overflow: auto; transform translateX(0%);">
-      <li class="bold">
-        <a href="#" class="waves-effect waves-teal">About</a>
+      <li>
+        <label for="startDate">Start Date</label>
+        <input id="startDate" type="date" class="datepicker">
+      </li>
+      <li>
+        <label for="endDate">end date</label>
+        <input id="endDate" type="date" class="datepicker">
+      </li>
+      <li>
+        <h6>Commodities</h6>
+      </li>
+      <li>
+        <img class="buttonIconImage" src="assets/images/corn_icon.svg" alt="Corn Commodity Icon for Button">
+        <button id="cornButton" class="waves-effect waves-teal btn-flat commodityButton">corn</button>
+      </li>
+      <li>
+        <img class="buttonIconImage" src="assets/images/soybean_icon.svg" alt="Soybean Commodity Icon for Button">
+        <button id="soybeanButton" class="waves-effect waves-teal btn-flat commodityButton">soybean</button>
+      </li>
+      <li>
+        <img class="buttonIconImage" src="assets/images/pecan_icon.svg" alt="Pecan Commodity Icon for Button">
+        <button id="pecanButton" class="waves-effect waves-teal btn-flat commodityButton">pecan</button>
+      </li>
+      <li>
+        <h6 id="locationLabel">Location</h6>
+      </li>
+      <li>
+        <img class="locationIcon" src="assets/images/optimised.svg" alt="Texas Icon">
+      </li>
+      
+      <li>
+        <h5>Get Chart</h5>
+        <button class="btn-floating btn-large green accent-4 waves-effect waves-light" type="submit" name="action"><i class="material-icons">multiline_chart</i></button>
       </li>
     </ul>
   </header>
