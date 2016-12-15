@@ -18,14 +18,11 @@ firebase.initializeApp(config);
 //token for accessing API
 
 var apiKey = "umJmbh6p4d37Z8soYvHB";
-var wheat = "COM/WLD_WHEAT_US_SRW";
-var coffee = "COM/PCOFFOTM_USD";
-var corn = "COM/PMAIZMT_USD";
-var cotton = "COM/COTTON";
-var timber = "COM/WLD_ITIMBER";
-var cocoa = "COM/WLD_COCOA";
-var orange = "COM/WLD_ORANGE"
-var soybean = "COM/WLD_SOYBEANS";
+var soybean = "CHRIS/CME_S2";
+var corn = "CHRIS/CME_C2";
+var wheat = "CHRIS/CME_W2";
+var cotton = "CHRIS/ICE_CT1";
+var cattle = "CHRIS/CME_LC2";
 var commodity = corn;
 
 //===============Weather API Variables====================
@@ -247,11 +244,12 @@ function precipitationApiQuery() {
 };
 //AJAX query for finance data
 function financeApiQuery() {
-    var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+apiKey+"&start_date="+startDate+"&end_date="+endDate;
+    var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+apiKey+"&start_date="+startDate+"&end_date="+endDate+"&collapse=monthly";
     var data = [];
     var dateArray = [];
     $.ajax({url:queryURL,method:'Get'}).done(function(response){
         data = response.dataset.data;
+        console.log(data);
         function collectDateInfo(){
             for (var i = 0; i < data.length; i++){
                 dateArray[i] = {
