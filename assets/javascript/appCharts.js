@@ -5,22 +5,16 @@ console.log("hello world");
     $('.modal').modal();
   });
 // variables: these will be pulled from alex and fred. for now these are placeholders.
-var dates = ['2005-01-01','2005-02-01','2005-03-01','2005-04-01','2005-05-01','2005-06-01']
+var dates = ['Jan-2005','Feb-2005','Mar-2005','Apr-2005','Jun-2005','Jul-2005']
 
-var tempData = [
-    ['2005-01-01','2005-02-01','2005-03-01','2005-04-01','2005-05-01','2005-06-01'],
-    [32, 45, 56, 44, 67, 80]];
+var tempData = [32, 45, 56, 44, 67, 80];
 
-var precipData = [
-['2005-01-01','2005-02-01','2005-03-01','2005-04-01','2005-05-01','2005-06-01'],
-[2, 8, 12, 4, 15, 13]];
+var precipData = [2, 8, 12, 4, 15, 13];
 
-var priceData = [
-['2005-01-01','2005-02-01','2005-03-01','2005-04-01','2005-05-01','2005-06-01'],
-[133, 137, 145, 152, 160, 130]];
+var priceData = [133, 137, 145, 152, 160, 130];
 
 // Combine my data for charting.  This may change based on how data is received.
-totalData = [precipData[1],priceData[1],tempData[1]];
+totalData = [precipData,priceData,tempData];
 var chartDataArray = [];
 var axesArray = [];
 var labelArray = ['precipitation','price','temperature'];
