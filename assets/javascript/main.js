@@ -102,22 +102,44 @@ $("#commodity-cattle-btn").on('click',function(){
 
 //============click events for locations on Map=============
     //sets name of station from map location
-$("#locationIllinois").on('click',function(){
-    //gets data attribute from button clicked
-    locEntered = true;
-    stn = $(this).data('id');
-    console.log("station id (stn)")
-    console.log(stn)
-    locationApiQuery();
-});
-$("#locationMissouri").on('click',function(){
-    //gets data attribute from button clicked
-    locEntered = true;
-    stn = $(this).data('id');
-    console.log("station id (stn)")
-    console.log(stn)
-    locationApiQuery();
-});
+locationClick("#locationIllinois");
+locationClick("#locationMissouri");
+locationClick("#locationIowa");
+locationClick("#locationMinnesota");
+function locationClick(id,) {
+    $(id).on('click',function(){
+        //gets data attribute from button clicked
+        locEntered = true;
+        stn = $(this).data('id');
+        console.log("station id (stn)")
+        console.log(stn)
+        locationApiQuery();
+    });
+}
+var mapLocation;
+function detectLocation(){
+    if(mapLocation == "US-IL") {
+        locEntered = true;
+        stn = "GHCND:USC00116200";
+        console.log("station id (stn)")
+        console.log(stn)
+    } else if(mapLocation == "US-MO"){
+        locEntered = true;
+        stn = "GHCND:USW00013994";
+        console.log("station id (stn)")
+        console.log(stn)
+    } else if(mapLocation == "US-IA"){
+        locEntered = true;
+        stn = "GHCND:USC00130181";
+        console.log("station id (stn)")
+        console.log(stn)
+    } else if(mapLocation == "US-MN"){
+        locEntered = true;
+        stn = "GHCND:USC00219046";
+        console.log("station id (stn)")
+        console.log(stn)
+    }
+}
 
 //=========click event for submit button (all data collected)=====
     //here coded for input-type
@@ -261,7 +283,7 @@ function financeApiQuery() {
             for (var i = 0; i < data.length; i++){
                 dateArray[i] = {
                     date: moment(data[i][0]).format('MMM-YYYY'),
-                    price: data[i][6];
+                    price: data[i][6]
                 }
             }
         }
@@ -279,7 +301,7 @@ function financeApiQuery() {
         //loop through data array, creating new arrays for charting
         for(var i =0; i < dateArray.length; i++){
             financeDateArray[i] = dateArray[i].date;
-            priceArray[i] = dateArray[i].price.price;
+            priceArray[i] = dateArray[i].price;
         }
         console.log("priceArray:");
         console.log(priceArray);
