@@ -1,4 +1,6 @@
 //arrays for graphing
+var startIndex;
+var endIndex;
 var startDateMonths;
 var endDateMonths;
 var tempArray = [];
@@ -42,18 +44,15 @@ var dataCategory = "TEMP";
 var dataType1 = "TMAX";
 var dataType2 = "TAVG";
 var dataType3 = "PRCP";
-//location
-//hard-coded---needs to be dynamically created from user input. Use moment.js
-var loc = "CITY:US170002";
 //station
 //hard-coded---needs to be dynamically created from user input. Use moment.js
 var stn;
 //start date
 //hard-coded---needs to be dynamically created from user input. Use moment.js
-var startDate = "2010-01-01";
+var startDate;
 //end date
 //hard-coded---needs to be dynamically created from user input. Use moment.js
-var endDate = "2016-12-31";
+var endDate;
 //name of commodity being searched
 //hard-coded---needs to be dynamically created from user input.
 var commodityName;
@@ -150,6 +149,7 @@ $("#submit-button").on('click',function(){
     return false;
 
 });
+
 //===============API AJAX Calls===================
 function locationApiQuery() {
     //AJAX url only for determining name of location
@@ -191,8 +191,10 @@ function temperatureApiQuery() {
         weatherData.set({
             dates: dateArray
         });
-        //looping through dateArray, get data, construct new arrays for graphing data
-        for(var i =0; i < dateArray.length;i++){
+        //creating date range variables
+        findDateRange(dateArray);
+        //loop through data array, creating new arrays for charting
+        for(var i =startIndex; i < endIndex; i++){
             tempDateArray[i] = dateArray[i].date;
             tempArray[i] = dateArray[i].temperature.temp;
         }
@@ -235,8 +237,10 @@ function precipitationApiQuery() {
         weatherData.set({
             dates:dateArray
         });
-        //loop through data array, creating new arrays for graphing
-        for(var i =0; i < dateArray.length;i++){
+        //creating date range variables
+        findDateRange(dateArray);
+        //loop through data array, creating new arrays for charting
+        for(var i =startIndex; i < endIndex; i++){
             precipDateArray[i] = dateArray[i].date;
             precipArray[i] = dateArray[i].precipitation.prcp;
         }
@@ -273,7 +277,7 @@ function financeApiQuery() {
             dates:dateArray
         })
         //loop through data array, creating new arrays for charting
-        for(var i =0; i < dateArray.length;i++){
+        for(var i =0; i < dateArray.length; i++){
             financeDateArray[i] = dateArray[i].date;
             priceArray[i] = dateArray[i].price.price;
         }
@@ -293,8 +297,10 @@ function firebaseTempQuery() {
         var rawTempData = snapshot.val();
         console.log('tempData variable')
         console.log(rawTempData)
-        //loop through data array, creating a new 2D array
-        for(var i =0; i < rawTempData.length;i++){
+        //creating date range variables
+        findDateRange(rawTempData);
+        //loop through data array, creating new arrays for charting
+        for(var i =startIndex; i < endIndex; i++){
             tempDateArray[i] = rawTempData[i].date;
             tempArray[i] = rawTempData[i].temperature.temp;
         }
@@ -313,8 +319,10 @@ function firebasePrecipQuery() {
         var rawPrecipData = snapshot.val();
         console.log('precipData variable')
         console.log(rawPrecipData)
-        //loop through data array, creating a new 2D array
-        for(var i =0; i < rawPrecipData.length;i++){
+        //creating date range variables
+        findDateRange(rawPrecipData);
+        //loop through data array, creating new arrays for charting
+        for(var i =startIndex; i < endIndex;i++){
             precipDateArray[i] = rawPrecipData[i].date;
             precipArray[i] = rawPrecipData[i].precipitation.prcp;
         }
@@ -333,8 +341,10 @@ function firebaseFinanceQuery() {
         var rawFinData = snapshot.val();
         console.log('rawFinData variable')
         console.log(rawFinData)
+        //creating date range variables
+        findDateRange(rawFinData);
         //loop through data array, creating new arrays for charting
-        for(var i =0; i < rawFinData.length;i++){
+        for(var i =startIndex; i < endIndex;i++){
             financeDateArray[i] = rawFinData[i].date;
             priceArray[i] = rawFinData[i].price.price;
         }
@@ -395,4 +405,16 @@ function financeDataCheck(){
             financeApiQuery();
         }
     })
+}
+function findDateRange(array){
+    for(var i = 0; i < array.length; i++){
+        if(array[i].date == startDateMonths){
+            startIndex = i;
+            console.log("===========startIndex variable: "+ startIndex);
+        }
+        if (array[i].date == endDateMonths){
+            endIndex = i;
+            console.log("===========endIndex variable: "+ endIndex);
+        }
+    }
 }
