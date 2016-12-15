@@ -1,7 +1,15 @@
-body {
-    background-image: url("../images/subtleBackground.png");
-    width: 100%;
-    height: 100%;}
+
+#mainColumnSite{
+	background-image: url("../images/subtleBackground.png");
+	height: 100%;
+	padding: 0;
+	margin: 0;
+
+}
+
+#mainImageCol{
+	padding: 0;
+}
 header {
 	padding: 10px;
 	color: black ;
@@ -15,7 +23,8 @@ header {
 .secondaryHead {height:100px;
 	width: 100%;
 	background-image: url("../images/weather.jpg");
-	border: 2px solid black;}
+	border: 2px solid black;
+	}
 
 .summary { text-align: center; }
 
@@ -34,9 +43,12 @@ footer {
 		background: black;
 		color: white;}
 
-#cornIcon:hover{
-	background-color: red;
+.buttonIcon{
+	height: 30px;
+	margin-top: 7px;
+	margin-right: 10px;
 }
+
 
 #soybeanIcon:hover{
 	background-color: green;
@@ -45,4 +57,12 @@ footer {
 #pecanIcon:hover{
 	background-color: brown;
 }
+
+.commodityButton{
+
+	width: 130px;
+	margin-top: 1px;
+}
+
+
 
