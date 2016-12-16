@@ -110,6 +110,39 @@ function detectLocation(){
     } else if(locClick == "US-NE"){
         locEntered = true;
         stn = "GHCND:USC00259510"; //data for station from 1893-2008, 93% coverage
+    } else if(locClick == "US-ND"){
+        locEntered = true;
+        stn = "GHCND:USW00094041";
+    } else if(locClick == "US-KS"){
+        locEntered = true;
+        stn = "GHCND:USC00143218";
+    } else if(locClick == "US-TX"){
+        locEntered = true;
+        stn = "GHCND:USC00417081";
+    } else if(locClick == "US-MS"){
+        locEntered = true;
+        stn = "GHCND:USC00221707";
+    } else if(locClick == ""){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == ""){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == ""){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == "US-"){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == ""){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == "US-"){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == ""){
+        locEntered = true;
+        stn = "";
     }
     console.log("station id (stn)")
     console.log(stn)
