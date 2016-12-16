@@ -7,9 +7,15 @@ header, main, footer {
 	text-align: center;
 }
 
+.resetText{
+	padding-right: 30px;
+}
+.getChartLine{
+	margin: 10px 0 10px 0;
+}
 
 #locationIconSpot {
-    display: none;
+    /*display: none;*/
 }
 
 
@@ -22,7 +28,7 @@ nav.top-nav{
 nav.top-nav a.page-title {
   line-height: 120px;
   font-size: 48px;
-	color: lightslategrey;
+	color: white;
 }
 
 nav .nav-wrapper {
@@ -136,6 +142,23 @@ font-size: 20px;
 
 #menu li {
     display: inline;
+}
+
+.btn-flat.picker__close, .btn-flat.picker__today, .picker__day.picker__day--infocus.picker__day--today.picker__day--highlighted {
+	color: #e65100;
+}
+
+.picker__day.picker__day--infocus.picker__day--today.picker__day--selected.picker__day--highlighted, .picker__day.picker__day--infocus.picker__day--selected.picker__day--highlighted{
+	color: white;
+	background-color: #e65100;
+}
+
+.picker__weekday-display{
+	background-color:#e65100;
+}
+
+.picker__date-display{
+	background-color: #ef6c00 ;
 }
 
 @media only screen and (max-width: 992px){

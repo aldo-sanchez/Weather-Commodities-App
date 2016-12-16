@@ -109,8 +109,12 @@ function drawMap() {
 
                 detectLocation();
                 locationApiQuery();
-                $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
-                $('#locationIconSpot').fadeIn();
+                $('#locationIconSpot').fadeOut(500,function(){
+                    $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
+                    $('#locationIconSpot').fadeIn();
+                });
+                // $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
+                // $('#locationIconSpot').fadeIn();
                 checkCompletedInputs();
             }
         }
@@ -124,28 +128,27 @@ function drawMap() {
 
 var firstRound = true;
 $('#addChartButton').on('click', function () {
+    var checkStartDate = $('#startDate').val();
+    var checkEndDate = $('#endDate').val();
+    if (checkStartDate != '' && checkEndDate != ''){
+    if(!firstRound){
+        clearData();
+    }
     gatherData();
-    
-    console.log('im done gathering data')
-    // chartDiv = $('#chartjsDiv');
-    // newChartCanvas = $('<canvas></canvas>');
-    // newChartCanvas.attr('id', 'chartjs');
-    // newChartCanvas.appendTo(chartDiv)
-    console.log('get chart!!!');
-    
-    
     displayChart();
     firstRound = false;
-
+    }
 });
 
 function displayChart(){
     if(!firstRound){
-        clearData();
         myChart.destroy();
     };    
     setTimeout(getNewChart, 2000);
-    // $('#chartCollapsible').click();
+    if(firstRound){
+        $('#chartCollapsible').click();
+    }
+    
 };
 
 function clearData(){
@@ -161,7 +164,10 @@ $('#resetButton').on('click', function () {
     // myChart.destroy();
 
     initialize();
-    $('#locationIconSpot').fadeOut();
+    $('#locationIconSpot').fadeOut(500,function(){
+      $('.locationIcon').attr('src', 'assets/images/US-Country_icon.svg');
+      $('#locationIconSpot').fadeIn();
+    });
 });
 
 $(document).on('click', '.commodityButton', function () {
@@ -191,9 +197,11 @@ $(document).on('click', '.commodityButton', function () {
 });
 
 function checkCompletedInputs() {
-    if (userSelections.commodity && userSelections.location) {
-        $('#addChartButton').removeClass('disabled');
-    } else {
+    
+        if (userSelections.commodity && userSelections.location) {
+            $('#addChartButton').removeClass('disabled');
+        } else {
         console.log('still looking');
     }
+    
 };
