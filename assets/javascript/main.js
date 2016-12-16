@@ -1,9 +1,9 @@
 //arrays for graphing
-console.log('we are merging');
 var startIndex;
 var endIndex;
 var startDateMonths;
 var endDateMonths;
+var rawPrecipData = [];
 
 var tempArray = [];
 var tempDateArray = [];
@@ -154,14 +154,13 @@ function detectLocation(){
 //=========click event for submit button (all data collected)=====
     //here coded for input-type
 $("#addChartButton").on('click',function(){
-    //checks if location and commodity entered
     
         //gets input text from start date input field with id = #startDate-submit
         startDate = moment($("#startDate").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
         console.log(startDate);
         //gets input text from start date input field with id = #startDate-submit
         endDate = moment($("#endDate").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
-        console.log(endDate)
+        console.log(endDate);
         //start date in month-year format
         startDateMonths = moment(startDate).format('MMM-YYYY');
         endDateMonths = moment(endDate).format('MMM-YYYY');
@@ -173,6 +172,7 @@ $("#addChartButton").on('click',function(){
         console.log("commodity Name variable: " + commodityName);
         console.log("start date: " + startDate);
         console.log("end date: " + endDate);
+    
     return false;
 
 });
@@ -187,14 +187,14 @@ function locationApiQuery() {
     });
 }
 //collects temp and date data from API JSON and assigns to array index(i)
-function collectData(index,apiArray,targetArray, targetObjectProperty, dateValue, targetValue){
-      for (var index = 0; index < apiArray.length; index++){
-            targetArray[index] = {
-                date: moment(dateValue).format('MMM-YYYY'),
-                targetObjectProperty:targetValue
-            }
-      }
-}
+// function collectData(index,apiArray,targetArray, targetObjectProperty, dateValue, targetValue){
+//       for (var index = 0; index < apiArray.length; index++){
+//             targetArray[index] = {
+//                 date: moment(dateValue).format('MMM-YYYY'),
+//                 targetObjectProperty:targetValue
+//             }
+//       }
+// }
 //AJAX query url for TEMPERATURE weather data
 function temperatureApiQuery() {
     var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=TAVG&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
@@ -230,7 +230,7 @@ function temperatureApiQuery() {
         //loop through data array, creating new arrays for charting
         for(var i =startIndex; i < endIndex; i++){
             tempDateArray[i] = dateArray[i].date;
-            tempArray[i] = dateArray[i].temperature.temp;
+            tempArray[i] = dateArray[i].temperature;
         }
         console.log("tempArray:");
         console.log(tempArray);
@@ -246,6 +246,8 @@ function precipitationApiQuery() {
         var prcpData = response.results;
         //variable for array of dates
         var dateArray = [];
+        //collects temp and date data from API JSON and assigns to array index(i)
+        //looping through ajax JSON to store relevant data (date, temp) in array
         function collectData(i){
               for (var i = 0; i < prcpData.length; i++){
                     dateArray[i] = {
@@ -254,16 +256,15 @@ function precipitationApiQuery() {
                     }
               }
         }
-        //collects temp and date data from API JSON and assigns to array index(i)
-        //looping through ajax JSON to store relevant data (date, temp) in array
         for(var i in prcpData){
             //checks if property index has value
             if(prcpData.hasOwnProperty(i)) {
                 //call for function that populates weatherObject
-                //parameter reference: collectData(index,dataArray,targetArray, targetObjectProperty, dateValue, targetValue)
                 collectData(i);
             }
         }
+        console.log("precipitation dateArray")
+        console.log(dateArray)
         //=======FIREBASE===========
         var database = firebase.database();
         var weatherData = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName);
@@ -288,7 +289,6 @@ function financeApiQuery() {
     var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+apiKey+"&start_date="+startDate+"&end_date="+endDate+"&collapse=monthly";
     var data = [];
     var dateArray = [];
-    
     $.ajax({url:queryURL,method:'Get'}).done(function(response){
         data = response.dataset.data;
         function collectData(i){
@@ -350,7 +350,8 @@ function firebasePrecipQuery() {
     var precipRef = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName+'/dates');
     precipRef.once('value').then(function(snapshot){
         //store data array
-        var rawPrecipData = snapshot.val();
+        rawPrecipData = snapshot.val();
+        console.log(rawPrecipData);
         //creating date range variables
         findDateRange(rawPrecipData);
         //loop through data array, creating new arrays for charting

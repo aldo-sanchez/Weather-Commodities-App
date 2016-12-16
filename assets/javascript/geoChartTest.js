@@ -98,8 +98,10 @@ function drawMap() {
                 userSelections.location = true;
                 console.log(message[0]);
                 locClick = selectedLocation[0];
+
                 detectLocation();
-                // $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
+                locationApiQuery();
+                $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
                 $('#locationIconSpot').fadeIn();
                 checkCompletedInputs();
             }
