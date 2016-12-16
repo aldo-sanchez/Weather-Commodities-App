@@ -1,13 +1,14 @@
-<doctype html>
+<!DOCTYPE html>
 <html>
 
 	<head>
 	<title> Comm Weather </title> 
 
-	
+	<script src="https://use.fontawesome.com/7fa3cf30ae.js"></script>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
   <link rel="stylesheet" type="text/css" href="assets/css/commWeather.css">
+
  </head>
 
 <body> 
@@ -31,34 +32,37 @@
         <input id="startDate" type="date" class="datepicker">
       </li>
       <li>
-        <label for="endDate">end date</label>
+        <label for="endDate">End Date</label>
         <input id="endDate" type="date" class="datepicker">
       </li>
       <li>
         <h6>Commodities</h6>
       </li>
       <li>
-        <img class="buttonIconImage" src="assets/images/corn_icon.svg" alt="Corn Commodity Icon for Button">
+        <img id="cornIcon" class="buttonIconImage" src="assets/images/corn_icon.svg" alt="Corn Commodity Icon for Button">
         <button id="cornButton" class="waves-effect waves-teal btn-flat commodityButton">corn</button>
       </li>
       <li>
-        <img class="buttonIconImage" src="assets/images/soybean_icon.svg" alt="Soybean Commodity Icon for Button">
+        <img id ="soybeanIcon" class="buttonIconImage" src="assets/images/soybean_icon.svg" alt="Soybean Commodity Icon for Button">
         <button id="soybeanButton" class="waves-effect waves-teal btn-flat commodityButton">soybean</button>
       </li>
       <li>
-        <img class="buttonIconImage" src="assets/images/pecan_icon.svg" alt="Pecan Commodity Icon for Button">
+        <img id="pecanIcon" class="buttonIconImage" src="assets/images/pecan_icon.svg" alt="Pecan Commodity Icon for Button">
         <button id="pecanButton" class="waves-effect waves-teal btn-flat commodityButton">pecan</button>
       </li>
       <li>
         <h6 id="locationLabel">Location</h6>
       </li>
-      <li>
-        <img class="locationIcon" src="assets/images/optimised.svg" alt="Texas Icon">
+      <li id="locationIconSpot">
+        <img class="locationIcon" src="" alt="">
       </li>
-      
+      <li>
+        <h5>Reset Selections</h5>
+        <button id="resetButton" class="btn-floating btn-large red accent-4 waves-effect waves-light" type="submit" name="action"><i class="material-icons">refresh</i></button>
+      </li>
       <li>
         <h5>Get Chart</h5>
-        <button class="btn-floating btn-large green accent-4 waves-effect waves-light" type="submit" name="action"><i class="material-icons">multiline_chart</i></button>
+        <button id="addChartButton" class="btn-floating btn-large green accent-4 waves-effect waves-light disabled" type="submit" name="action"><i class="material-icons">multiline_chart</i></button>
       </li>
     </ul>
   </header>
@@ -71,7 +75,7 @@
         </div>
       </div>
     </div>
-      <div class="container">
+      <div class="container mainDataContainer">
         <div class="row" id="subtitleRow">
           <div class="col s12">
             <p>A visualization of the direct and indirect impact of weather on major commodities with in the US market</p>
@@ -79,7 +83,20 @@
         </div>
         <div class="row">
           <div class="col s12">
-            <div id="mapVis"></div>
+            <ul class="collapsible" data-collapsible="accordion">
+              <li>
+                <div id="mapCollapsible" class="collapsible-header active"><i class="fa fa-globe" aria-hidden="true"></i>Commodities Map</div>
+                <div class="collapsible-body"><div id="mapVis"></div></div>
+              </li>
+              <li>
+                <div id="chartCollapsible" class="collapsible-header"><i class="material-icons">multiline_chart</i>Chart</div>
+                <div class="collapsible-body"><div id="chartjsDiv"><canvas id="chartjs"></canvas></div></div>
+              </li>
+              <li>
+                <div id="forecastCollapsible" class="collapsible-header"><i class="material-icons">filter_drama</i>Forecast</div>
+                <div class="collapsible-body"><p><i class="fa fa-cogs" aria-hidden="true"></i>  Coming Soon!</p></div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>    
@@ -125,7 +142,7 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
   <script type="text/javascript" src="assets/librariesJS/Chart.bundle.min.js"></script>
-
+    <script src="assets/javascript/appCharts.js"></script>
   <script src="assets/javascript/geoChartTest.js"></script> 
 </body>
 </html>

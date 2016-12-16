@@ -1,83 +1,15 @@
-/*nav.top-nav{
-	height: 122px;
-	box-shadow: none;
+.container {
+    max-width: 100%;
 }
-
-nav.top-nav a.page-title{
-	line-height: 122px;
-	font-size: 48px;
-}
-
-
-#mainColumnSite{
-	background-image: url("../images/subtleBackground.png");
-	height: 100%;
-	padding: 0;
-	margin: 0;
-
-}
-
-#mainImageCol{
-	padding: 0;
-}
-header {
-	padding: 10px;
-	color: black ;
-	text-align: center;
-	font-weight: bold;
-	letter-spacing: 5px;
-	font-size: 30px;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	height: 70px;}
-
-.secondaryHead {height:100px;
-	width: 100%;
-	background-image: url("../images/weather.jpg");
-	border: 2px solid black;
-	}
-
-.summary { text-align: center; }
-
-
-.worldMap {
-	text-align: center;
-	}
-
-
-p { font-weight: bold; }
-
-footer { 
-		text-align: center; 
-		background: black;
-		color: white;}
-
-.buttonIcon{
-	height: 30px;
-	margin-top: 7px;
-	margin-right: 10px;
-}
-
-
-#soybeanIcon:hover{
-	background-color: green;
-}
-
-#pecanIcon:hover{
-	background-color: brown;
-}
-
-.commodityButton{
-	width: 130px;
-	margin-top: 1px;
-}
-
-*/
 
 header, main, footer {
   padding-left: 300px;
 	text-align: center;
 }
 
+#locationIconSpot {
+    display: none;
+}
 
 
 nav.top-nav{
@@ -159,8 +91,12 @@ input[type=text], textarea.materialize-textarea{
 	height: 1rem;
 }
 
+.fa-cogs {
+font-size: 20px;
+}
+
 .locationIcon{
-	height: 100px;
+    height: 100px;
   margin-top: 5px;
   text-align: center;
   vertical-align: middle;
@@ -169,6 +105,36 @@ input[type=text], textarea.materialize-textarea{
 
 #locationLabel{
 	margin-top: 15px;
+}
+
+#mapVis {
+    display: inline-block;
+    margin: 0 auto;
+}
+
+ body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+
+#chartjsDiv {
+    /*display: none;*/
+    /*height: 500px;
+    width: 1000px;*/
+    margin: 0 auto;
+}
+
+.fadeOutIcon {
+    opacity: .4;
+}
+
+#menu li {
+    display: inline;
 }
 
 @media only screen and (max-width: 992px){
@@ -198,8 +164,7 @@ input[type=text], textarea.materialize-textarea{
 }
 
 @media only screen and (max-width: 992px){
-	nav .nav-wrapper {
-		text-align: center;
+	nav .nav-wrapper, #mapVis {
+		
 	}
 }
-
