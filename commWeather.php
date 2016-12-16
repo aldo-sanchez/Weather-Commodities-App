@@ -1,1 +1,1 @@
-<?php include('commWeather.html');
+<?php include_once('commWeather.html');
