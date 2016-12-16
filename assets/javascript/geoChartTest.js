@@ -23,9 +23,12 @@ header = ['State', '% Produced'];
 var locationDataTest = [];
 var cornLocation = [header, ['US-IA', 18.42], ['US-NE', 14.80], ['US-IL', 12.45]];
 var soybeanLocation = [header, ['US-IL', 14.03], ['US-IA', 12.5], ['US-MN', 8.25]];
-var pecanLocation = [header, ['US-TX', 32], ['US-NM', 15], ['US-CA', 4]];
+var wheatLocation = [header, ['US-ND', 18.03], ['US-KS', 15.69], ['US-MT', 9.04]];
+var cottonLocation = [header, ['US-TX', 45.00], ['US-GA', 16.30], ['US-MS', 5.20]];
+var cattleLocation = [header, ['US-TX', 12.72], ['US-NE', 7.01], ['US-KS', 6.79]];
 
-var commodityLocation = [['corn', cornLocation], ['soybean', soybeanLocation], ['pecan', pecanLocation]];
+
+var commodityLocation = [['corn', cornLocation], ['soybean', soybeanLocation], ['wheat', wheatLocation], ['cotton', cottonLocation], ['cattle', cattleLocation]];
 
 google.charts.load('current', { 'packages': ['line'] });
 
@@ -35,7 +38,7 @@ $(document).ready(function () {
 })
 function initialize() {
 
-    commodities = ['corn', 'soybean', 'pecan'];
+    commodities = ['corn', 'soybean', 'wheat', 'cotton', 'cattle'];
 
     userSelections.commodity = false;
     userSelections.location = false;
@@ -60,6 +63,9 @@ function drawMap() {
 
     var options = {
         backgroundColor: { fill: 'transparent' },
+        // colorAxis: {colors: ['#00853f', 'black', '#e31b23']},
+        colorAxis: {colors: ['#81d4fa','#01579b']},
+        datalessRegionColor: '#bababa',
         height: 400,
         //   width: 556, 
         //   height: 347, 
