@@ -141,6 +141,7 @@ $('#addChartButton').on('click', function () {
 
 function displayChart(){
     if(!firstRound){
+        clearData();
         myChart.destroy();
     };    
     setTimeout(getNewChart, 2000);
@@ -159,7 +160,8 @@ function clearData(){
 $('#resetButton').on('click', function () {
     // myChart.destroy();
 
-    clearData();
+    initialize();
+    $('#locationIconSpot').fadeOut();
 });
 
 $(document).on('click', '.commodityButton', function () {
