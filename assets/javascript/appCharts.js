@@ -1,16 +1,14 @@
 console.log("hello world");
 
-// variables: these will be pulled from alex and fred. for now these are placeholders.
-var dates = ['Jan-2005','Feb-2005','Mar-2005','Apr-2005','Jun-2005','Jul-2005']
 
-var tempData = [32, 45, 56, 44, 67, 80];
 
-var precipData = [2, 8, 12, 4, 15, 13];
-
-var priceData = [];
-
+var myChart
 // Combine my data for charting.  This may change based on how data is received.
-totalData = [precipArray,priceArray,tempArray];
+var totalData = [];
+function populateTotalData(){
+  totalData = [precipArray,priceArray,tempArray];
+}
+
 var chartDataArray = [];
 var axesArray = [];
 var labelArray = ['precipitation','price','temperature'];
@@ -38,10 +36,10 @@ var pointHoverRadius = 6;
 var pointHoverWidth = 3;
 
 function getNewChart(){
-for (i = 0; i < tempData.length; i++){
-  priceData.push(priceArray[i]);
+// for (i = 0; i < tempArray.length; i++){
+//   priceData.push(priceArray[i]);
   
-}
+// }
 var ctx = document.getElementById("chartjs").getContext("2d");
 for (i = 0; i < 3; i++){
   chartDataArray[i] = {
@@ -81,7 +79,7 @@ for (i = 0; i < 3; i++){
   };
 };
 
-var myChart = new Chart(ctx, {
+myChart = new Chart(ctx, {
   type: "line",
   data: {
     "labels": tempDateArray,

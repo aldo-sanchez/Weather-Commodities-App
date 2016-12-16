@@ -25,12 +25,33 @@ firebase.initializeApp(config);
 //token for accessing API
 
 var apiKey = "umJmbh6p4d37Z8soYvHB";
-var soybean = "CHRIS/CME_S2";
-var corn = "CHRIS/CME_C2";
-var wheat = "CHRIS/CME_W2";
-var cotton = "CHRIS/ICE_CT1";
-var cattle = "CHRIS/CME_LC2";
-var commodity = corn;
+var soybeanFinance = "CHRIS/CME_S2";
+var cornFinance = "CHRIS/CME_C2";
+var wheatFinance = "CHRIS/CME_W2";
+var cottonFinance = "CHRIS/ICE_CT1";
+var cattleFinance = "CHRIS/CME_LC2";
+var commodityFinance = '';
+// var commodityFinance = corn;
+
+function assignCommodityFinance() {
+    
+    if (commodityName == 'corn'){
+        commodityFinance = cornFinance;
+    }
+    else if(commodityName == 'soybean'){
+        commodityFinance = soybeanFinance;
+    }
+    else if (commodityName == 'wheat'){
+        commodityFinance = wheatFinance;
+    }
+    else if (commodityName == 'cotton'){
+        commodityFinance = cottonFinance;
+    }
+    else if (commodityName == 'cattle'){
+        commodityFinance = cattleFinance;
+    }
+}
+
 
 //===============Weather API Variables====================
 //token for accessing API
@@ -68,37 +89,37 @@ var limit = "1000";
 var locEnetered = false;
 var commodityEntered = false;
 //click events for commodity
-commodityClick("#commodity-corn-btn","corn");
-commodityClick("#commodity-soybean-btn","soybean");
-commodityClick("#commodity-wheat-btn","wheat");
-commodityClick("#commodity-cotton-btn","cotton");
-commodityClick("#commodity-cattle-btn","cattle");
-//click event function for commodity
-function commodityClick(id, commodity) {
-    $(id).on('click',function(){
-        //signals commodity has been chosen by user
-        commodityEntered = true;
-        // sets commodity name depending on button clicked
-        commodityName = commodity;
-    });
-}
+// commodityClick("#commodity-corn-btn","corn");
+// commodityClick("#commodity-soybean-btn","soybean");
+// commodityClick("#commodity-wheat-btn","wheat");
+// commodityClick("#commodity-cotton-btn","cotton");
+// commodityClick("#commodity-cattle-btn","cattle");
+// //click event function for commodity
+// function commodityClick(id, commodity) {
+//     $(id).on('click',function(){
+//         //signals commodity has been chosen by user
+//         commodityEntered = true;
+//         // sets commodity name depending on button clicked
+//         commodityName = commodity;
+//     });
+// }
 
 //============click events for locations on Map=============
     //sets name of station from map location
-locationClick("#locationIllinois");
-locationClick("#locationMissouri");
-locationClick("#locationIowa");
-locationClick("#locationMinnesota");
-function locationClick(id) {
-    $(id).on('click',function(){
-        //gets data attribute from button clicked
-        locEntered = true;
-        stn = $(this).data('id');
-        console.log("station id (stn)")
-        console.log(stn)
-        locationApiQuery();
-    });
-}
+// locationClick("#locationIllinois");
+// locationClick("#locationMissouri");
+// locationClick("#locationIowa");
+// locationClick("#locationMinnesota");
+// function locationClick(id) {
+//     $(id).on('click',function(){
+//         //gets data attribute from button clicked
+//         locEntered = true;
+//         stn = $(this).data('id');
+//         console.log("station id (stn)")
+//         console.log(stn)
+//         locationApiQuery();
+//     });
+// }
 var locClick;
 function detectLocation(){
     if(locClick == "US-IL") {
@@ -153,7 +174,8 @@ function detectLocation(){
 
 //=========click event for submit button (all data collected)=====
     //here coded for input-type
-$("#addChartButton").on('click',function(){
+// $("#addChartButton").on('click',function(){
+    function gatherData(){
     
         //gets input text from start date input field with id = #startDate-submit
         var startDateTest = $('#startDate').val().trim();
@@ -170,14 +192,15 @@ $("#addChartButton").on('click',function(){
         weatherDataCheck('temperature', firebaseTempQuery(),temperatureApiQuery());
         weatherDataCheck('precipitation', firebasePrecipQuery(),precipitationApiQuery());
         financeDataCheck();
+        populateTotalData();
 
         console.log("commodity Name variable: " + commodityName);
         console.log("start date: " + startDate);
         console.log("end date: " + endDate);
     
-    return false;
-
-});
+    // return false;
+    }
+// });
 
 //===============API AJAX Calls===================
 function locationApiQuery() {
@@ -288,7 +311,7 @@ function precipitationApiQuery() {
 };
 //AJAX query for finance data
 function financeApiQuery() {
-    var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+apiKey+"&start_date="+startDate+"&end_date="+endDate+"&collapse=monthly";
+    var queryURL="https://www.quandl.com/api/v3/datasets/"+commodityFinance+".json?api_key="+apiKey+"&start_date="+startDate+"&end_date="+endDate+"&collapse=monthly";
     var data = [];
     var dateArray = [];
     $.ajax({url:queryURL,method:'Get'}).done(function(response){

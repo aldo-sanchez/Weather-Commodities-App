@@ -1,6 +1,8 @@
 // console.log('merging stuff')
 
-var locClick;
+
+var executionReady;
+
 var selectedLocation;
 var commoditySelectedBool;
 var locationSelectedBool;
@@ -114,22 +116,44 @@ function drawMap() {
 
 }
 
+var firstRound = true;
 $('#addChartButton').on('click', function () {
-    console.log('get chart!!!');
-    getNewChart();
-    $('#mapCollapsible').click();
-    $('#chartCollapsible').click();
+    gatherData();
     
+    console.log('im done gathering data')
+    // chartDiv = $('#chartjsDiv');
+    // newChartCanvas = $('<canvas></canvas>');
+    // newChartCanvas.attr('id', 'chartjs');
+    // newChartCanvas.appendTo(chartDiv)
+    console.log('get chart!!!');
+    
+    
+    displayChart();
+    firstRound = false;
+
 });
 
-$('#resetButton').on('click', function () {
-    console.log('reset');
-    initialize();
+function displayChart(){
+    if(!firstRound){
+        myChart.destroy();
+    };    
+    setTimeout(getNewChart, 2000);
+    // $('#chartCollapsible').click();
+};
+
+function clearData(){
+    // myChart.destroy();
+    totalData = [];
     precipArray = [];
     tempArray = [];
     priceArray = [];
     tempDateArray = [];
-    getNewChart();
+}
+
+$('#resetButton').on('click', function () {
+    // myChart.destroy();
+
+    clearData();
 });
 
 $(document).on('click', '.commodityButton', function () {
@@ -137,6 +161,8 @@ $(document).on('click', '.commodityButton', function () {
         var index = $(this).attr('id');
         index = index.substring(0, index.indexOf('Button'));
         commodityName = index;
+        assignCommodityFinance();
+        console.log(commodityFinance);
 
         locationDataTest = commodityLocation[commodities.indexOf(index)][1];
         google.charts.setOnLoadCallback(drawMap);
