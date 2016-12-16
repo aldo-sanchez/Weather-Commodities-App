@@ -146,28 +146,13 @@ function detectLocation(){
     } else if(locClick == "US-MS"){
         locEntered = true;
         stn = "GHCND:USC00221707";
-    } else if(locClick == ""){
+    } else if(locClick == "US-MT"){
         locEntered = true;
-        stn = "";
-    } else if(locClick == ""){
+        stn = "GHCND:USW00094012";
+    } else if(locClick == "US-GA"){
         locEntered = true;
-        stn = "";
-    } else if(locClick == ""){
-        locEntered = true;
-        stn = "";
-    } else if(locClick == "US-"){
-        locEntered = true;
-        stn = "";
-    } else if(locClick == ""){
-        locEntered = true;
-        stn = "";
-    } else if(locClick == "US-"){
-        locEntered = true;
-        stn = "";
-    } else if(locClick == ""){
-        locEntered = true;
-        stn = "";
-    }
+        stn = "GHCND:USC00090140";
+    } 
     console.log("station id (stn)")
     console.log(stn)
 }
