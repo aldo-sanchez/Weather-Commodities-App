@@ -2,7 +2,7 @@ console.log('map Vis')
 
 
 
-
+var locClick;
 var selectedLocation;
 var commoditySelectedBool;
 var locationSelectedBool;
@@ -74,7 +74,8 @@ function drawMap() {
     var chart = new google.visualization.GeoChart(container);
 
     function myClickHandler() {
-        if (!userSelections.location) {
+        if (userSelections.commodity) {
+            console.log('i ran');
             var selection = chart.getSelection();
             var message = '';
             for (var i = 0; i < selection.length; i++) {
@@ -98,6 +99,8 @@ function drawMap() {
             if (message != '') {
                 userSelections.location = true;
                 console.log(message[0]);
+                locClick = selectedLocation[0];
+                detectLocation();
                 $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
                 $('#locationIconSpot').fadeIn();
                 checkCompletedInputs();
