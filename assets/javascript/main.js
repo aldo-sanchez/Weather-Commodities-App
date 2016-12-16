@@ -202,13 +202,21 @@ function temperatureApiQuery() {
         var tempData = response.results;
         //variable for array of dates
         var dateArray = [];
+        function collectData(i){
+              for (var i = 0; i < tempData.length; i++){
+                    dateArray[i] = {
+                        date: moment(tempData[i].date).format('MMM-YYYY'),
+                        temperature:tempData[i].value
+                    }
+              }
+        }
         //looping through ajax JSON to store relevant data (date, temp) in array
         for(var i in tempData){
             //checks if property index has value
             if(tempData.hasOwnProperty(i)) {
                 //call for function that populates weatherObject
                 //parameter reference: collectData(index,apiArray,targetArray, targetObjectProperty, dateValue, targetValue)
-                collectData(i,tempData,dateArray,'temperature',tempData[i].date,tempData[i].value);
+                collectData(i);
             }
         }
         // =======FIREBASE===========
@@ -238,6 +246,14 @@ function precipitationApiQuery() {
         var prcpData = response.results;
         //variable for array of dates
         var dateArray = [];
+        function collectData(i){
+              for (var i = 0; i < prcpData.length; i++){
+                    dateArray[i] = {
+                        date: moment(prcpData[i].date).format('MMM-YYYY'),
+                        precipitation:prcpData[i].value
+                    }
+              }
+        }
         //collects temp and date data from API JSON and assigns to array index(i)
         //looping through ajax JSON to store relevant data (date, temp) in array
         for(var i in prcpData){
@@ -245,7 +261,7 @@ function precipitationApiQuery() {
             if(prcpData.hasOwnProperty(i)) {
                 //call for function that populates weatherObject
                 //parameter reference: collectData(index,dataArray,targetArray, targetObjectProperty, dateValue, targetValue)
-                collectData(i,prcpData,dateArray,'precipitation',prcpData[i].date,prcpData[i].value);
+                collectData(i);
             }
         }
         //=======FIREBASE===========
@@ -272,12 +288,21 @@ function financeApiQuery() {
     var queryURL="https://www.quandl.com/api/v3/datasets/"+commodity+".json?api_key="+apiKey+"&start_date="+startDate+"&end_date="+endDate+"&collapse=monthly";
     var data = [];
     var dateArray = [];
+    
     $.ajax({url:queryURL,method:'Get'}).done(function(response){
         data = response.dataset.data;
+        function collectData(i){
+              for (var i = 0; i < data.length; i++){
+                    dateArray[i] = {
+                        date: moment(data[i][0]).format('MMM-YYYY'),
+                        price:data[i][6]
+                    }
+              }
+        }
         for (var i in data){
             //function collects data from api and stores into array
             //parameter reference: collectData(index,dataArray,targetArray, targetObjectProperty, dateValue, targetValue)
-            collectData(i, data, dateArray, price , data[i][0], data[i][6]);
+            collectData(i);
         }
         // dateArray.reverse();
         dateArray = dateArray.reverse();
@@ -311,7 +336,7 @@ function firebaseTempQuery() {
         //loop through data array, creating new arrays for charting
         for(var i =startIndex; i < endIndex; i++){
             tempDateArray[i] = rawTempData[i].date;
-            tempArray[i] = rawTempData[i].temperature.temp;
+            tempArray[i] = rawTempData[i].temperature;
         }
     })
     console.log("firebase queried!: tempDatesArray")
@@ -331,7 +356,7 @@ function firebasePrecipQuery() {
         //loop through data array, creating new arrays for charting
         for(var i =startIndex; i < endIndex;i++){
             precipDateArray[i] = rawPrecipData[i].date;
-            precipArray[i] = rawPrecipData[i].precipitation.prcp;
+            precipArray[i] = rawPrecipData[i].precipitation;
         }
     })
     console.log("firebase queried!: precipitation precipData");
