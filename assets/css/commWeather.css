@@ -1,0 +1,170 @@
+.container {
+    max-width: 100%;
+}
+
+header, main, footer {
+  padding-left: 300px;
+	text-align: center;
+}
+
+#locationIconSpot {
+    display: none;
+}
+
+
+nav.top-nav{
+  height: 60px;
+  box-shadow: none;
+	background-color: transparent;
+}
+
+nav.top-nav a.page-title {
+  line-height: 60px;
+  font-size: 48px;
+	color: black;
+}
+
+nav .nav-wrapper {
+  position: relative;
+  height: 100%;
+}
+
+a.button-collapse.top-nav i {
+	line-height: 60px;
+  font-size: 32px;
+}
+
+
+
+a.button-collapse.top-nav {
+  position: absolute;
+  text-align: center;
+  height: 48px;
+  width: 48px;
+  left: 7.5%;
+  top: 0;
+  float: none;
+  margin-left: 1.5rem;
+  color: black;
+  font-size: 36px;
+  z-index: 2;
+}
+
+main, header{
+	/*background-image: url("../images/subtleBackground.png");*/
+	/*background-image: url("../images/stardust.png")*/
+}
+
+.secondaryHead {
+	height:80px;
+	width: 100%;
+	background-image: url("../images/weather.jpg");
+	/*border: 2px solid black;*/
+	}
+	#mainImageRow, #mainImageCol, #imageContainer{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	/*text-align: center;*/
+}
+
+#subtitleRow{
+	margin-bottom: 0;
+}
+
+.buttonIconImage{
+	height: 40px;
+	vertical-align: middle;
+	margin-left: 25%;
+}
+
+.commodityButton{
+	/*padding: 3px 75px 3px 5px;*/
+	width: 130px;
+	text-align: left;
+	margin-left: 3px;
+	padding-left: 3px;
+}
+
+input[type=text], textarea.materialize-textarea{
+	text-align: center;
+	height: 1rem;
+}
+
+.fa-cogs {
+font-size: 20px;
+}
+
+.locationIcon{
+    height: 100px;
+  margin-top: 5px;
+  text-align: center;
+  vertical-align: middle;
+  margin-bottom: -25px;
+}
+
+#locationLabel{
+	margin-top: 15px;
+}
+
+#mapVis {
+    display: inline-block;
+    margin: 0 auto;
+}
+
+ body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+
+#chartjsDiv {
+    /*display: none;*/
+    /*height: 500px;
+    width: 1000px;*/
+    margin: 0 auto;
+}
+
+.fadeOutIcon {
+    opacity: .4;
+}
+
+#menu li {
+    display: inline;
+}
+
+@media only screen and (max-width: 992px){
+	header, main, footer {
+  	padding-left: 0;
+		/*text-align: left;*/
+	}
+}
+
+@media only screen and (max-width: 992px){
+	nav .nav-wrapper a.page-title {
+		font-size: 36px;
+	}
+}
+
+@media only screen and (min-width: 601px){
+	nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
+  	height: 64px;
+  	line-height: 64px;
+	}
+}
+
+@media only screen and (min-width: 601px){
+	.container {
+  	width: 85%;
+	}
+}
+
+@media only screen and (max-width: 992px){
+	nav .nav-wrapper, #mapVis {
+		
+	}
+}
