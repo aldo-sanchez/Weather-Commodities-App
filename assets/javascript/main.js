@@ -377,9 +377,10 @@ function firebaseFinanceQuery() {
         //creating date range variables
         findDateRange(rawFinData);
         //loop through data array, creating new arrays for charting
-        for(var i =startIndex; i < endIndex;i++){
-            financeDateArray[i] = rawFinData[i].date;
-            priceArray[i] = rawFinData[i].price;
+        for(var i = 0; i < (endIndex - actualIndex);i++){
+            financeDateArray[i] = rawFinData[startIndex].date;
+            priceArray[i] = rawFinData[startIndex].price;
+            startIndex++;
         }
     })
     console.log("firebase queried!: Price Array")
@@ -422,15 +423,21 @@ function financeDataCheck(){
         }
     })
 }
+var actualIndex;
 function findDateRange(array){
     for(var i = 0; i < array.length; i++){
         if(array[i].date == startDateMonths){
+            actualIndex = i;
             startIndex = i;
-            console.log("===========startIndex variable: "+ startIndex);
+            break;
+            // console.log("===========startIndex variable: "+ startIndex);
         }
+        // console.log("===========endIndex variable: "+ endIndex);
+    }
+    for(var i = 0; i < array.length; i++){
         if (array[i].date == endDateMonths){
             endIndex = i;
-            console.log("===========endIndex variable: "+ endIndex);
+            break;
         }
     }
 }

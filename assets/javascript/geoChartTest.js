@@ -116,8 +116,10 @@ function drawMap() {
 
 $('#addChartButton').on('click', function () {
     console.log('get chart!!!');
+    getNewChart();
     $('#mapCollapsible').click();
     $('#chartCollapsible').click();
+    
 });
 
 $('#resetButton').on('click', function () {

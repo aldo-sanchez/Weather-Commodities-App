@@ -7,10 +7,10 @@ var tempData = [32, 45, 56, 44, 67, 80];
 
 var precipData = [2, 8, 12, 4, 15, 13];
 
-var priceData = [133, 137, 145, 152, 160, 130];
+var priceData = [];
 
 // Combine my data for charting.  This may change based on how data is received.
-totalData = [precipData,priceData,tempData];
+totalData = [precipArray,priceArray,tempArray];
 var chartDataArray = [];
 var axesArray = [];
 var labelArray = ['precipitation','price','temperature'];
@@ -37,6 +37,11 @@ var pointBorderWidth = 2;
 var pointHoverRadius = 6;
 var pointHoverWidth = 3;
 
+function getNewChart(){
+for (i = 0; i < tempData.length; i++){
+  priceData.push(priceArray[i]);
+  
+}
 var ctx = document.getElementById("chartjs").getContext("2d");
 for (i = 0; i < 3; i++){
   chartDataArray[i] = {
@@ -79,7 +84,7 @@ for (i = 0; i < 3; i++){
 var myChart = new Chart(ctx, {
   type: "line",
   data: {
-    "labels": dates,
+    "labels": tempDateArray,
     'datasets': chartDataArray
   },
   options: {
@@ -88,3 +93,4 @@ var myChart = new Chart(ctx, {
     }
   }
 });
+}
