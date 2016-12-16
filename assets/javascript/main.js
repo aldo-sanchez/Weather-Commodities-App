@@ -1,11 +1,14 @@
 //arrays for graphing
+console.log('we are merging');
 var startIndex;
 var endIndex;
 var startDateMonths;
 var endDateMonths;
+
 var tempArray = [];
 var tempDateArray = [];
 var precipDateArray = [];
+
 var precipArray = [];
 var priceArray = [];
 var financeDateArray = [];
@@ -110,6 +113,39 @@ function detectLocation(){
     } else if(locClick == "US-NE"){
         locEntered = true;
         stn = "GHCND:USC00259510"; //data for station from 1893-2008, 93% coverage
+    } else if(locClick == "US-ND"){
+        locEntered = true;
+        stn = "GHCND:USW00094041";
+    } else if(locClick == "US-KS"){
+        locEntered = true;
+        stn = "GHCND:USC00143218";
+    } else if(locClick == "US-TX"){
+        locEntered = true;
+        stn = "GHCND:USC00417081";
+    } else if(locClick == "US-MS"){
+        locEntered = true;
+        stn = "GHCND:USC00221707";
+    } else if(locClick == ""){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == ""){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == ""){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == "US-"){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == ""){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == "US-"){
+        locEntered = true;
+        stn = "";
+    } else if(locClick == ""){
+        locEntered = true;
+        stn = "";
     }
     console.log("station id (stn)")
     console.log(stn)
@@ -132,8 +168,8 @@ $("#submit-button").on('click',function(){
         startDateMonths = moment(startDate).format('MMM-YYYY');
         endDateMonths = moment(endDate).format('MMM-YYYY');
         //=======functions check if data exists==========
-        tempDataCheck();
-        precipDataCheck();
+        weatherDataCheck('temperature', firebaseTempQuery(),temperatureApiQuery());
+        weatherDataCheck('precipitation', firebasePrecipQuery(),precipitationApiQuery());
         financeDataCheck();
 
         console.log("commodity Name variable: " + commodityName);
@@ -153,6 +189,15 @@ function locationApiQuery() {
         console.log("location Name: "+locName);
     });
 }
+//collects temp and date data from API JSON and assigns to array index(i)
+function collectData(index,apiArray,targetArray, targetObjectProperty, dateValue, targetValue){
+      for (var index = 0; index < apiArray.length; index++){
+            targetArray[index] = {
+                date: moment(dateValue).format('MMM-YYYY'),
+                targetObjectProperty:targetValue
+            }
+      }
+}
 //AJAX query url for TEMPERATURE weather data
 function temperatureApiQuery() {
     var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=TAVG&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
@@ -160,23 +205,13 @@ function temperatureApiQuery() {
         var tempData = response.results;
         //variable for array of dates
         var dateArray = [];
-        //collects temp and date data from API JSON and assigns to array index(i)
-        function collectDateInfo(){
-              for (var i = 0; i < tempData.length; i++){
-                    dateArray[i] = {
-                        date: moment(tempData[i].date).format('MMM-YYYY'),
-                        temperature: {
-                            temp: tempData[i].value
-                        }
-                    }
-              }
-        }
         //looping through ajax JSON to store relevant data (date, temp) in array
         for(var i in tempData){
             //checks if property index has value
             if(tempData.hasOwnProperty(i)) {
                 //call for function that populates weatherObject
-                collectDateInfo(i);
+                //parameter reference: collectData(index,apiArray,targetArray, targetObjectProperty, dateValue, targetValue)
+                collectData(i,tempData,dateArray,'temperature',tempData[i].date,tempData[i].value);
             }
         }
         // =======FIREBASE===========
@@ -207,22 +242,13 @@ function precipitationApiQuery() {
         //variable for array of dates
         var dateArray = [];
         //collects temp and date data from API JSON and assigns to array index(i)
-        function collectDateInfo(){
-          for (var i = 0; i < prcpData.length; i++){
-            dateArray[i] = {
-                date: moment(prcpData[i].date).format('MMM-YYYY'),
-                precipitation: {
-                    prcp: prcpData[i].value
-                }
-            }
-          }
-        }
         //looping through ajax JSON to store relevant data (date, temp) in array
         for(var i in prcpData){
             //checks if property index has value
             if(prcpData.hasOwnProperty(i)) {
                 //call for function that populates weatherObject
-                collectDateInfo(i);
+                //parameter reference: collectData(index,dataArray,targetArray, targetObjectProperty, dateValue, targetValue)
+                collectData(i,prcpData,dateArray,'precipitation',prcpData[i].date,prcpData[i].value);
             }
         }
         //=======FIREBASE===========
@@ -251,16 +277,10 @@ function financeApiQuery() {
     var dateArray = [];
     $.ajax({url:queryURL,method:'Get'}).done(function(response){
         data = response.dataset.data;
-        function collectDateInfo(){
-            for (var i = 0; i < data.length; i++){
-                dateArray[i] = {
-                    date: moment(data[i][0]).format('MMM-YYYY'),
-                    price: data[i][6]
-                }
-            }
-        }
         for (var i in data){
-            collectDateInfo(i);
+            //function collects data from api and stores into array
+            //parameter reference: collectData(index,dataArray,targetArray, targetObjectProperty, dateValue, targetValue)
+            collectData(i, data, dateArray, price , data[i][0], data[i][6]);
         }
         // dateArray.reverse();
         dateArray = dateArray.reverse();
@@ -289,8 +309,6 @@ function firebaseTempQuery() {
     tempRef.once('value').then(function(snapshot){
         //store data array
         var rawTempData = snapshot.val();
-        console.log('tempData variable')
-        console.log(rawTempData)
         //creating date range variables
         findDateRange(rawTempData);
         //loop through data array, creating new arrays for charting
@@ -311,8 +329,6 @@ function firebasePrecipQuery() {
     precipRef.once('value').then(function(snapshot){
         //store data array
         var rawPrecipData = snapshot.val();
-        console.log('precipData variable')
-        console.log(rawPrecipData)
         //creating date range variables
         findDateRange(rawPrecipData);
         //loop through data array, creating new arrays for charting
@@ -333,8 +349,6 @@ function firebaseFinanceQuery() {
     finRef.once('value').then(function(snapshot){
         //store data array
         var rawFinData = snapshot.val();
-        console.log('rawFinData variable')
-        console.log(rawFinData)
         //creating date range variables
         findDateRange(rawFinData);
         //loop through data array, creating new arrays for charting
@@ -348,37 +362,20 @@ function firebaseFinanceQuery() {
     console.log("finance dates Array")
     console.log(financeDateArray)
 }
-function tempDataCheck(){
-    var tempExist;
-    var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName);
-    tempRef.once('value').then(function(snapshot){
-        tempExist = snapshot.exists();
-        console.log("temp data exists: "+tempExist);
-        if(tempExist){
+
+function weatherDataCheck(weatherVariableType, firebaseQueryFunction, apiQueryFunction){
+    var exists;
+    var ref = firebase.database().ref('weather/'+weatherVariableType+'/commodity/'+commodityName+'/location/'+locName);
+    ref.once('value').then(function(snapshot){
+        exist = snapshot.exists();
+        console.log("temp data exists: "+exists);
+        if(exists){
             console.log("data found!")
-            firebaseTempQuery();
+            firebaseQueryFunction;
         } else {
             console.log("data not found, querying API!")
             // run weather data API functions
-            temperatureApiQuery();
-        }
-    })
-}
-function precipDataCheck(){
-    var precipExist;
-    // var commodityName = "corn";
-    // var locName = "BLOOMINGTON 5 W, IL US";
-    var precipRef = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName+'/dates');
-    precipRef.once('value').then(function(snapshot){
-        precipExist = snapshot.exists();
-        console.log("precipitation data exists: "+precipExist);
-        if(precipExist){
-            console.log("precipitation data found! Querying firebase")
-            firebasePrecipQuery();
-        } else {
-            console.log("data not found, querying precipitation API!")
-            // run weather data API functions
-            precipitationApiQuery();
+            apiQueryFunction;
         }
     })
 }

@@ -1,6 +1,4 @@
-console.log('map Vis')
-
-
+// console.log('merging stuff')
 
 var locClick;
 var selectedLocation;
