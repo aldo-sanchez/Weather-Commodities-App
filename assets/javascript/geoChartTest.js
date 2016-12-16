@@ -74,7 +74,8 @@ function drawMap() {
     var chart = new google.visualization.GeoChart(container);
 
     function myClickHandler() {
-        if (!userSelections.location) {
+        if (userSelections.commodity) {
+            console.log('i ran');
             var selection = chart.getSelection();
             var message = '';
             for (var i = 0; i < selection.length; i++) {
