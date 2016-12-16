@@ -125,6 +125,11 @@ $('#addChartButton').on('click', function () {
 $('#resetButton').on('click', function () {
     console.log('reset');
     initialize();
+    precipArray = [];
+    tempArray = [];
+    priceArray = [];
+    tempDateArray = [];
+    getNewChart();
 });
 
 $(document).on('click', '.commodityButton', function () {

@@ -13,15 +13,15 @@ header, main, footer {
 
 
 nav.top-nav{
-  height: 60px;
+  height: 120px;
   box-shadow: none;
 	background-color: transparent;
 }
 
 nav.top-nav a.page-title {
-  line-height: 60px;
+  line-height: 120px;
   font-size: 48px;
-	color: black;
+	color: lightslategrey;
 }
 
 nav .nav-wrapper {
@@ -30,8 +30,8 @@ nav .nav-wrapper {
 }
 
 a.button-collapse.top-nav i {
-	line-height: 60px;
-  font-size: 32px;
+	line-height: 120px;
+  font-size: 48px;
 }
 
 
@@ -50,9 +50,11 @@ a.button-collapse.top-nav {
   z-index: 2;
 }
 
-main, header{
+main{
 	/*background-image: url("../images/background.jpg");*/
 	/*background-image: url("../images/stardust.png")*/
+	/*background-color: lightgray;*/
+	background-image: url('../images/grey_wash_wall.png');
 }
 
 .secondaryHead {

@@ -336,9 +336,10 @@ function firebaseTempQuery() {
         //creating date range variables
         findDateRange(rawTempData);
         //loop through data array, creating new arrays for charting
-        for(var i =startIndex; i < endIndex; i++){
-            tempDateArray[i] = rawTempData[i].date;
-            tempArray[i] = rawTempData[i].temperature;
+        for(var i = 0; i < (endIndex - actualIndex);i++){
+            tempDateArray[i] = rawTempData[startIndex].date;
+            tempArray[i] = rawTempData[startIndex].temperature;
+            startIndex++;
         }
     })
     console.log("firebase queried!: tempDatesArray")
@@ -357,9 +358,10 @@ function firebasePrecipQuery() {
         //creating date range variables
         findDateRange(rawPrecipData);
         //loop through data array, creating new arrays for charting
-        for(var i =startIndex; i < endIndex;i++){
-            precipDateArray[i] = rawPrecipData[i].date;
-            precipArray[i] = rawPrecipData[i].precipitation;
+        for(var i = 0; i < (endIndex - actualIndex);i++){
+            precipDateArray[i] = rawPrecipData[startIndex].date;
+            precipArray[i] = rawPrecipData[startIndex].precipitation;
+            startIndex++;
         }
     })
     console.log("firebase queried!: precipitation precipData");
