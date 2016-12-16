@@ -1,0 +1,12 @@
+body{
+  background-color: white;
+}
+.modal{
+  width: 50%; 
+  max-height: 100%;
+  overflow-y: hidden;
+}
+
+/*.modal-body{
+  overflow: hidden;
+}*/
