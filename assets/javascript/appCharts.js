@@ -1,9 +1,5 @@
 console.log("hello world");
 
-  $(document).ready(function(){
-    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-    $('.modal').modal();
-  });
 // variables: these will be pulled from alex and fred. for now these are placeholders.
 var dates = ['Jan-2005','Feb-2005','Mar-2005','Apr-2005','Jun-2005','Jul-2005']
 
