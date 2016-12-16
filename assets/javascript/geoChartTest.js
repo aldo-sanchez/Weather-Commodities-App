@@ -99,7 +99,7 @@ function drawMap() {
                 console.log(message[0]);
                 locClick = selectedLocation[0];
                 detectLocation();
-                $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
+                // $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
                 $('#locationIconSpot').fadeIn();
                 checkCompletedInputs();
             }
@@ -127,6 +127,7 @@ $(document).on('click', '.commodityButton', function () {
     if (!userSelections.commodity) {
         var index = $(this).attr('id');
         index = index.substring(0, index.indexOf('Button'));
+        commodityName = index;
 
         locationDataTest = commodityLocation[commodities.indexOf(index)][1];
         google.charts.setOnLoadCallback(drawMap);
@@ -134,10 +135,10 @@ $(document).on('click', '.commodityButton', function () {
         commodities.splice(commodities.indexOf(index), 1);
         console.log(commodities);
         for (i = 0; i < commodities.length; i++) {
-            console.log(commodities[i]);
+            
             var tempIcon = '#' + commodities[i] + 'Icon';
             var tempButton = '#' + commodities[i] + 'Button';
-            console.log(tempIcon)
+            
             $(tempIcon).addClass('fadeOutIcon');
             $(tempButton).addClass('disabled');
         }

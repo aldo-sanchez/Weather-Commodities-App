@@ -153,17 +153,15 @@ function detectLocation(){
 
 //=========click event for submit button (all data collected)=====
     //here coded for input-type
-$("#submit-button").on('click',function(){
+$("#addChartButton").on('click',function(){
     //checks if location and commodity entered
-    if (!commodityEntered) {
-        alert("choose commodity!")
-    } else if (!locEntered) {
-        alert("choose location!")
-    } else {
+    
         //gets input text from start date input field with id = #startDate-submit
-        startDate = moment($("#startDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
+        startDate = moment($("#startDate").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
+        console.log(startDate);
         //gets input text from start date input field with id = #startDate-submit
-        endDate = moment($("#endDate-submit").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
+        endDate = moment($("#endDate").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
+        console.log(endDate)
         //start date in month-year format
         startDateMonths = moment(startDate).format('MMM-YYYY');
         endDateMonths = moment(endDate).format('MMM-YYYY');
@@ -175,7 +173,6 @@ $("#submit-button").on('click',function(){
         console.log("commodity Name variable: " + commodityName);
         console.log("start date: " + startDate);
         console.log("end date: " + endDate);
-    }
     return false;
 
 });
@@ -262,7 +259,7 @@ function precipitationApiQuery() {
         //loop through data array, creating new arrays for charting
         for(var i =startIndex; i < endIndex; i++){
             precipDateArray[i] = dateArray[i].date;
-            precipArray[i] = dateArray[i].precipitation.prcp;
+            precipArray[i] = dateArray[i].precipitation;
         }
         console.log("precipArray:");
         console.log(precipArray);
@@ -367,7 +364,7 @@ function weatherDataCheck(weatherVariableType, firebaseQueryFunction, apiQueryFu
     var exists;
     var ref = firebase.database().ref('weather/'+weatherVariableType+'/commodity/'+commodityName+'/location/'+locName);
     ref.once('value').then(function(snapshot){
-        exist = snapshot.exists();
+        exists = snapshot.exists();
         console.log("temp data exists: "+exists);
         if(exists){
             console.log("data found!")
