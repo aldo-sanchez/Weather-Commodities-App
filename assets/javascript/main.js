@@ -156,11 +156,13 @@ function detectLocation(){
 $("#addChartButton").on('click',function(){
     
         //gets input text from start date input field with id = #startDate-submit
-        startDate = moment($("#startDate").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
-        console.log(startDate);
+        var startDateTest = $('#startDate').val().trim();
+        console.log(startDateTest);
+        startDate = moment($("#startDate").val().trim(), "D MMMM, YYYY").format("YYYY-MM-DD");
+        // console.log(startDate);
         //gets input text from start date input field with id = #startDate-submit
-        endDate = moment($("#endDate").val().trim(), "MM-DD-YYYY").format("YYYY-MM-DD");
-        console.log(endDate);
+        endDate = moment($("#endDate").val().trim(), "D MMMM, YYYY").format("YYYY-MM-DD");
+        // console.log(endDate);
         //start date in month-year format
         startDateMonths = moment(startDate).format('MMM-YYYY');
         endDateMonths = moment(endDate).format('MMM-YYYY');
