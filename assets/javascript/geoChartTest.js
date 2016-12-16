@@ -2,7 +2,7 @@ console.log('map Vis')
 
 
 
-
+var locClick;
 var selectedLocation;
 var commoditySelectedBool;
 var locationSelectedBool;
@@ -99,6 +99,8 @@ function drawMap() {
             if (message != '') {
                 userSelections.location = true;
                 console.log(message[0]);
+                locClick = selectedLocation[0];
+                detectLocation();
                 $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
                 $('#locationIconSpot').fadeIn();
                 checkCompletedInputs();
