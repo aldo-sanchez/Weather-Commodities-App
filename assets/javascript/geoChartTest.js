@@ -167,6 +167,15 @@ $('#resetButton').on('click', function () {
     $('#locationIconSpot').fadeOut(500,function(){
       $('.locationIcon').attr('src', 'assets/images/US-Country_icon.svg');
       $('#locationIconSpot').fadeIn();
+      if (totalData.length > 0){
+          myChart.destroy();
+      }
+      $('#mapCollapsible').click();
+      $('#addChartButton').addClass('disabled');
+      $('#startDate').val('');
+      $('#endDate').val('');
+      firstRound = true;
+
     });
 });
 
