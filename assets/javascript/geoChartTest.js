@@ -110,6 +110,8 @@ function drawMap() {
                 detectLocation();
                 locationApiQuery();
                 $('#locationIconSpot').fadeOut(500,function(){
+                    $('.locationIcon').attr('src', '');
+                    $('#locationIconSpot').fadeIn();
                     $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
                     $('#locationIconSpot').fadeIn();
                 });
