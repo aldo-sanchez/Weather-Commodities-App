@@ -1,4 +1,5 @@
 //arrays for graphing
+var actualIndex;
 var startIndex;
 var endIndex;
 var startDateMonths;
@@ -173,44 +174,47 @@ function temperatureApiQuery() {
                 collectData(i);
             }
         }
-        // ==FIREBASE===========
+        //====Storing into FIREBASE====
         var database = firebase.database();
+        //referencing the database node where data is to be stored. If it doesnt exist, it creates new node
         var weatherData = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName);
+        // within reference node, new dates object is created, containing dateArray 
         weatherData.set({
             dates: dateArray
         });
-        //creating date range variables
-        findDateRange(dateArray);
         //loop through data array, creating new arrays for charting
         for(var i =startIndex; i < endIndex; i++){
+            //array containing dates of Temperature Data
             tempDateArray[i] = dateArray[i].date;
+            //array containing values of Temperature Data
             tempArray[i] = dateArray[i].temperature;
         }
-        console.log("tempArray:");
-        console.log(tempArray);
-        console.log("tempDateArray: ");
-        console.log(tempDateArray);
     });
 };
 
 //AJAX query url for PRECIPITATION weather data
 function precipitationApiQuery() {
-    console.log('=======precipitation API function runs=========')
+    //AJAX url: uses variables set by user
     var prcpQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=PRCP&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
+    //AJAX call
     $.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
+        //holds JSON object with relevant data
         var prcpData = response.results;
-        //variable for array of dates
+        //variable for array of dates and weather data
         var dateArray = [];
-        //collects temp and date data from API JSON and assigns to array index(i)
-        //looping through ajax JSON to store relevant data (date, temp) in array
+        //populates dateArray by looping through JSON array of data
         function collectData(i){
               for (var i = 0; i < prcpData.length; i++){
+                    //array of objects from index, i
                     dateArray[i] = {
+                        //date property
                         date: moment(prcpData[i].date).format('MMM-YYYY'),
+                        //temperature property with value
                         precipitation:prcpData[i].value
                     }
               }
         }
+        //looping through ajax JSON to store relevant data (date, temp) in dateArray
         for(var i in prcpData){
             //checks if property index has value
             if(prcpData.hasOwnProperty(i)) {
@@ -218,199 +222,222 @@ function precipitationApiQuery() {
                 collectData(i);
             }
         }
-        console.log("precipitation dateArray")
-        console.log(dateArray)
-        //=======FIREBASE===========
+        //====Storing into FIREBASE====
         var database = firebase.database();
+        //referencing the database node where data is to be stored. If it doesnt exist, it creates new node
         var weatherData = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName);
+        // within reference node, new dates object is created, containing dateArray 
         weatherData.set({
             dates:dateArray
         });
-        //creating date range variables
-        findDateRange(dateArray);
         //loop through data array, creating new arrays for charting
         for(var i =startIndex; i < endIndex; i++){
+            //array containing dates of Temperature Data
             precipDateArray[i] = dateArray[i].date;
+            //array containing values of Temperature Data
             precipArray[i] = dateArray[i].precipitation;
         }
-        console.log("precipArray:");
-        console.log(precipArray);
-        console.log("precipDateArray: ");
-        console.log(precipDateArray);
     });
 };
 //AJAX query for finance data
 function financeApiQuery() {
-    console.log('=======finance API function runs=========')
+    //AJAX url: uses variables set by user
     var queryURL="https://www.quandl.com/api/v3/datasets/"+commodityFinance+".json?api_key="+apiKey+"&start_date="+startDate+"&end_date="+endDate+"&collapse=monthly";
+    //  AJAX JSON return
     var data = [];
+    //variable for array of dates and weather data
     var dateArray = [];
+    //AJAX call
     $.ajax({url:queryURL,method:'Get'}).done(function(response){
+        //holds JSON object with relevant data
         data = response.dataset.data;
+        //populates dateArray by looping through JSON array of data
         function collectData(i){
               for (var i = 0; i < data.length; i++){
+                    //array of objects from index, i
                     dateArray[i] = {
+                        //date property
                         date: moment(data[i][0]).format('MMM-YYYY'),
+                        //price property with value
                         price:data[i][6]
                     }
               }
         }
+        //looping through ajax JSON to store relevant data (date, temp) in dateArray
         for (var i in data){
-            //function collects data from api and stores into array
-            //parameter reference: collectData(index,dataArray,targetArray, targetObjectProperty, dateValue, targetValue)
+            //call for function that populates weatherObject
             collectData(i);
         }
-        // dateArray.reverse();
+        // reverses order of array because API dates are given in descending order. Need in ascending order
         dateArray = dateArray.reverse();
-        //======FIREBASE data send=======
+        //====Storing into FIREBASE====
         var database = firebase.database();
+        //referencing the database node where data is to be stored. If it doesnt exist, it creates new node
         var financeData = database.ref("finance/commodity/"+commodityName);
+        // within reference node, new dates object is created, containing dateArray 
         financeData.set({
             dates:dateArray
         })
         //loop through data array, creating new arrays for charting
         for(var i =0; i < dateArray.length; i++){
+            //array containing dates of Temperature Data
             financeDateArray[i] = dateArray[i].date;
+            //array containing values of Temperature Data
             priceArray[i] = dateArray[i].price;
         }
-        console.log("priceArray:");
-        console.log(priceArray);
-        console.log("priceDateArray: ");
-        console.log(financeDateArray);
     });
 }
-//=========Querying Firebase==========
+//=========Querying DATABASE==========
 function firebaseTempQuery() {
-    //reference data path, to reach date array
-        //takes snapshot of the data one, not an event listener
+    //reference data path, to reach specific date array
     var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/dates');
+    //performs function once at specified reference
     tempRef.once('value').then(function(snapshot){
         //store data array
         var rawTempData = snapshot.val();
-        //creating date range variables
+        //creating date range variables to grab correct values - see line 408
         findDateRange(rawTempData);
         //loop through data array, creating new arrays for charting
+        //(endIndex - actualIndex) is number of loops performed. Length determined from date range figured out in findDateRange();
         for(var i = 0; i < (endIndex - actualIndex);i++){
+            //dates from temperature data
+            //startIndex is first index from date range found
             tempDateArray[i] = rawTempData[startIndex].date;
+            //temperature data
             tempArray[i] = rawTempData[startIndex].temperature;
+            //startIndex increased by 1 to move downstream data array
             startIndex++;
         }
     })
-    console.log("firebase queried!: tempDatesArray")
-    console.log(tempDateArray)
-    console.log("tempArray");
-    console.log(tempArray);
 }
 function firebasePrecipQuery() {
-    //reference data path, to reach date array
-        //takes snapshot of the data one, not an event listener
+    //reference data path, to reach specific date array
     var precipRef = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName+'/dates');
+    //performs function once at specified reference
     precipRef.once('value').then(function(snapshot){
         //store data array
         rawPrecipData = snapshot.val();
-        console.log(rawPrecipData);
-        //creating date range variables
+        //creating date range variables to grab correct values - see line 408
         findDateRange(rawPrecipData);
         //loop through data array, creating new arrays for charting
+        //(endIndex - actualIndex) is number of loops performed. Length determined from date range figured out in findDateRange();
         for(var i = 0; i < (endIndex - actualIndex);i++){
+            //dates from precipitation data
+            //startIndex is first index from date range found
             precipDateArray[i] = rawPrecipData[startIndex].date;
+            //temperature data
             precipArray[i] = rawPrecipData[startIndex].precipitation;
+            //startIndex increased by 1 to move downstream data array
             startIndex++;
         }
     })
-    console.log("firebase queried!: precipitation precipData");
-    console.log(precipArray);
-    console.log("precipDateArray");
-    console.log(precipDateArray);
 }
 function firebaseFinanceQuery() {
-    //reference data path, to reach date array
-        //takes snapshot of the data one, not an event listener
+    //reference data path, to reach specific date array
     var finRef = firebase.database().ref('finance/commodity/'+commodityName+'/dates');
+    //performs function once at specified reference
     finRef.once('value').then(function(snapshot){
         //store data array
         var rawFinData = snapshot.val();
-        //creating date range variables
+        //creating date range variables to grab correct values - see line 408
         findDateRange(rawFinData);
         //loop through data array, creating new arrays for charting
+        //(endIndex - actualIndex) is number of loops performed. Length determined from date range figured out in findDateRange();
         for(var i = 0; i < (endIndex - actualIndex);i++){
+            //dates from financial data
+            //startIndex is first index from date range found
             financeDateArray[i] = rawFinData[startIndex].date;
+            //temperature data
             priceArray[i] = rawFinData[startIndex].price;
+            //startIndex increased by 1 to move downstream data array
             startIndex++;
         }
     })
-    console.log("firebase queried!: Price Array")
-    console.log(priceArray)
-    console.log("finance dates Array")
-    console.log(financeDateArray)
 }
-
+//checks if temperature data exists in Database
 function tempDataCheck(){
-    console.log('=======tempDataCheck function runs=========')
+    // variable to store bolean
     var exists;
+    // database location reference
     var ref = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName);
+    //function performed for specified reference
     ref.once('value').then(function(snapshot){
+        //exist method checks if referenced node contains data, assigns boolean
         exists = snapshot.exists();
-        console.log("temperature data exists: "+exists);
+        //if data does exist
         if(exists){
-            console.log("temperature data found!")
+            //execute function that queries database
             firebaseTempQuery();
+        //if data does not exist
         } else {
-            console.log("temperature data not found, querying API!")
-            // run weather data API functions
+            // run temperature API function
             temperatureApiQuery();
         }
     })
 }
+//checks if precipitation data exists in Database
 function precipDataCheck(){
-    console.log('=======precipDataCheck function runs=========');
+    // variable to store bolean
     var exists;
+    // database location reference
     var ref = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName);
+    //function performed for specified reference
     ref.once('value').then(function(snapshot){
+        //exist method checks if referenced node contains data, assigns boolean
         exists = snapshot.exists();
-        console.log("precipitation data exists: "+exists);
+        //if data does exist
         if(exists){
-            console.log("precipitation data found! running firebasePrecipQuery function")
+            //run function that queries database
             firebasePrecipQuery();
+        //if data does not exist    
         } else {
-            console.log("precipitation data not found, running precipAPIQuery function!")
-            // run weather data API functions
+            // run precipitation API function
             precipitationApiQuery();
         }
     })
 }
+//checks if finance data exists in Database
 function financeDataCheck(){
+    // variable to store bolean
     var finExist;
-    // var commodityName = "corn";
-    // var locName = "BLOOMINGTON 5 W, IL US";
+    // database location reference
     var finRef = firebase.database().ref('finance/commodity/'+commodityName+'/dates');
+    //function performed for specified reference
     finRef.once('value').then(function(snapshot){
+        //exist method checks if referenced node contains data, assigns boolean
         finExist = snapshot.exists();
-        console.log("financial data exists: " + finExist);
+        //if data does exist
         if(finExist){
-            console.log("finance data found!")
+            //run function that queries database
             firebaseFinanceQuery();
+        //if data does not exist  
         } else {
-            console.log("data not found, querying precipitatio API!")
-            // run weather data API functions
+            // run precipitation API function
             financeApiQuery();
         }
     })
 }
-var actualIndex;
+//finds date range desired by user for array
+//runs through array determining the index where user's date inputs are located
 function findDateRange(array){
+    //loops through array
     for(var i = 0; i < array.length; i++){
+        //if index's date string equals start date string of user
         if(array[i].date == startDateMonths){
+            //store the index, i, where this occured
             actualIndex = i;
             startIndex = i;
+            //break from loop
             break;
-            // console.log("===========startIndex variable: "+ startIndex);
         }
-        // console.log("===========endIndex variable: "+ endIndex);
     }
+    //loops through array
     for(var i = 0; i < array.length; i++){
+        //if index's date equals end date of user
         if (array[i].date == endDateMonths){
+            //store the index, i, where this occured
             endIndex = i;
+            //break from loop
             break;
         }
     }
