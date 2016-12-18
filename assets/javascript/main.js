@@ -55,194 +55,125 @@ function assignCommodityFinance() {
 
 //===============Weather API Variables====================
 //token for accessing API
-    //hard-coded---needs to be dynamically created from user input. Use moment.js
 var token = "sUtCbQRELKcKTvcahYjUDGMtwcoeqrmz";
 //data set is specific type of data called from NOAA api
-    //hard-coded---needs to be dynamically created from user input. Use moment.js
 var dataSet = "GSOM";
 //category id's: TEMP, PRCP(precipitation), WATER, SUTEMP(summer temperature), SUPRCP(summer preciptation)
-    //hard-coded---needs to be dynamically created from user input. Use moment.js
 var dataCategory = "TEMP";
 //data types
-    //hard-coded---needs to be dynamically created from user input. Use moment.js
 var dataType1 = "TMAX";
 var dataType2 = "TAVG";
 var dataType3 = "PRCP";
-//station
-//hard-coded---needs to be dynamically created from user input. Use moment.js
+//weather station location id, required for weather api calls
 var stn;
 //start date
-//hard-coded---needs to be dynamically created from user input. Use moment.js
 var startDate;
 //end date
-//hard-coded---needs to be dynamically created from user input. Use moment.js
 var endDate;
 //name of commodity being searched
-//hard-coded---needs to be dynamically created from user input.
 var commodityName;
-//name of location queried for data
+//name of location, required for weather firebase calls
 var locName;
 //API return limit (max=1000)
 var limit = "1000";
 
-//============click events for commodities=============
-var locEnetered = false;
-var commodityEntered = false;
-//click events for commodity
-// commodityClick("#commodity-corn-btn","corn");
-// commodityClick("#commodity-soybean-btn","soybean");
-// commodityClick("#commodity-wheat-btn","wheat");
-// commodityClick("#commodity-cotton-btn","cotton");
-// commodityClick("#commodity-cattle-btn","cattle");
-// //click event function for commodity
-// function commodityClick(id, commodity) {
-//     $(id).on('click',function(){
-//         //signals commodity has been chosen by user
-//         commodityEntered = true;
-//         // sets commodity name depending on button clicked
-//         commodityName = commodity;
-//     });
-// }
 
-//============click events for locations on Map=============
-    //sets name of station from map location
-// locationClick("#locationIllinois");
-// locationClick("#locationMissouri");
-// locationClick("#locationIowa");
-// locationClick("#locationMinnesota");
-// function locationClick(id) {
-//     $(id).on('click',function(){
-//         //gets data attribute from button clicked
-//         locEntered = true;
-//         stn = $(this).data('id');
-//         console.log("station id (stn)")
-//         console.log(stn)
-//         locationApiQuery();
-//     });
-// }
+//===function assigns stn and locName variables when a location clicked on geoChart.js===
 var locClick;
 function detectLocation(){
     if(locClick == "US-IL") {
-        locEntered = true;
         stn = "GHCND:USC00110764"; // 2004-2015 100% coverage
         locName = "BLOOMINGTON 5 W, IL US";
     } else if(locClick == "US-IA"){
-        locEntered = true;
         stn = "GHCND:USW00014943"; //1948-2016 100% coverage
         locName = "SIOUX CITY GATEWAY AIRPORT, IA US";
     } else if(locClick == "US-MN"){
-        locEntered = true;
         stn = "GHCND:USC00219046"; //1898-2016 97% coverage
         locName = "WINNEBAGO, MN US";
     } else if(locClick == "US-NE"){
-        locEntered = true;
         stn = "GHCND:USC00259510"; //data for station from 1893-2008, 93% coverage
         locName = "YORK, NE US";
     } else if(locClick == "US-ND"){
-        locEntered = true;
         stn = "GHCND:USW00094041";
         locName = "GARRISON, ND US";
     } else if(locClick == "US-KS"){
-        locEntered = true;
         stn = "GHCND:USC00143218";
         locName = "GREAT BEND 3 W, KS US";
     } else if(locClick == "US-TX"){
-        locEntered = true;
         stn = "GHCND:USC00417081";
         locName = "PLAINVIEW WATER PRODUCTION, TX US";
     } else if(locClick == "US-MS"){
-        locEntered = true;
         stn = "GHCND:USC00221707";
         locName = "CLARKSDALE, MS US";
     } else if(locClick == "US-MT"){
-        locEntered = true;
         stn = "GHCND:USW00094012";
         locName = "HAVRE AIRPORT ASOS, MT US";
     } else if(locClick == "US-GA"){
-        locEntered = true;
         stn = "GHCND:USC00090140";
         locName = "ALBANY 3 SE, GA US";
     } 
-    console.log("station id (stn)")
-    console.log(stn)
+}
+//function stores user-input variables, runs initial functions
+function gatherData(){
+    //gets input from start date calendar: formatted for api
+    startDate = moment($("#startDate").val().trim(), "D MMMM, YYYY").format("YYYY-MM-DD");
+    //gets input from end date calendar: formatted for api
+    endDate = moment($("#endDate").val().trim(), "D MMMM, YYYY").format("YYYY-MM-DD");
+    //date variables in month-year format, for database
+    startDateMonths = moment(startDate).format('MMM-YYYY');
+    endDateMonths = moment(endDate).format('MMM-YYYY');
+    //functions check if data exists
+    tempDataCheck();
+    precipDataCheck();
+    financeDataCheck();
+    //gathers precipArray,priceArray,tempArray and puts into TotalData array for graphing
+    //function in appChart.js(line 8)
+    populateTotalData();    
 }
 
-//=========click event for submit button (all data collected)=====
-    //here coded for input-type
-// $("#addChartButton").on('click',function(){
-    function gatherData(){
-    
-        //gets input text from start date input field with id = #startDate-submit
-        var startDateTest = $('#startDate').val().trim();
-        console.log(startDateTest);
-        startDate = moment($("#startDate").val().trim(), "D MMMM, YYYY").format("YYYY-MM-DD");
-        // console.log(startDate);
-        //gets input text from start date input field with id = #startDate-submit
-        endDate = moment($("#endDate").val().trim(), "D MMMM, YYYY").format("YYYY-MM-DD");
-        // console.log(endDate);
-        //start date in month-year format
-        startDateMonths = moment(startDate).format('MMM-YYYY');
-        endDateMonths = moment(endDate).format('MMM-YYYY');
-        //=======functions check if data exists==========
-        tempDataCheck();
-        precipDataCheck();
-        financeDataCheck();
-        populateTotalData();
 
-        console.log("commodity Name variable: " + commodityName);
-        console.log("start date: " + startDate);
-        console.log("end date: " + endDate);
-    
-    // return false;
-    }
-// });
-
-//===============API AJAX Calls===================
+//===============API Calls===================
+// calls NOAA api to determine name of weather location when using stn ID
 function locationApiQuery() {
-    //AJAX url only for determining name of location
+    //AJAX url
     var nameQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/stations/"+stn;
+    //AJAX call
     $.ajax({ url:nameQueryURL, headers:{ token:token } }).done(function(response){
+        //name of location
          locName = response.name;
-        console.log("location Name: "+locName);
     });
 }
-//collects temp and date data from API JSON and assigns to array index(i)
-// function collectData(index,apiArray,targetArray, targetObjectProperty, dateValue, targetValue){
-//       for (var index = 0; index < apiArray.length; index++){
-//             targetArray[index] = {
-//                 date: moment(dateValue).format('MMM-YYYY'),
-//                 targetObjectProperty:targetValue
-//             }
-//       }
-// }
-//AJAX query url for TEMPERATURE weather data
+//API call for TEMPERATURE weather data
 function temperatureApiQuery() {
-    console.log("=================temp API query function runs================")
+    //AJAX url: uses variables set by user
     var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=TAVG&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
+    //AJAX call
     $.ajax({ url:tempQueryURL, headers:{ token:token } }).done(function(response){
+        //holds JSON object with relevant data
         var tempData = response.results;
-        console.log("temp api return:");
-        console.log(tempData);
         //variable for array of dates
         var dateArray = [];
+        //populates dateArray by looping through JSON array of data
         function collectData(i){
               for (var i = 0; i < tempData.length; i++){
+                    //array of objects from index, i
                     dateArray[i] = {
+                        //date property
                         date: moment(tempData[i].date).format('MMM-YYYY'),
+                        //temperature property with value
                         temperature:tempData[i].value
                     }
               }
         }
-        //looping through ajax JSON to store relevant data (date, temp) in array
+        //looping through ajax JSON to store relevant data (date, temp) in dateArray
         for(var i in tempData){
             //checks if property index has value
             if(tempData.hasOwnProperty(i)) {
                 //call for function that populates weatherObject
-                //parameter reference: collectData(index,apiArray,targetArray, targetObjectProperty, dateValue, targetValue)
                 collectData(i);
             }
         }
-        // =======FIREBASE===========
+        // ==FIREBASE===========
         var database = firebase.database();
         var weatherData = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName);
         weatherData.set({
