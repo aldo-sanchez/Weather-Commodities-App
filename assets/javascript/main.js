@@ -184,8 +184,8 @@ function detectLocation(){
         startDateMonths = moment(startDate).format('MMM-YYYY');
         endDateMonths = moment(endDate).format('MMM-YYYY');
         //=======functions check if data exists==========
-        weatherDataCheck('temperature', firebaseTempQuery(),temperatureApiQuery());
-        weatherDataCheck('precipitation', firebasePrecipQuery(),precipitationApiQuery());
+        tempDataCheck();
+        precipDataCheck();
         financeDataCheck();
         populateTotalData();
 
@@ -217,9 +217,12 @@ function locationApiQuery() {
 // }
 //AJAX query url for TEMPERATURE weather data
 function temperatureApiQuery() {
+    console.log("=================temp API query function runs================")
     var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=TAVG&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
     $.ajax({ url:tempQueryURL, headers:{ token:token } }).done(function(response){
         var tempData = response.results;
+        console.log("temp api return:");
+        console.log(tempData);
         //variable for array of dates
         var dateArray = [];
         function collectData(i){
@@ -261,6 +264,7 @@ function temperatureApiQuery() {
 
 //AJAX query url for PRECIPITATION weather data
 function precipitationApiQuery() {
+    console.log('=======precipitation API function runs=========')
     var prcpQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=PRCP&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
     $.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
         var prcpData = response.results;
@@ -306,6 +310,7 @@ function precipitationApiQuery() {
 };
 //AJAX query for finance data
 function financeApiQuery() {
+    console.log('=======finance API function runs=========')
     var queryURL="https://www.quandl.com/api/v3/datasets/"+commodityFinance+".json?api_key="+apiKey+"&start_date="+startDate+"&end_date="+endDate+"&collapse=monthly";
     var data = [];
     var dateArray = [];
@@ -409,19 +414,37 @@ function firebaseFinanceQuery() {
     console.log(financeDateArray)
 }
 
-function weatherDataCheck(weatherVariableType, firebaseQueryFunction, apiQueryFunction){
+function tempDataCheck(){
+    console.log('=======tempDataCheck function runs=========')
     var exists;
-    var ref = firebase.database().ref('weather/'+weatherVariableType+'/commodity/'+commodityName+'/location/'+locName);
+    var ref = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName);
     ref.once('value').then(function(snapshot){
         exists = snapshot.exists();
-        console.log("temp data exists: "+exists);
+        console.log("temperature data exists: "+exists);
         if(exists){
-            console.log("data found!")
-            firebaseQueryFunction;
+            console.log("temperature data found!")
+            firebaseTempQuery();
         } else {
-            console.log("data not found, querying API!")
+            console.log("temperature data not found, querying API!")
             // run weather data API functions
-            apiQueryFunction;
+            temperatureApiQuery();
+        }
+    })
+}
+function precipDataCheck(){
+    console.log('=======precipDataCheck function runs=========');
+    var exists;
+    var ref = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName);
+    ref.once('value').then(function(snapshot){
+        exists = snapshot.exists();
+        console.log("precipitation data exists: "+exists);
+        if(exists){
+            console.log("precipitation data found! running firebasePrecipQuery function")
+            firebasePrecipQuery();
+        } else {
+            console.log("precipitation data not found, running precipAPIQuery function!")
+            // run weather data API functions
+            precipitationApiQuery();
         }
     })
 }
@@ -432,7 +455,7 @@ function financeDataCheck(){
     var finRef = firebase.database().ref('finance/commodity/'+commodityName+'/dates');
     finRef.once('value').then(function(snapshot){
         finExist = snapshot.exists();
-        console.log("temp data exists: " + finExist);
+        console.log("financial data exists: " + finExist);
         if(finExist){
             console.log("finance data found!")
             firebaseFinanceQuery();
