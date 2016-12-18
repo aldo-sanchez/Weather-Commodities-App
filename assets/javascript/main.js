@@ -125,33 +125,43 @@ function detectLocation(){
     if(locClick == "US-IL") {
         locEntered = true;
         stn = "GHCND:USC00110764"; // 2004-2015 100% coverage
+        locName = "BLOOMINGTON 5 W, IL US";
     } else if(locClick == "US-IA"){
         locEntered = true;
         stn = "GHCND:USW00014943"; //1948-2016 100% coverage
+        locName = "SIOUX CITY GATEWAY AIRPORT, IA US";
     } else if(locClick == "US-MN"){
         locEntered = true;
         stn = "GHCND:USC00219046"; //1898-2016 97% coverage
+        locName = "WINNEBAGO, MN US";
     } else if(locClick == "US-NE"){
         locEntered = true;
         stn = "GHCND:USC00259510"; //data for station from 1893-2008, 93% coverage
+        locName = "YORK, NE US";
     } else if(locClick == "US-ND"){
         locEntered = true;
         stn = "GHCND:USW00094041";
+        locName = "GARRISON, ND US";
     } else if(locClick == "US-KS"){
         locEntered = true;
         stn = "GHCND:USC00143218";
+        locName = "GREAT BEND 3 W, KS US";
     } else if(locClick == "US-TX"){
         locEntered = true;
         stn = "GHCND:USC00417081";
+        locName = "PLAINVIEW WATER PRODUCTION, TX US";
     } else if(locClick == "US-MS"){
         locEntered = true;
         stn = "GHCND:USC00221707";
+        locName = "CLARKSDALE, MS US";
     } else if(locClick == "US-MT"){
         locEntered = true;
         stn = "GHCND:USW00094012";
+        locName = "HAVRE AIRPORT ASOS, MT US";
     } else if(locClick == "US-GA"){
         locEntered = true;
         stn = "GHCND:USC00090140";
+        locName = "ALBANY 3 SE, GA US";
     } 
     console.log("station id (stn)")
     console.log(stn)
