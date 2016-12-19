@@ -38,4 +38,4 @@ This project used icons from the following sources:
 Additional credit is due to the fantastic artists from the Noun Project who created the icons below:
 + World Maps - Dots [anbileru adaleru](https://thenounproject.com/pronoun/collection/world-maps-dots/) Some samples can be seen below:
 
-![Alt text](assets/images/US-Country_icon "US Dots Sample") ![Alt text](assets/images/US-TX_icon "Texas Dots Sample") ![Alt text](assets/images/US-IL_icon "Illinois Dots Sample")
+![Alt text](assets/images/US-Country_icon.svg "US Dots Sample") ![Alt text](assets/images/US-TX_icon.svg "Texas Dots Sample") ![Alt text](assets/images/US-IL.svg "Illinois Dots Sample")
