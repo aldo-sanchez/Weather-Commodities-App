@@ -41,4 +41,4 @@ Additional credit is due to the fantastic artists from the Noun Project who crea
 ![Alt text](assets/images/US-Country_icon.svg "US Dots Sample") 
 ![Alt text](assets/images/US-TX_icon.svg "Texas Dots Sample") 
 ![Alt text](assets/images/US-IL.svg "Illinois Dots Sample")
-![Alt text](assets/images/US-TX.svg "sample map")
+![Alt text](assets/images/US-TX_icon.svg "sample map")
