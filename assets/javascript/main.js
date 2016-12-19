@@ -154,6 +154,8 @@ function temperatureApiQuery() {
         var tempData = response.results;
         //variable for array of dates
         var dateArray = [];
+        console.log("temperature array 'dateArray'");
+        console.log(dateArray)
         //populates dateArray by looping through JSON array of data
         function collectData(i){
               for (var i = 0; i < tempData.length; i++){
@@ -182,8 +184,10 @@ function temperatureApiQuery() {
         weatherData.set({
             dates: dateArray
         });
+        //creating date range variables to grab correct values - see line 408
+        findDateRange(dateArray);
         //loop through data array, creating new arrays for charting
-        for(var i =startIndex; i < endIndex; i++){
+        for(var i = startIndex; i < endIndex; i++){
             //array containing dates of Temperature Data
             tempDateArray[i] = dateArray[i].date;
             //array containing values of Temperature Data
@@ -230,6 +234,8 @@ function precipitationApiQuery() {
         weatherData.set({
             dates:dateArray
         });
+        //creating date range variables to grab correct values - see line 408
+        findDateRange(dateArray);
         //loop through data array, creating new arrays for charting
         for(var i =startIndex; i < endIndex; i++){
             //array containing dates of Temperature Data
@@ -278,6 +284,8 @@ function financeApiQuery() {
         financeData.set({
             dates:dateArray
         })
+        //creating date range variables to grab correct values - see line 408
+        findDateRange(dateArray);
         //loop through data array, creating new arrays for charting
         for(var i =0; i < dateArray.length; i++){
             //array containing dates of Temperature Data
