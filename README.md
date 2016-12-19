@@ -1,3 +1,13 @@
+# Comm weather
+Site is hosted in both:
+[Heroku](commweather.herokuapp.com) and [Github Pages](https://aldo-sanchez.github.io/Weather-Commodities-App/)
+
+This project was completed as a project assignment for the UT Coding Bootcamp, in collaboration with:
+
++ [Alejandro Harb](https://github.com/alejandroharb)
++ [Daniel Switzer](https://github.com/Danielswitzer)
++ [Fred Nguyen](https://github.com/frednguyen)
+
 ## Synopsis
 This tool can be utilized to visualize historical weather data and commodities futures prices.  
 User can select commodity, one of top three producing regions, and date range for visualization. Visualization is available in a chart.js line plot with three y-axis (temperature and precipitation on the left side and price on the right side) see example below.  
@@ -36,9 +46,9 @@ This project used icons from the following sources:
 + [The Noun Project](https://thenounproject.com/) 
 
 Additional credit is due to the fantastic artists from the Noun Project who created the icons below:
-+ World Maps - Dots [anbileru adaleru](https://thenounproject.com/pronoun/collection/world-maps-dots/) Some samples can be seen below:
-
-![Alt text](assets/images/US-Country_icon.svg "US Dots Sample") 
-![Alt text](assets/images/US-TX_icon.svg "Texas Dots Sample") 
-![Alt text](assets/images/US-IL.svg "Illinois Dots Sample")
-![Alt text](assets/images/US-TX_icon.svg "sample map")
++ States and US dot maps[anbileru adaleru](https://thenounproject.com/pronoun/collection/world-maps-dots/)
++ Cattle: [Sascha Elmers](https://thenounproject.com/saschaelmers/)
++ Corn: [Creative Stall](https://thenounproject.com/search/?q=corn&i=178924)
++ Cotton: [Alice Noir](https://thenounproject.com/AliceNoir/)
++ Wheat: [Edward Boatman](https://thenounproject.com/edward/)
++ Soybean: [anbileru adaleru](https://thenounproject.com/pronoun/collection/vegetables-and-fruits-glyphs/)
