@@ -1,23 +1,32 @@
 <!DOCTYPE html>
 <html>
-<!--merging-->
-	<head>
-	<title> Comm Weather </title> 
+  <head>
+    <title> Comm Weather </title> 
 
-	<script src="https://use.fontawesome.com/7fa3cf30ae.js"></script>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
-  <link rel="stylesheet" type="text/css" href="assets/css/commWeather.css">
+    <!--Font Awesome-->
+    <script src="https://use.fontawesome.com/7fa3cf30ae.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <!--google fonts-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
- </head>
+    <!--Materialize CSS-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+
+    <!--CommWeather CSS (mainly used for materialize overrides)-->
+    <link rel="stylesheet" type="text/css" href="assets/css/commWeather.css">
+
+    <!--JQuery-->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!--Firebase-->
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
+  </head>
 
 <body> 
   <!--sidebar and header-->
   <header>
+    <!--Top Header-->
     <nav class="top-nav light-blue darken-4">
       <div class="container">
         <div class="nav-wrapper">
@@ -25,12 +34,15 @@
         </div>
       </div>
     </nav>
+    <!--Collapsible Burger Button-->
     <div class="container">
       <a href="#" data-activates="nav-mobile" class="button-collapse top-nav full hide-on-large-only">
         <i class="material-icons">menu</i>
       </a>
     </div>
+    <!--Side Bar Menu-->
     <ul id="nav-mobile" class="side-nav fixed" style="overflow: auto; transform translateX(0%);">
+      <!--Date Selection-->
       <li>
         <h6>Dates</h6>
       </li>
@@ -42,6 +54,7 @@
         <label for="endDate">End Date</label>
         <input id="endDate" type="date" class="datepicker">
       </li>
+      <!--Commodity Selection-->
       <li>
         <h6>Commodities</h6>
       </li>
@@ -71,56 +84,58 @@
       <li id="locationIconSpot">
         <img class="locationIcon" src="assets/images/US-Country_icon.svg" alt="">
       </li>
+      <!--Buttons-->
+      <!--Reset Button-->
       <li>
         <span class="resetText">Reset</span><button id="resetButton" class="btn-floating red accent-4 waves-effect waves-light" type="submit" name="action"><i class="material-icons">refresh</i></button>
       </li>
+      <!--Get Chart Button-->
       <li class="getChartLine">
-        <!--<h5>Get Chart</h5>-->
         Get Chart <button id="addChartButton" class="btn-floating btn-large green accent-4 waves-effect waves-light disabled" type="submit" name="action"><i class="material-icons">multiline_chart</i></button>
       </li>
     </ul>
   </header>
 
+<!--Main Site Container (Charts)-->
   <main>
-    <!--<div class="container" id="imageContainer">
-      <div class="row" id="mainImageRow">
-        <div class="col s12" id="mainImageCol">
-          <div class="secondaryHead"></div>
+    <div class="container mainDataContainer">
+      <!--Subtitle-->
+      <div class="row" id="subtitleRow">
+        <div class="col s12">
+          <p>A visualization of the direct and indirect impact of weather on major commodities with in the US market</p>
         </div>
       </div>
-    </div>-->
-      <div class="container mainDataContainer">
-        <div class="row" id="subtitleRow">
-          <div class="col s12">
-            <p>A visualization of the direct and indirect impact of weather on major commodities with in the US market</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col s12">
-            <ul class="collapsible" data-collapsible="accordion">
-              <li>
-                <div id="mapCollapsible" class="collapsible-header active"><i class="fa fa-globe" aria-hidden="true"></i>Commodities Map</div>
-                <div class="collapsible-body">
-                  <div id="mapVis"></div>
+      <!--Collapsible (charts are stored here)-->
+      <div class="row">
+        <div class="col s12">
+          <ul class="collapsible" data-collapsible="accordion">
+            <!--Map Chart-->
+            <li>
+              <div id="mapCollapsible" class="collapsible-header active"><i class="fa fa-globe" aria-hidden="true"></i>Commodities Map</div>
+              <div class="collapsible-body">
+                <div id="mapVis"></div>
+              </div>
+            </li>
+            <!--Chart.js Line Chart-->
+            <li>
+              <div id="chartCollapsible" class="collapsible-header"><i class="material-icons">multiline_chart</i>Chart</div>
+              <div class="collapsible-body">
+                <div id="chartjsDiv">
+                  <canvas id="chartjs"></canvas>
                 </div>
-              </li>
-              <li>
-                <div id="chartCollapsible" class="collapsible-header"><i class="material-icons">multiline_chart</i>Chart</div>
-                <div class="collapsible-body">
-                  <div id="chartjsDiv">
-                    <canvas id="chartjs"></canvas>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div id="forecastCollapsible" class="collapsible-header"><i class="material-icons">filter_drama</i>Forecast</div>
-                <div class="collapsible-body"><p><i class="fa fa-cogs" aria-hidden="true"></i>  Coming Soon!</p></div>
-              </li>
-            </ul>
-          </div>
+              </div>
+            </li>
+            <!--Forcast - Future Enhancement-->
+            <li>
+              <div id="forecastCollapsible" class="collapsible-header"><i class="material-icons">filter_drama</i>Forecast</div>
+              <div class="collapsible-body"><p><i class="fa fa-cogs" aria-hidden="true"></i>  Coming Soon!</p></div>
+            </li>
+          </ul>
         </div>
-      </div>    
+      </div>
+    </div>    
   </main>
+  <!--Footer-->
   <footer class="page-footer orange darken-4">
     <div class="container">
       <div class="row">
@@ -138,21 +153,26 @@
     </div>
     <div class="footer-copyright">
       <div class="container">
-        © 2016 Copyright CommWeather
+        © 2016 CommWeather
       </div>
     </div>
   </footer>
-     
   
+  <!--Moment.js-->
+  <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 
-   <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
-   <script type="text/javascript" src="assets/librariesJS/Chart.min.js"></script>
+  <!--Chart.js-->
+  <script type="text/javascript" src="assets/librariesJS/Chart.min.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
-  <script>
+<!--Materialize Javascript-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+
+<!--Materialize button collapse screen (burger button)-->
+<script>
  $(".button-collapse").sideNav();
-  </script>
+</script>
 
+<!--Materialize date picker script-->
   <script>
   $('.datepicker').pickadate({
     selectMonths: true, // Creates a dropdown to control month
@@ -160,14 +180,16 @@
     });
   </script>
 
- 
-  
-    
+  <!--Google Geo Chart-->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-  
-   <script src="assets/javascript/main.js"></script>
-    <script src="assets/javascript/appChart.js"></script>
+  <!--api and firebase calls-->
+  <script src="assets/javascript/main.js"></script>
+
+  <!--Line charts-->
+  <script src="assets/javascript/appChart.js"></script>
+
+  <!--geoChart-->
   <script src="assets/javascript/geoChart.js"></script> 
 </body>
 </html>
