@@ -1,6 +1,6 @@
 # Comm weather
 Site is hosted in both:
-[Heroku](commweather.herokuapp.com) and [Github Pages](https://aldo-sanchez.github.io/Weather-Commodities-App/)
+[Heroku](http://commweather.herokuapp.com/) and [Github Pages](https://aldo-sanchez.github.io/Weather-Commodities-App/)
 
 This project was completed as a project assignment for the UT Coding Bootcamp, in collaboration with:
 
