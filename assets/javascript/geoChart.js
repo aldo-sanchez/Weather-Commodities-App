@@ -1,14 +1,11 @@
-// console.log('merging stuff')
-
-
-var executionReady;
-
+// Global Variables
 var selectedLocation;
 var commoditySelectedBool;
 var locationSelectedBool;
 var startDateSelectedBool;
 var endDateSelectedBool;
 
+// User States - Selections
 var userSelections = {
     commodity: commoditySelectedBool,
     location: locationSelectedBool,
@@ -16,9 +13,10 @@ var userSelections = {
     endDate: endDateSelectedBool,
 };
 
+// Commodities array (used for buttons)
 var commodities = [];
 
-
+// Header and location used as inputs for geo chart
 header = ['State', '% Produced'];
 var locationDataTest = [];
 var cornLocation = [header, ['US-IA', 18.42], ['US-NE', 14.80], ['US-IL', 12.45]];
@@ -27,12 +25,13 @@ var wheatLocation = [header, ['US-ND', 18.03], ['US-KS', 15.69], ['US-MT', 9.04]
 var cottonLocation = [header, ['US-TX', 45.00], ['US-GA', 16.30], ['US-MS', 5.20]];
 var cattleLocation = [header, ['US-TX', 12.72], ['US-NE', 7.01], ['US-KS', 6.79]];
 
-
+// Array summarizing location information
 var commodityLocation = [['corn', cornLocation], ['soybean', soybeanLocation], ['wheat', wheatLocation], ['cotton', cottonLocation], ['cattle', cattleLocation]];
 
+// loading google chart
 google.charts.load('current', { 'packages': ['line'] });
 
-
+// initialization - variables and states
 $(document).ready(function () {
     initialize();
 })
@@ -54,26 +53,24 @@ function initialize() {
         $(tempIcon).removeClass('fadeOutIcon');
         $(tempButton).removeClass('disabled');
     }
+
+    // call to draw map on site
   google.charts.setOnLoadCallback(drawMap);
-  
 }
 
+// function used to draw map on site
 function drawMap() {
+    // all locations are fed here.  these change depending on selected commodity
     var data = google.visualization.arrayToDataTable(locationDataTest);
 
+    // opttions for chart such as colors, size, and region.
     var options = {
         backgroundColor: { fill: 'transparent' },
-        // colorAxis: {colors: ['#00853f', 'black', '#e31b23']},
         colorAxis: {colors: ['#81d4fa','#01579b']},
         datalessRegionColor: '#bababa',
         height: 400,
-        //   width: 556, 
-        //   height: 347, 
         region: "US",
         resolution: "provinces"
-        // dataMode: 'regions',
-        // width: 834,
-        // height: 521
     };
 
     var container = document.getElementById('mapVis');
