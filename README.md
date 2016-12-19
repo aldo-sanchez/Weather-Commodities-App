@@ -46,7 +46,7 @@ This project used icons from the following sources:
 + [The Noun Project](https://thenounproject.com/) 
 
 Additional credit is due to the fantastic artists from the Noun Project who created the icons below:
-+ States and US dot maps[anbileru adaleru](https://thenounproject.com/pronoun/collection/world-maps-dots/)
++ States and US dot maps: [anbileru adaleru](https://thenounproject.com/pronoun/collection/world-maps-dots/)
 + Cattle: [Sascha Elmers](https://thenounproject.com/saschaelmers/)
 + Corn: [Creative Stall](https://thenounproject.com/search/?q=corn&i=178924)
 + Cotton: [Alice Noir](https://thenounproject.com/AliceNoir/)
