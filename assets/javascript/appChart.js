@@ -28,10 +28,22 @@ var borderCapStyle = 'butt';
 var borderJoinStyle = 'miter';
 var lineTension = 0.2;
 
-var pointRadius = 5;
-var pointBorderWidth = 2;
-var pointHoverRadius = 6;
-var pointHoverWidth = 3;
+var pointRadius;
+var pointBorderWidth;
+var pointHoverRadius;
+var pointHoverWidth;
+
+// point display for short plot 
+var pointRadiusShort = 5;
+var pointBorderWidthShort = 2;
+var pointHoverRadiusShort = 6;
+var pointHoverWidthShort = 3;
+
+// point display for long plot
+var pointRadiusLong = 1;
+var pointBorderWidthLong = 1;
+var pointHoverRadiusLong = 1;
+var pointHoverWidthLong = 1;
 
 function getNewChart(){
 // for (i = 0; i < tempArray.length; i++){
@@ -39,6 +51,19 @@ function getNewChart(){
   
 // }
 var ctx = document.getElementById("chartjs").getContext("2d");
+//chage point size based on array length
+if (tempDateArray.length > 18){
+  pointRadius = pointHoverRadiusLong;
+  pointBorderWidth = pointBorderWidthLong;
+  pointHoverRadius = pointHoverRadiusLong;
+  pointHoverWidthLong= pointHoverWidthLong;
+}
+else{
+  pointRadius = pointRadiusShort;
+  pointBorderWidth = pointBorderWidthShort;
+  pointHoverRadius = pointHoverRadiusShort;
+  pointHoverWidth = pointHoverWidthShort;
+}
 for (i = 0; i < 3; i++){
   chartDataArray[i] = {
     label: labelArray[i],
