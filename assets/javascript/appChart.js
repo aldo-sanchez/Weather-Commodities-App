@@ -1,6 +1,4 @@
-console.log("hello world");
-
-
+console.log('Let us know if you find interesting patterns!');
 
 var myChart
 // Combine my data for charting.  This may change based on how data is received.

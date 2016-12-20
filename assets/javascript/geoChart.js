@@ -78,7 +78,7 @@ function drawMap() {
 
     function myClickHandler() {
         if (userSelections.commodity) {
-            console.log('i ran');
+            // console.log('i ran');
             var selection = chart.getSelection();
             var message = '';
             for (var i = 0; i < selection.length; i++) {
@@ -101,7 +101,7 @@ function drawMap() {
             }
             if (message != '') {
                 userSelections.location = true;
-                console.log(message[0]);
+                // console.log(message[0]);
                 locClick = selectedLocation[0];
 
                 detectLocation();
@@ -184,13 +184,13 @@ $(document).on('click', '.commodityButton', function () {
         index = index.substring(0, index.indexOf('Button'));
         commodityName = index;
         assignCommodityFinance();
-        console.log(commodityFinance);
+        // console.log(commodityFinance);
 
         locationDataTest = commodityLocation[commodities.indexOf(index)][1];
         google.charts.setOnLoadCallback(drawMap);
 
         commodities.splice(commodities.indexOf(index), 1);
-        console.log(commodities);
+        // console.log(commodities);
         for (i = 0; i < commodities.length; i++) {
             
             var tempIcon = '#' + commodities[i] + 'Icon';
@@ -209,7 +209,7 @@ function checkCompletedInputs() {
         if (userSelections.commodity && userSelections.location) {
             $('#addChartButton').removeClass('disabled');
         } else {
-        console.log('still looking');
+        // console.log('still looking');
     }
     
 };
