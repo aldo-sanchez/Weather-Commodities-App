@@ -25,10 +25,10 @@ Currently, data available are monthly average temperature, precipitation (top th
 ## Data Gathering and Storage:
 This tool uses two APIs for data gathering:
 
-1. NOAA GSOM historical average data sets
-2. Quandl commodity futures historical pricing
+1. [NOAA](https://www.ncdc.noaa.gov/cdo-web/webservices/v2) for GSOM historical average data sets
+2. [Quandl] for commodity futures historical pricing
 
-Data from APIs is stored in Firebase for future use.
+Data from APIs is stored in [Google's Firebase](https://firebase.google.com/) for future use.
 
 ## Charting Tools
 1. [Chart.js](http://www.chartjs.org/) is used to create a line graph of price and weather data over a range of time.
