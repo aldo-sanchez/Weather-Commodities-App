@@ -31,8 +31,8 @@ This tool uses two APIs for data gathering:
 Data from APIs is stored in Firebase for future use.
 
 ## Charting Tools
-1. Chart.js is used to create a line graph of price and weather data over a range of time.
-2. Google’s Geo Chart is used to display and select US top producers of a specified commodity.
+1. [Chart.js](http://www.chartjs.org/) is used to create a line graph of price and weather data over a range of time.
+2. [Google’s Geo Chart](https://developers.google.com/chart/interactive/docs/gallery/geochart) is used to display and select US top producers of a specified commodity.
 
 ## CSS and Javascript Libraries
 + [Materialize CSS](http://materializecss.com/)
