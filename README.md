@@ -26,7 +26,7 @@ Currently, data available are monthly average temperature, precipitation (top th
 This tool uses two APIs for data gathering:
 
 1. [NOAA](https://www.ncdc.noaa.gov/cdo-web/webservices/v2) for GSOM historical average data sets
-2. [Quandl] for commodity futures historical pricing
+2. [Quandl](https://www.quandl.com/docs/api) for commodity futures historical pricing
 
 Data from APIs is stored in [Google's Firebase](https://firebase.google.com/) for future use.
 
