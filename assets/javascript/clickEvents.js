@@ -80,12 +80,31 @@ $(document).on('click', '.commodityButton', function () {
     }
 });
 
+$('.datepicker').change(function(){
+    if ($('#startDate').val() != ''){
+        console.log('not empty')
+        userSelections.startDate = true;
+    }
+    if($('#endDate').val() != ''){
+        userSelections.endDate = true;
+    }
+    if ($('#startDate').val() == ''){
+        console.log('not empty')
+        userSelections.startDate = false;
+    }
+    if($('#endDate').val() == ''){
+        userSelections.endDate = false;
+    } 
+
+checkCompletedInputs()
+})
+
 function checkCompletedInputs() {
-    
-        if (userSelections.commodity && userSelections.location) {
+        if (userSelections.commodity && userSelections.location && userSelections.startDate && userSelections.endDate) {
             $('#addChartButton').removeClass('disabled');
         } else {
-        // console.log('still looking');
-    }
-    
+            if (!$('#addChartButton').hasClass('disabled')){
+              $('#addChartButton').addClass('disabled');  
+            }
+        }
 };
