@@ -154,8 +154,8 @@ function temperatureApiQuery() {
         var tempData = response.results;
         //variable for array of dates
         var dateArray = [];
-        console.log("temperature array 'dateArray'");
-        console.log(dateArray)
+        // console.log("temperature array 'dateArray'");
+        // console.log(dateArray)
         //populates dateArray by looping through JSON array of data
         function collectData(i){
               for (var i = 0; i < tempData.length; i++){

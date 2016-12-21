@@ -25,14 +25,14 @@ Currently, data available are monthly average temperature, precipitation (top th
 ## Data Gathering and Storage:
 This tool uses two APIs for data gathering:
 
-1. NOAA GSOM historical average data sets
-2. Quandl commodity futures historical pricing
+1. [NOAA](https://www.ncdc.noaa.gov/cdo-web/webservices/v2) for GSOM historical average data sets
+2. [Quandl](https://www.quandl.com/docs/api) for commodity futures historical pricing
 
-Data from APIs is stored in Firebase for future use.
+Data from APIs is stored in [Google's Firebase](https://firebase.google.com/) for future use.
 
 ## Charting Tools
-1. Chart.js is used to create a line graph of price and weather data over a range of time.
-2. Google’s Geo Chart is used to display and select US top producers of a specified commodity.
+1. [Chart.js](http://www.chartjs.org/) is used to create a line graph of price and weather data over a range of time.
+2. [Google’s Geo Chart](https://developers.google.com/chart/interactive/docs/gallery/geochart) is used to display and select US top producers of a specified commodity.
 
 ## CSS and Javascript Libraries
 + [Materialize CSS](http://materializecss.com/)
@@ -46,7 +46,7 @@ This project used icons from the following sources:
 + [The Noun Project](https://thenounproject.com/) 
 
 Additional credit is due to the fantastic artists from the Noun Project who created the icons below:
-+ States and US dot maps[anbileru adaleru](https://thenounproject.com/pronoun/collection/world-maps-dots/)
++ States and US dot maps: [anbileru adaleru](https://thenounproject.com/pronoun/collection/world-maps-dots/)
 + Cattle: [Sascha Elmers](https://thenounproject.com/saschaelmers/)
 + Corn: [Creative Stall](https://thenounproject.com/search/?q=corn&i=178924)
 + Cotton: [Alice Noir](https://thenounproject.com/AliceNoir/)

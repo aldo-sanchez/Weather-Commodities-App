@@ -76,15 +76,15 @@ function drawMap() {
     var container = document.getElementById('mapVis');
     var chart = new google.visualization.GeoChart(container);
 
-    function myClickHandler() {
+    //Provides information on clicked location
+    function mapClickHandler() {
         if (userSelections.commodity) {
-            console.log('i ran');
+            // console.log('i ran');
             var selection = chart.getSelection();
             var message = '';
             for (var i = 0; i < selection.length; i++) {
                 var item = selection[i];
                 if (item.row != null && item.row != null) {
-                    //message += '{row:' + item.row + ',column:' + item.column + '}';
                     message = locationDataTest[item.row + 1];
                     selectedLocation = locationDataTest[item.row + 1];
                 }
@@ -96,12 +96,8 @@ function drawMap() {
                     selectedLocation = locationDataTest[item.row + 1];
                 }
             }
-            if (message == '') {
-                message = 'nothing';
-            }
             if (message != '') {
                 userSelections.location = true;
-                console.log(message[0]);
                 locClick = selectedLocation[0];
 
                 detectLocation();
@@ -112,104 +108,11 @@ function drawMap() {
                     $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
                     $('#locationIconSpot').fadeIn();
                 });
-                // $('.locationIcon').attr('src', 'assets/images/' + message[0] + '_icon.svg');
-                // $('#locationIconSpot').fadeIn();
                 checkCompletedInputs();
             }
         }
     }
-
-    google.visualization.events.addListener(chart, 'select', myClickHandler);
-
+    google.visualization.events.addListener(chart, 'select', mapClickHandler);
     chart.draw(data, options);
-
 }
 
-var firstRound = true;
-$('#addChartButton').on('click', function () {
-    var checkStartDate = $('#startDate').val();
-    var checkEndDate = $('#endDate').val();
-    if (checkStartDate != '' && checkEndDate != ''){
-    if(!firstRound){
-        clearData();
-    }
-    gatherData();
-    displayChart();
-    firstRound = false;
-    }
-});
-
-function displayChart(){
-    if(!firstRound){
-        myChart.destroy();
-    };    
-    setTimeout(getNewChart, 2000);
-    if(firstRound){
-        $('#chartCollapsible').click();
-    }
-    
-};
-
-function clearData(){
-    // myChart.destroy();
-    totalData = [];
-    precipArray = [];
-    tempArray = [];
-    priceArray = [];
-    tempDateArray = [];
-}
-
-$('#resetButton').on('click', function () {
-    // myChart.destroy();
-
-    initialize();
-    $('#locationIconSpot').fadeOut(500,function(){
-      $('.locationIcon').attr('src', 'assets/images/US-Country_icon.svg');
-      $('#locationIconSpot').fadeIn();
-      if (totalData.length > 0){
-          myChart.destroy();
-      }
-      $('#mapCollapsible').click();
-      $('#addChartButton').addClass('disabled');
-      $('#startDate').val('');
-      $('#endDate').val('');
-      firstRound = true;
-
-    });
-});
-
-$(document).on('click', '.commodityButton', function () {
-    if (!userSelections.commodity) {
-        var index = $(this).attr('id');
-        index = index.substring(0, index.indexOf('Button'));
-        commodityName = index;
-        assignCommodityFinance();
-        console.log(commodityFinance);
-
-        locationDataTest = commodityLocation[commodities.indexOf(index)][1];
-        google.charts.setOnLoadCallback(drawMap);
-
-        commodities.splice(commodities.indexOf(index), 1);
-        console.log(commodities);
-        for (i = 0; i < commodities.length; i++) {
-            
-            var tempIcon = '#' + commodities[i] + 'Icon';
-            var tempButton = '#' + commodities[i] + 'Button';
-            
-            $(tempIcon).addClass('fadeOutIcon');
-            $(tempButton).addClass('disabled');
-        }
-        userSelections.commodity = true;
-        checkCompletedInputs();
-    }
-});
-
-function checkCompletedInputs() {
-    
-        if (userSelections.commodity && userSelections.location) {
-            $('#addChartButton').removeClass('disabled');
-        } else {
-        console.log('still looking');
-    }
-    
-};
