@@ -355,15 +355,15 @@ function firebaseFinanceQuery() {
 //checks if temperature data exists in Database
 function tempDataCheck(){
     // variable to store bolean
-    var exists;
-    // database location reference
-    var ref = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName);
+    var exist;
+    // database location reference to node of specific start date
+    var ref = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/'+startDateMonths);
     //function performed for specified reference
     ref.once('value').then(function(snapshot){
         //exist method checks if referenced node contains data, assigns boolean
-        exists = snapshot.exists();
+        exist = snapshot.exists();
         //if data does exist
-        if(exists){
+        if(exist){
             //execute function that queries database
             firebaseTempQuery();
         //if data does not exist
@@ -376,15 +376,15 @@ function tempDataCheck(){
 //checks if precipitation data exists in Database
 function precipDataCheck(){
     // variable to store bolean
-    var exists;
-    // database location reference
-    var ref = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName);
+    var exist;
+    // database location reference to node of specific start date
+    var ref = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName+'/'+startDateMonths);
     //function performed for specified reference
     ref.once('value').then(function(snapshot){
         //exist method checks if referenced node contains data, assigns boolean
-        exists = snapshot.exists();
+        exist = snapshot.exists();
         //if data does exist
-        if(exists){
+        if(exist){
             //run function that queries database
             firebasePrecipQuery();
         //if data does not exist
@@ -396,47 +396,26 @@ function precipDataCheck(){
 }
 //checks if finance data exists in Database
 function financeDataCheck(){
+    console.log("checking if finance data exists")
     // variable to store bolean
-    var finExist;
-    // database location reference
-    var finRef = firebase.database().ref('finance/commodity/'+commodityName+'/dates');
+    var exist;
+    // database location reference to node of specific start date
+    var ref = firebase.database().ref('finance/commodity/'+commodityName+'/'+startDateMonths);
     //function performed for specified reference
-    finRef.once('value').then(function(snapshot){
+    ref.once('value').then(function(snapshot){
         //exist method checks if referenced node contains data, assigns boolean
-        finExist = snapshot.exists();
+        exist = snapshot.exists();
         //if data does exist
-        if(finExist){
+        if(exist){
+            console.log("FINANCE data does does exist, querying firebase")
             //run function that queries database
             firebaseFinanceQuery();
         //if data does not exist
         } else {
+             console.log("FINANCE data does does NOT exist, calling API")
             // run precipitation API function
             financeApiQuery();
         }
     })
 }
-//finds date range desired by user for array
-//runs through array determining the index where user's date inputs are located
-function findDateRange(array){
-    //loops through array
-    for(var i = 0; i < array.length; i++){
-        //if index's date string equals start date string of user
-        if(array[i].date == startDateMonths){
-            //store the index, i, where this occured
-            actualIndex = i;
-            startIndex = i;
-            //break from loop
-            break;
-        }
-    }
-    //loops through array
-    for(var i = 0; i < array.length; i++){
-        //if index's date equals end date of user
-        if (array[i].date == endDateMonths){
-            //store the index, i, where this occured
-            endIndex = i;
-            //break from loop
-            break;
-        }
-    }
-}
+
