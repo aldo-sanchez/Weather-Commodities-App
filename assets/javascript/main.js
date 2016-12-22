@@ -13,6 +13,10 @@ var precipDateArray = [];
 var precipArray = [];
 var priceArray = [];
 var financeDateArray = [];
+
+var tempApiError = '';
+var precipApiError = '';
+var financeApiError = '';
 // Initialize Firebase
 var config = {
 apiKey: "AIzaSyD5onGD-yX2IvrbzyEiNJ2Y7DfsjNQz0EA",
@@ -35,7 +39,7 @@ var commodityFinance = '';
 // var commodityFinance = corn;
 
 function assignCommodityFinance() {
-    
+
     if (commodityName == 'corn'){
         commodityFinance = cornFinance;
     }
@@ -112,7 +116,7 @@ function detectLocation(){
     } else if(locClick == "US-GA"){
         stn = "GHCND:USC00090140";
         locName = "ALBANY 3 SE, GA US";
-    } 
+    }
 }
 //function stores user-input variables, runs initial functions
 function gatherData(){
@@ -129,7 +133,7 @@ function gatherData(){
     financeDataCheck();
     //gathers precipArray,priceArray,tempArray and puts into TotalData array for graphing
     //function in appChart.js(line 8)
-    populateTotalData();    
+    populateTotalData();
 }
 
 
@@ -149,7 +153,21 @@ function temperatureApiQuery() {
     //AJAX url: uses variables set by user
     var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=TAVG&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
     //AJAX call
-    $.ajax({ url:tempQueryURL, headers:{ token:token } }).done(function(response){
+    $.ajax({
+        url:tempQueryURL,
+        headers:{ token:token },
+        error: function(jqHXR, exception){
+            if(jqHXR.status == 400){
+                tempApiError = "Bad Request: It's possible that dates are out of range. Please select new dates.";
+            } else if (jqHXR.status == 404){
+                tempApiError = "Data not found. It's possible that dates are out of range of weather information available. Please try new dates."
+            } else if (jqHXR.status == 0 || jqHXR == 500){
+                tempApiError = "NOAA Weather Source Server is likely down. Please try again later."
+            } else if (jqHXR.status == 502){
+                tempApiError = "high traffic to NOAA weather Server has prevented a data request. Please try again later."
+            }
+        }
+         }).done(function(response){
         //holds JSON object with relevant data
         var tempData = response.results;
         //variable for array of dates
@@ -180,7 +198,7 @@ function temperatureApiQuery() {
         var database = firebase.database();
         //referencing the database node where data is to be stored. If it doesnt exist, it creates new node
         var weatherData = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName);
-        // within reference node, new dates object is created, containing dateArray 
+        // within reference node, new dates object is created, containing dateArray
         weatherData.set({
             dates: dateArray
         });
@@ -201,7 +219,20 @@ function precipitationApiQuery() {
     //AJAX url: uses variables set by user
     var prcpQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=PRCP&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
     //AJAX call
-    $.ajax({ url:prcpQueryURL, headers:{ token:token } }).done(function(response){
+    $.ajax({
+        url:prcpQueryURL,
+        headers:{ token:token },
+        error: function (jqHXR, exception){
+            if(jqHXR.status == 400){
+                precipApiError = "Bad Request: It's possible that dates are out of range. Please select new dates.";
+            } else if (jqHXR.status == 404){
+                precipApiError = "Data not found. It's possible that dates are out of range of weather information available. Please try new dates."
+            } else if (jqHXR.status == 0 || jqHXR == 500){
+                precipApiError = "NOAA Weather Source Server is likely down. Please try again later."
+            } else if (jqHXR.status == 502){
+                precipApiError = "high traffic to NOAA weather Server has prevented a data request. Please try again later."
+            }
+         }).done(function(response){
         //holds JSON object with relevant data
         var prcpData = response.results;
         //variable for array of dates and weather data
@@ -230,7 +261,7 @@ function precipitationApiQuery() {
         var database = firebase.database();
         //referencing the database node where data is to be stored. If it doesnt exist, it creates new node
         var weatherData = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName);
-        // within reference node, new dates object is created, containing dateArray 
+        // within reference node, new dates object is created, containing dateArray
         weatherData.set({
             dates:dateArray
         });
@@ -254,7 +285,21 @@ function financeApiQuery() {
     //variable for array of dates and weather data
     var dateArray = [];
     //AJAX call
-    $.ajax({url:queryURL,method:'Get'}).done(function(response){
+    $.ajax({
+        url:queryURL,
+        method:'Get',
+        error: function financeApiErrorHandler(jqHXR, exception){
+            if(jqHXR.status == 400){
+                financeApiError = "Bad Request: It's possible that dates are out of range. Please select new dates.";
+            } else if (jqHXR.status == 404){
+                financeApiError = "Data not found. It's possible that this particular data no longer exists. Please try new dates."
+            } else if (jqHXR.status == 0 || jqHXR == 500){
+                financeApiError = "NOAA Weather Source Server is likely down. Please try again later."
+            } else if (jqHXR.status == 502){
+                financeApiError = "high traffic to NOAA weather Server has prevented a data request. Please try again later."
+            }
+        }
+        }).done(function(response){
         //holds JSON object with relevant data
         data = response.dataset.data;
         //populates dateArray by looping through JSON array of data
@@ -280,7 +325,7 @@ function financeApiQuery() {
         var database = firebase.database();
         //referencing the database node where data is to be stored. If it doesnt exist, it creates new node
         var financeData = database.ref("finance/commodity/"+commodityName);
-        // within reference node, new dates object is created, containing dateArray 
+        // within reference node, new dates object is created, containing dateArray
         financeData.set({
             dates:dateArray
         })
@@ -397,7 +442,7 @@ function precipDataCheck(){
         if(exists){
             //run function that queries database
             firebasePrecipQuery();
-        //if data does not exist    
+        //if data does not exist
         } else {
             // run precipitation API function
             precipitationApiQuery();
@@ -418,7 +463,7 @@ function financeDataCheck(){
         if(finExist){
             //run function that queries database
             firebaseFinanceQuery();
-        //if data does not exist  
+        //if data does not exist
         } else {
             // run precipitation API function
             financeApiQuery();
