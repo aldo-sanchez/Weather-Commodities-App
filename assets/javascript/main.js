@@ -289,7 +289,7 @@ function financeApiQuery() {
     $.ajax({
         url:queryURL,
         method:'Get',
-        error: function financeApiErrorHandler(jqHXR, exception){
+        error: function (jqHXR, exception){
             if(jqHXR.status == 400){
                 financeApiError = "Bad Request: It's possible that dates are out of range. Please select new dates.";
             } else if (jqHXR.status == 404){
