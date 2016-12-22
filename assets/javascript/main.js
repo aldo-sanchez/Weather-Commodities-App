@@ -9,7 +9,6 @@ var rawPrecipData = [];
 var tempArray = [];
 var tempDateArray = [];
 var precipDateArray = [];
-
 var precipArray = [];
 var priceArray = [];
 var financeDateArray = [];
@@ -125,8 +124,8 @@ function gatherData(){
     //gets input from end date calendar: formatted for api
     endDate = moment($("#endDate").val().trim(), "D MMMM, YYYY").format("YYYY-MM-DD");
     //date variables in month-year format, for database
-    startDateMonths = moment(startDate).format('MMM-YYYY');
-    endDateMonths = moment(endDate).format('MMM-YYYY');
+    startDateMonths = moment(startDate).format('YYYY-MM');
+    endDateMonths = moment(endDate).format('YYYY-MM');
     //functions check if data exists
     tempDataCheck();
     precipDataCheck();
@@ -170,46 +169,24 @@ function temperatureApiQuery() {
          }).done(function(response){
         //holds JSON object with relevant data
         var tempData = response.results;
-        //variable for array of dates
-        var dateArray = [];
-        // console.log("temperature array 'dateArray'");
-        // console.log(dateArray)
-        //populates dateArray by looping through JSON array of data
-        function collectData(i){
-              for (var i = 0; i < tempData.length; i++){
-                    //array of objects from index, i
-                    dateArray[i] = {
-                        //date property
-                        date: moment(tempData[i].date).format('MMM-YYYY'),
-                        //temperature property with value
-                        temperature:tempData[i].value
-                    }
-              }
-        }
-        //looping through ajax JSON to store relevant data (date, temp) in dateArray
-        for(var i in tempData){
-            //checks if property index has value
-            if(tempData.hasOwnProperty(i)) {
-                //call for function that populates weatherObject
-                collectData(i);
-            }
-        }
-        //====Storing into FIREBASE====
+        console.log("tempData from temp api return")
+        console.log(tempData);
+        //Storing into FIREBASE
         var database = firebase.database();
-        //referencing the database node where data is to be stored. If it doesnt exist, it creates new node
-        var weatherData = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName);
-        // within reference node, new dates object is created, containing dateArray
-        weatherData.set({
-            dates: dateArray
-        });
-        //creating date range variables to grab correct values - see line 408
-        findDateRange(dateArray);
-        //loop through data array, creating new arrays for charting
-        for(var i = startIndex; i < endIndex; i++){
-            //array containing dates of Temperature Data
-            tempDateArray[i] = dateArray[i].date;
-            //array containing values of Temperature Data
-            tempArray[i] = dateArray[i].temperature;
+        //looping through ajax JSON to store relevant data (date, temp) in dateArray
+        for(var i = 0; i < tempData.length; i++){
+            //date formatted into Years first and then months, so organized in asc manner in firebase
+            var date = moment(tempData[i].date).format('YYYY-MM');
+            //formats dates for display in chart
+            var dateDisplay = moment(tempData[i].date).format('MMM-YYYY');
+            //referencing the database node where data is to be stored. Creates new node for new date
+            var value = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName+"/"+date);
+            //sets new property in firebase node at tempValue reference
+            value.set({temp: tempData[i].value});
+            //creates temp array that gets plotted by Chart.js
+            tempArray[i] = tempData[i].value;
+            //creates date array that gets used by Chart.js
+            tempDateArray[i] = dateDisplay;
         }
     });
 };
@@ -236,44 +213,18 @@ function precipitationApiQuery() {
          }).done(function(response){
         //holds JSON object with relevant data
         var prcpData = response.results;
-        //variable for array of dates and weather data
-        var dateArray = [];
-        //populates dateArray by looping through JSON array of data
-        function collectData(i){
-              for (var i = 0; i < prcpData.length; i++){
-                    //array of objects from index, i
-                    dateArray[i] = {
-                        //date property
-                        date: moment(prcpData[i].date).format('MMM-YYYY'),
-                        //temperature property with value
-                        precipitation:prcpData[i].value
-                    }
-              }
-        }
-        //looping through ajax JSON to store relevant data (date, temp) in dateArray
-        for(var i in prcpData){
-            //checks if property index has value
-            if(prcpData.hasOwnProperty(i)) {
-                //call for function that populates weatherObject
-                collectData(i);
-            }
-        }
-        //====Storing into FIREBASE====
+        //storing into firebase database
         var database = firebase.database();
-        //referencing the database node where data is to be stored. If it doesnt exist, it creates new node
-        var weatherData = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName);
-        // within reference node, new dates object is created, containing dateArray
-        weatherData.set({
-            dates:dateArray
-        });
-        //creating date range variables to grab correct values - see line 408
-        findDateRange(dateArray);
-        //loop through data array, creating new arrays for charting
-        for(var i =startIndex; i < endIndex; i++){
-            //array containing dates of Temperature Data
-            precipDateArray[i] = dateArray[i].date;
-            //array containing values of Temperature Data
-            precipArray[i] = dateArray[i].precipitation;
+        //looping through ajax JSON to store relevant data (date, temp) in dateArray
+        for(var i = 0; i < prcpData.length; i++){
+            //date formatted into Years first and then months, so organized in asc manner in firebase
+            var date = moment(prcpData[i].date).format('YYYY-MM');
+            //referencing the database node where data is to be stored. Creates new node for new date
+            var value = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName+"/"+date);
+            //sets new property in firebase node at tempValue reference
+            value.set({precip: prcpData[i].value});
+            //creates precipitation array that gets plotted by Chart.js
+            precipArray[i] = prcpData[i].value;
         }
     });
 };
@@ -283,8 +234,6 @@ function financeApiQuery() {
     var queryURL="https://www.quandl.com/api/v3/datasets/"+commodityFinance+".json?api_key="+apiKey+"&start_date="+startDate+"&end_date="+endDate+"&collapse=monthly";
     //  AJAX JSON return
     var data = [];
-    //variable for array of dates and weather data
-    var dateArray = [];
     //AJAX call
     $.ajax({
         url:queryURL,
@@ -303,108 +252,103 @@ function financeApiQuery() {
         }).done(function(response){
         //holds JSON object with relevant data
         data = response.dataset.data;
-        //populates dateArray by looping through JSON array of data
-        function collectData(i){
-              for (var i = 0; i < data.length; i++){
-                    //array of objects from index, i
-                    dateArray[i] = {
-                        //date property
-                        date: moment(data[i][0]).format('MMM-YYYY'),
-                        //price property with value
-                        price:data[i][6]
-                    }
-              }
-        }
-        //looping through ajax JSON to store relevant data (date, temp) in dateArray
-        for (var i in data){
-            //call for function that populates weatherObject
-            collectData(i);
-        }
-        // reverses order of array because API dates are given in descending order. Need in ascending order
-        dateArray = dateArray.reverse();
+        // //populates dateArray by looping through JSON array of data
+        // function collectData(i){
+        //       for (var i = 0; i < data.length; i++){
+        //             //array of objects from index, i
+        //             dateArray[i] = {
+        //                 //date property
+        //                 date: moment(data[i][0]).format('MMM-YYYY'),
+        //                 //price property with value
+        //                 price:data[i][6]
+        //             }
+        //       }
+        // }
+        // //looping through ajax JSON to store relevant data (date, temp) in dateArray
+        // for (var i in data){
+        //     //call for function that populates weatherObject
+        //     collectData(i);
+        // }
+        // // reverses order of array because API dates are given in descending order. Need in ascending order
+        // dateArray = dateArray.reverse();
         //====Storing into FIREBASE====
         var database = firebase.database();
-        //referencing the database node where data is to be stored. If it doesnt exist, it creates new node
-        var financeData = database.ref("finance/commodity/"+commodityName);
-        // within reference node, new dates object is created, containing dateArray
-        financeData.set({
-            dates:dateArray
-        })
-        //creating date range variables to grab correct values - see line 408
-        findDateRange(dateArray);
-        //loop through data array, creating new arrays for charting
-        for(var i =0; i < dateArray.length; i++){
-            //array containing dates of Temperature Data
-            financeDateArray[i] = dateArray[i].date;
-            //array containing values of Temperature Data
-            priceArray[i] = dateArray[i].price;
+        //looping through ajax JSON to store relevant data (date, temp) in dateArray
+        for(var i = 0; i < data.length; i++){
+            //date formatted into Years first and then months, so organized in asc manner in firebase
+            var date = moment(data[i][0]).format('YYYY-MM');
+            //referencing the database node where data is to be stored. Creates new node for new date
+            var value = database.ref("finance/commodity/"+commodityName+"/"+date);
+            //sets new property in firebase node at reference node
+            value.set({price: data[i][6]});
+            //creates price array that gets plotted by Chart.js
+            priceArray[i] = data[i][6];
         }
     });
 }
 //=========Querying DATABASE==========
 function firebaseTempQuery() {
     //reference data path, to reach specific date array
-    var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/dates');
-    //performs function once at specified reference
-    tempRef.once('value').then(function(snapshot){
-        //store data array
+    var tempRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName);
+    //performs function once at specified reference, with start date and end date value
+    tempRef.orderByKey().startAt(startDateMonths).endAt(endDateMonths).once('value').then(function(snapshot){
+        //store JSON object from firebase
         var rawTempData = snapshot.val();
-        //creating date range variables to grab correct values - see line 408
-        findDateRange(rawTempData);
-        //loop through data array, creating new arrays for charting
-        //(endIndex - actualIndex) is number of loops performed. Length determined from date range figured out in findDateRange();
-        for(var i = 0; i < (endIndex - actualIndex);i++){
-            //dates from temperature data
-            //startIndex is first index from date range found
-            tempDateArray[i] = rawTempData[startIndex].date;
-            //temperature data
-            tempArray[i] = rawTempData[startIndex].temperature;
-            //startIndex increased by 1 to move downstream data array
-            startIndex++;
+        //iterates through properties of JSON object returned by firebase
+        for(var prop in rawTempData){
+            //checks if property exists
+            if(rawTempData.hasOwnProperty(prop)){
+                //stores property of rawTempData of current iteration 
+                var value = rawTempData[prop];
+                //pushes value of temp property into array for plotting with Chart.js
+                tempArray.push(value.temp)
+            }
+        }
+        //Object.getOwnPropertyNames creates array of all properties found. Here: dates from firebase
+        var dateArray = Object.getOwnPropertyNames(rawTempData);
+        for (var i = 0; i < dateArray.length; i++){
+            //formats dates for display in chart
+            var dateDisplay = moment(dateArray[i]).format('MMM-YYYY');
+            tempDateArray[i] = dateDisplay;
         }
     })
 }
 function firebasePrecipQuery() {
     //reference data path, to reach specific date array
-    var precipRef = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName+'/dates');
+    var ref = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName);
     //performs function once at specified reference
-    precipRef.once('value').then(function(snapshot){
+    ref.orderByKey().startAt(startDateMonths).endAt(endDateMonths).once('value').then(function(snapshot){
         //store data array
-        rawPrecipData = snapshot.val();
-        //creating date range variables to grab correct values - see line 408
-        findDateRange(rawPrecipData);
-        //loop through data array, creating new arrays for charting
-        //(endIndex - actualIndex) is number of loops performed. Length determined from date range figured out in findDateRange();
-        for(var i = 0; i < (endIndex - actualIndex);i++){
-            //dates from precipitation data
-            //startIndex is first index from date range found
-            precipDateArray[i] = rawPrecipData[startIndex].date;
-            //temperature data
-            precipArray[i] = rawPrecipData[startIndex].precipitation;
-            //startIndex increased by 1 to move downstream data array
-            startIndex++;
+        var rawPrecipData = snapshot.val();
+
+        //iterates through properties of JSON object returned by firebase
+        for(var prop in rawPrecipData){
+            //checks if property exists
+            if(rawPrecipData.hasOwnProperty(prop)){
+                //stores property of rawPrecipData of current iteration 
+                var value = rawPrecipData[prop];
+                //pushes value of precip property into array for plotting with Chart.js
+                precipArray.push(value.precip)
+            }
         }
-    })
+    });
 }
 function firebaseFinanceQuery() {
     //reference data path, to reach specific date array
-    var finRef = firebase.database().ref('finance/commodity/'+commodityName+'/dates');
+    var ref = firebase.database().ref('finance/commodity/'+commodityName);
     //performs function once at specified reference
-    finRef.once('value').then(function(snapshot){
+    ref.orderByKey().startAt(startDateMonths).endAt(endDateMonths).once('value').then(function(snapshot){
         //store data array
         var rawFinData = snapshot.val();
-        //creating date range variables to grab correct values - see line 408
-        findDateRange(rawFinData);
-        //loop through data array, creating new arrays for charting
-        //(endIndex - actualIndex) is number of loops performed. Length determined from date range figured out in findDateRange();
-        for(var i = 0; i < (endIndex - actualIndex);i++){
-            //dates from financial data
-            //startIndex is first index from date range found
-            financeDateArray[i] = rawFinData[startIndex].date;
-            //temperature data
-            priceArray[i] = rawFinData[startIndex].price;
-            //startIndex increased by 1 to move downstream data array
-            startIndex++;
+        //iterates through properties of JSON object returned by firebase
+        for(var prop in rawFinData){
+            //checks if property exists
+            if(rawFinData.hasOwnProperty(prop)){
+                //stores property of rawFinData of current iteration 
+                var value = rawFinData[prop];
+                //pushes value of precip property into array for plotting with Chart.js
+                precipArray.push(value.price)
+            }
         }
     })
 }
