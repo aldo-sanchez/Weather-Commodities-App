@@ -232,6 +232,7 @@ function precipitationApiQuery() {
             } else if (jqHXR.status == 502){
                 precipApiError = "high traffic to NOAA weather Server has prevented a data request. Please try again later."
             }
+        }
          }).done(function(response){
         //holds JSON object with relevant data
         var prcpData = response.results;
