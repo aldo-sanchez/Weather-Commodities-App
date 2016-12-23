@@ -17,7 +17,7 @@ function displayChart(){
         myChart.destroy();
     };    
     setTimeout(getNewChart, 2000);
-    if(firstRound){
+    if(!$('#chartCollapsible').hasClass('active')){
         $('#chartCollapsible').click();
     }
     $('#addChartButton').removeClass('glowEffect');
