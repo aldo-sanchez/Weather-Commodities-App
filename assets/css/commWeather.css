@@ -168,9 +168,9 @@ button.glowEffect{
 }
 
 @-webkit-keyframes greenPulse {
-  from { background-color: #1b5e20; -webkit-box-shadow: 0 0 9px #333; }
-  50% { background-color: #4caf50; -webkit-box-shadow: 0 0 18px #4caf50; }
-  to { background-color: #00c853; -webkit-box-shadow: 0 0 9px #333; }
+	from { background-color: #00c853 ; -webkit-box-shadow: 0 0 9px #333; }
+  50% { background-color: #00e676  ; -webkit-box-shadow: 0 0 18px #00e676; }
+  to { background-color: #00c853 ; -webkit-box-shadow: 0 0 9px #333; }
 }
 
 
