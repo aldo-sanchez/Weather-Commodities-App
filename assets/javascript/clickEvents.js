@@ -20,7 +20,7 @@ function displayChart(){
     if(firstRound){
         $('#chartCollapsible').click();
     }
-    
+    $('#addChartButton').removeClass('glowEffect');
 };
 
 function clearData(){
@@ -102,6 +102,8 @@ checkCompletedInputs()
 function checkCompletedInputs() {
         if (userSelections.commodity && userSelections.location && userSelections.startDate && userSelections.endDate) {
             $('#addChartButton').removeClass('disabled');
+            $('#addChartButton').addClass('glowEffect');
+
         } else {
             if (!$('#addChartButton').hasClass('disabled')){
               $('#addChartButton').addClass('disabled');  
