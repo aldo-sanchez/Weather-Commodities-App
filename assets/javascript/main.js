@@ -252,18 +252,21 @@ function financeApiQuery() {
         }).done(function(response){
         //holds JSON object with relevant data
         data = response.dataset.data;
+        console.log("finance data from API")
+        console.log(data)
         //Storing into FIREBASE
         var database = firebase.database();
         //looping through ajax JSON to store relevant data (date, temp) in dateArray
         for(var i = 0; i < data.length; i++){
             //date formatted into Years first and then months, so organized in asc manner in firebase
             var date = moment(data[i][0]).format('YYYY-MM');
+            var price = data[i][3];
             //referencing the database node where data is to be stored. Creates new node for new date
             var value = database.ref("finance/commodity/"+commodityName+"/"+date);
             //sets new property in firebase node at reference node
-            value.set({price: data[i][6]});
+            value.set({price: price});
             //creates price array that gets plotted by Chart.js
-            priceArray[i] = data[i][6];
+            priceArray[i] = price;
         }
     });
 }
@@ -321,6 +324,8 @@ function firebaseFinanceQuery() {
     ref.orderByKey().startAt(startDateMonths).endAt(endDateMonths).once('value').then(function(snapshot){
         //store data array
         var rawFinData = snapshot.val();
+        console.log("firebase query return")
+        console.log(rawFinData)
         //iterates through properties of JSON object returned by firebase
         for(var prop in rawFinData){
             //checks if property exists
@@ -328,7 +333,7 @@ function firebaseFinanceQuery() {
                 //stores property of rawFinData of current iteration 
                 var value = rawFinData[prop];
                 //pushes value of precip property into array for plotting with Chart.js
-                precipArray.push(value.price)
+                priceArray.push(value.price)
             }
         }
     })
