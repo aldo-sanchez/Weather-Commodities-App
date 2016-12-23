@@ -17,10 +17,10 @@ function displayChart(){
         myChart.destroy();
     };    
     setTimeout(getNewChart, 2000);
-    if(firstRound){
+    if(!$('#chartCollapsible').hasClass('active')){
         $('#chartCollapsible').click();
     }
-    
+    $('#addChartButton').removeClass('glowEffect');
 };
 
 function clearData(){
@@ -102,6 +102,8 @@ checkCompletedInputs()
 function checkCompletedInputs() {
         if (userSelections.commodity && userSelections.location && userSelections.startDate && userSelections.endDate) {
             $('#addChartButton').removeClass('disabled');
+            $('#addChartButton').addClass('glowEffect');
+
         } else {
             if (!$('#addChartButton').hasClass('disabled')){
               $('#addChartButton').addClass('disabled');  
