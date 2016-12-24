@@ -33,15 +33,13 @@ function clearData(){
 }
 
 $('#resetButton').on('click', function () {
+    initialize();
     myChart.destroy();
     clearData();
-    initialize();
+    
     $('#locationIconSpot').fadeOut(500,function(){
       $('.locationIcon').attr('src', 'assets/images/US-Country_icon.svg');
       $('#locationIconSpot').fadeIn();
-      if (totalData.length > 0){
-          myChart.destroy();
-      }
     if (!$('#mapCollapsible').hasClass('active')){
         $('#mapCollapsible').click();
     }
