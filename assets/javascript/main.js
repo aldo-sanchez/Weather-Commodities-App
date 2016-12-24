@@ -300,6 +300,8 @@ function firebaseTempQuery() {
         }
         //Object.getOwnPropertyNames creates array of all properties found. Here: dates from firebase
         var dateArray = Object.getOwnPropertyNames(rawTempData);
+        console.log("dateArray")
+        console.log(dateArray)
         for (var i = 0; i < dateArray.length; i++){
             //formats dates for display in chart
             var dateDisplay = moment(dateArray[i]).format('MMM-YYYY');
