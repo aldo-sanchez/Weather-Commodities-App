@@ -165,8 +165,14 @@ function temperatureApiQuery() {
             } else if (jqHXR.status == 502){
                 tempApiError = "high traffic to NOAA weather Server has prevented a data request. Please try again later."
             }
+        },
+        //handler function that runs only when api completed successfully
+        complete: function (jqHXR){
+            //when api complete, query database to collect the data
+            firebaseTempQuery();
+            console.log("api completed successfully, and firebase query function called.")
         }
-         }).done(function(response){
+    }).done(function(response){
         //holds JSON object with relevant data
         var tempData = response.results;
         console.log("tempData from temp api return")
@@ -183,10 +189,6 @@ function temperatureApiQuery() {
             var value = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName+"/"+date);
             //sets new property in firebase node at tempValue reference
             value.set({temp: tempData[i].value});
-            //creates temp array that gets plotted by Chart.js
-            tempArray[i] = tempData[i].value;
-            //creates date array that gets used by Chart.js
-            tempDateArray[i] = dateDisplay;
         }
     });
 };
@@ -209,8 +211,14 @@ function precipitationApiQuery() {
             } else if (jqHXR.status == 502){
                 precipApiError = "high traffic to NOAA weather Server has prevented a data request. Please try again later."
             }
+        },
+        //handler function that runs only when api completed successfully
+        complete: function (jqHXR){
+            //when api complete, query database to collect the data
+            firebasePrecipQuery();
+            console.log("api completed successfully, and firebase query function called.")
         }
-         }).done(function(response){
+    }).done(function(response){
         //holds JSON object with relevant data
         var prcpData = response.results;
         //storing into firebase database
@@ -223,8 +231,6 @@ function precipitationApiQuery() {
             var value = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName+"/"+date);
             //sets new property in firebase node at tempValue reference
             value.set({precip: prcpData[i].value});
-            //creates precipitation array that gets plotted by Chart.js
-            precipArray[i] = prcpData[i].value;
         }
     });
 };
@@ -248,8 +254,14 @@ function financeApiQuery() {
             } else if (jqHXR.status == 502){
                 financeApiError = "high traffic to NOAA weather Server has prevented a data request. Please try again later."
             }
+        },
+         //handler function that runs only when api completed successfully
+        complete: function (jqHXR){
+            //when api complete, query database to collect the data
+            firebaseFinanceQuery();
+            console.log("api completed successfully, and firebase query function called.")
         }
-        }).done(function(response){
+    }).done(function(response){
         //holds JSON object with relevant data
         data = response.dataset.data;
         console.log("finance data from API")
@@ -265,8 +277,6 @@ function financeApiQuery() {
             var value = database.ref("finance/commodity/"+commodityName+"/"+date);
             //sets new property in firebase node at reference node
             value.set({price: price});
-            //creates price array that gets plotted by Chart.js
-            priceArray[i] = price;
         }
     });
 }
