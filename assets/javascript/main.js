@@ -170,13 +170,10 @@ function temperatureApiQuery() {
         complete: function (jqHXR){
             //when api complete, query database to collect the data
             firebaseTempQuery();
-            console.log("api completed successfully, and firebase query function called.")
         }
     }).done(function(response){
         //holds JSON object with relevant data
         var tempData = response.results;
-        console.log("tempData from temp api return")
-        console.log(tempData);
         //Storing into FIREBASE
         var database = firebase.database();
         //looping through ajax JSON to store relevant data (date, temp) in dateArray
@@ -216,7 +213,6 @@ function precipitationApiQuery() {
         complete: function (jqHXR){
             //when api complete, query database to collect the data
             firebasePrecipQuery();
-            console.log("api completed successfully, and firebase query function called.")
         }
     }).done(function(response){
         //holds JSON object with relevant data
@@ -259,13 +255,10 @@ function financeApiQuery() {
         complete: function (jqHXR){
             //when api complete, query database to collect the data
             firebaseFinanceQuery();
-            console.log("api completed successfully, and firebase query function called.")
         }
     }).done(function(response){
         //holds JSON object with relevant data
         data = response.dataset.data;
-        console.log("finance data from API")
-        console.log(data)
         //Storing into FIREBASE
         var database = firebase.database();
         //looping through ajax JSON to store relevant data (date, temp) in dateArray
@@ -300,8 +293,6 @@ function firebaseTempQuery() {
         }
         //Object.getOwnPropertyNames creates array of all properties found. Here: dates from firebase
         var dateArray = Object.getOwnPropertyNames(rawTempData);
-        console.log("dateArray")
-        console.log(dateArray)
         for (var i = 0; i < dateArray.length; i++){
             //formats dates for display in chart
             var dateDisplay = moment(dateArray[i]).format('MMM-YYYY');
@@ -316,7 +307,6 @@ function firebasePrecipQuery() {
     ref.orderByKey().startAt(startDateMonths).endAt(endDateMonths).once('value').then(function(snapshot){
         //store data array
         var rawPrecipData = snapshot.val();
-
         //iterates through properties of JSON object returned by firebase
         for(var prop in rawPrecipData){
             //checks if property exists
@@ -336,8 +326,6 @@ function firebaseFinanceQuery() {
     ref.orderByKey().startAt(startDateMonths).endAt(endDateMonths).once('value').then(function(snapshot){
         //store data array
         var rawFinData = snapshot.val();
-        console.log("firebase query return")
-        console.log(rawFinData)
         //iterates through properties of JSON object returned by firebase
         for(var prop in rawFinData){
             //checks if property exists
@@ -353,67 +341,116 @@ function firebaseFinanceQuery() {
 //checks if temperature data exists in Database
 function tempDataCheck(){
     // variable to store bolean
-    var exist;
+    var startDateExist;
+    var endDateExist;
     // database location reference to node of specific start date
-    var ref = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/'+startDateMonths);
+    var startRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/'+startDateMonths);
+    var endRef = firebase.database().ref('weather/temperature/commodity/'+commodityName+'/location/'+locName+'/'+endDateMonths);
     //function performed for specified reference
-    ref.once('value').then(function(snapshot){
+    startRef.once('value').then(function(snapshot){
         //exist method checks if referenced node contains data, assigns boolean
-        exist = snapshot.exists();
-        //if data does exist
-        if(exist){
-            //execute function that queries database
-            firebaseTempQuery();
+        startDateExist = snapshot.exists();
+        console.log("TEMPERATURE startDateExist inside ref function")
+        console.log(startDateExist)
+        if(startDateExist){
+            endRef.once('value').then(function(snapshot){
+                endDateExist = snapshot.exists();
+                console.log("TEMPERATURE endDateExist inside ref function")
+                console.log(endDateExist);
+                if(endDateExist){
+                    console.log("querying TEMPERATURE FIREBASE")
+                    //execute function that queries database
+                    firebaseTempQuery();
+                } else {
+                    console.log("TEMPERATURE startDate found, endDate NOT found, calling API")
+                    // run temperature API function
+                    temperatureApiQuery();
+                }
+            });
         //if data does not exist
         } else {
+            console.log("startDateExist: "+startDateExist);
+            console.log("TEMP startDate NOT found, running API call")
             // run temperature API function
             temperatureApiQuery();
         }
-    })
+    });
+    
+    //if start and end data both does exist, query firebase
+    
 }
 //checks if precipitation data exists in Database
 function precipDataCheck(){
     // variable to store bolean
-    var exist;
+    var startDateExist;
+    var endDateExist;
     // database location reference to node of specific start date
-    var ref = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName+'/'+startDateMonths);
+    var startRef = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName+'/'+startDateMonths);
+    var endRef = firebase.database().ref('weather/precipitation/commodity/'+commodityName+'/location/'+locName+'/'+endDateMonths);
     //function performed for specified reference
-    ref.once('value').then(function(snapshot){
+    startRef.once('value').then(function(snapshot){
         //exist method checks if referenced node contains data, assigns boolean
-        exist = snapshot.exists();
-        //if data does exist
-        if(exist){
-            //run function that queries database
-            firebasePrecipQuery();
+        startDateExist = snapshot.exists();
+        if(startDateExist){
+            endRef.once('value').then(function(snapshot){
+                endDateExist = snapshot.exists();
+                console.log("PRECIPITATION endDateExist inside ref function")
+                console.log(endDateExist);
+                if(endDateExist){
+                    console.log("querying PRECIPITATION FIREBASE")
+                    //execute function that queries database
+                    firebasePrecipQuery();
+                } else {
+                    console.log("PRECIPITATION startDate found, endDate NOT found, calling API")
+                    // run temperature API function
+                    precipitationApiQuery();
+                }
+            });
         //if data does not exist
         } else {
-            // run precipitation API function
+            console.log("PRECIPITATION startDateExist: "+startDateExist);
+            console.log("PRECIPITATION endDateExist: "+endDateExist)
+            console.log("PRECIPITATION startDate NOT found, running API call")
+            // run temperature API function
             precipitationApiQuery();
         }
-    })
+    });
 }
 //checks if finance data exists in Database
 function financeDataCheck(){
-    console.log("checking if finance data exists")
     // variable to store bolean
-    var exist;
+    var startDateExist;
+    var endDateExist;    
     // database location reference to node of specific start date
-    var ref = firebase.database().ref('finance/commodity/'+commodityName+'/'+startDateMonths);
+    var startRef = firebase.database().ref('finance/commodity/'+commodityName+'/'+startDateMonths);
+    var endRef = firebase.database().ref('finance/commodity/'+commodityName+'/'+endDateMonths);
     //function performed for specified reference
-    ref.once('value').then(function(snapshot){
+    startRef.once('value').then(function(snapshot){
         //exist method checks if referenced node contains data, assigns boolean
-        exist = snapshot.exists();
-        //if data does exist
-        if(exist){
-            console.log("FINANCE data does does exist, querying firebase")
-            //run function that queries database
-            firebaseFinanceQuery();
+        startDateExist = snapshot.exists();
+        console.log("FINANCE startDateExist inside ref function")
+        console.log(startDateExist)
+        if(startDateExist){
+            endRef.once('value').then(function(snapshot){
+                endDateExist = snapshot.exists();
+                console.log("FINANCE endDateExist inside ref function")
+                console.log(endDateExist);
+                if(endDateExist){
+                    console.log("querying FINANCE  FIREBASE")
+                    //execute function that queries database
+                    firebaseFinanceQuery();
+                } else {
+                    console.log("FINANCE startDate found, endDate NOT found, calling API")
+                    // run temperature API function
+                    financeApiQuery();
+                }
+            });
         //if data does not exist
         } else {
-             console.log("FINANCE data does does NOT exist, calling API")
-            // run precipitation API function
+            console.log("FINANCE  startDate NOT found, running API call")
+            // run temperature API function
             financeApiQuery();
         }
-    })
+    });
 }
 
