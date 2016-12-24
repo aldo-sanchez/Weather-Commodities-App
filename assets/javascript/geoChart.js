@@ -53,7 +53,9 @@ function initialize() {
         $(tempIcon).removeClass('fadeOutIcon');
         $(tempButton).removeClass('disabled');
     }
-
+if (!$('#mapCollapsible').hasClass('active')){
+        $('#mapCollapsible').click();
+    }
     // call to draw map on site
   google.charts.setOnLoadCallback(drawMap);
 }
