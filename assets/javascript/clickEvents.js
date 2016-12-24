@@ -1,30 +1,51 @@
+// list of click events for commweather.  Includes some logic.
+// sets first round to true.  this is used to know if we have to destroy a chart... if a chart does not exist chart.js will not let you destroy a chart and throw an error.
 var firstRound = true;
+
+// addChartButton click event
 $('#addChartButton').on('click', function () {
+    // look at values for start and end dates.
     var checkStartDate = $('#startDate').val();
     var checkEndDate = $('#endDate').val();
-    if (checkStartDate != '' && checkEndDate != ''){
-        if(!firstRound){
-            clearData();
-        }
-        gatherData();
-        displayChart();
-        firstRound = false;
+
+    //if it isn't first round clear all data.
+    if(!firstRound){
+        clearData();
     }
+    // we gather data necessary for charting using gatherData() -- see main.js for function
+    gatherData();
+
+    // checkComplete checks if all data is ready for plotting.  Using setInterval checkComplete checks every 100ms if tempDateArray is the same length as the difference in dates+1.  if it is it displays chart.
+    var checkComplete = setInterval(function(){
+        console.log('checking completion')
+        if (tempDateArray.length == moment(endDate).diff(moment(startDate), 'months')+1){
+            clearInterval(checkComplete);
+            displayChart();
+        }
+    },100);
 });
 
+
+//displays chart on chart collapsible
 function displayChart(){
+    //check if this is the first time the addChartButton has been pressed.  If it isn't then destroy the chart.  Destroying the chart resets all data.
     if(!firstRound){
         myChart.destroy();
-    };    
-    setTimeout(getNewChart, 2000);
+    };
+    // after destroying the chart we make a new chart with getNewChart
+    getNewChart();
+    // check if the chart collapsible is active.  if it isn't we make it active by clicking on it.
     if(!$('#chartCollapsible').hasClass('active')){
         $('#chartCollapsible').click();
     }
+    // we remove the glow effect from addChartButton
     $('#addChartButton').removeClass('glowEffect');
+    // We set first round to false.
+    firstRound = false;
 };
 
+// clearData clears all charting data for chart.js plot
 function clearData(){
-    // myChart.destroy();
     totalData = [];
     precipArray = [];
     tempArray = [];
@@ -32,8 +53,8 @@ function clearData(){
     tempDateArray = [];
 }
 
+
 $('#resetButton').on('click', function () {
-    // myChart.destroy();
     clearData();
     initialize();
     $('#locationIconSpot').fadeOut(500,function(){
@@ -45,12 +66,10 @@ $('#resetButton').on('click', function () {
     if (!$('#mapCollapsible').hasClass('active')){
         $('#mapCollapsible').click();
     }
-      
       $('#addChartButton').addClass('disabled');
       $('#startDate').val('');
       $('#endDate').val('');
       firstRound = true;
-
     });
 });
 
