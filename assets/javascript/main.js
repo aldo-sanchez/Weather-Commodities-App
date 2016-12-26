@@ -285,7 +285,7 @@ function firebaseTempQuery() {
         for(var prop in rawTempData){
             //checks if property exists
             if(rawTempData.hasOwnProperty(prop)){
-                //stores property of rawTempData of current iteration 
+                //stores property of rawTempData of current iteration
                 var value = rawTempData[prop];
                 //pushes value of temp property into array for plotting with Chart.js
                 tempArray.push(value.temp)
@@ -311,7 +311,7 @@ function firebasePrecipQuery() {
         for(var prop in rawPrecipData){
             //checks if property exists
             if(rawPrecipData.hasOwnProperty(prop)){
-                //stores property of rawPrecipData of current iteration 
+                //stores property of rawPrecipData of current iteration
                 var value = rawPrecipData[prop];
                 //pushes value of precip property into array for plotting with Chart.js
                 precipArray.push(value.precip)
@@ -330,7 +330,7 @@ function firebaseFinanceQuery() {
         for(var prop in rawFinData){
             //checks if property exists
             if(rawFinData.hasOwnProperty(prop)){
-                //stores property of rawFinData of current iteration 
+                //stores property of rawFinData of current iteration
                 var value = rawFinData[prop];
                 //pushes value of precip property into array for plotting with Chart.js
                 priceArray.push(value.price)
@@ -375,9 +375,9 @@ function tempDataCheck(){
             temperatureApiQuery();
         }
     });
-    
+
     //if start and end data both does exist, query firebase
-    
+
 }
 //checks if precipitation data exists in Database
 function precipDataCheck(){
@@ -420,7 +420,7 @@ function precipDataCheck(){
 function financeDataCheck(){
     // variable to store bolean
     var startDateExist;
-    var endDateExist;    
+    var endDateExist;
     // database location reference to node of specific start date
     var startRef = firebase.database().ref('finance/commodity/'+commodityName+'/'+startDateMonths);
     var endRef = firebase.database().ref('finance/commodity/'+commodityName+'/'+endDateMonths);
