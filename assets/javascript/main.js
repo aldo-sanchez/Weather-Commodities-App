@@ -85,7 +85,10 @@ var commodityName;
 var locName;
 //API return limit (max=1000)
 var limit = "1000";
-
+var latitude;
+var longitude;
+var locState;
+var locCity;
 
 //===function assigns stn and locName variables when a location clicked on geoChart.js===
 var locClick;
@@ -151,9 +154,16 @@ function locationApiQuery() {
     //AJAX url
     var nameQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/stations/"+stn;
     //AJAX call
-    $.ajax({ url:nameQueryURL, headers:{ token:token } }).done(function(response){
+    $.ajax({
+        url:nameQueryURL,
+        headers:{ token:token }
+         }).done(function(response){
         //name of location
+        console.log(response)
          locName = response.name;
+         latitude = response.latitude;
+         longitude = response.longitude;
+         weatherForecastApi();
     });
 }
 //performs AJAX call for weather variable desired in parameters, sends data to firebase, then calls firebaseQueryFunction
