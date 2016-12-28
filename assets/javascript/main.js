@@ -181,7 +181,7 @@ function weatherApiCall(APIurl, errorMessage, databaseQuery, weatherVariable, pr
     }).done(function(response){
         //holds JSON object with relevant data
         var data = response.results;
-        console.log(data)
+
         //Storing into FIREBASE
         var database = firebase.database();
         //looping through ajax JSON to store relevant data (date, temp) in dateArray
@@ -198,88 +198,6 @@ function weatherApiCall(APIurl, errorMessage, databaseQuery, weatherVariable, pr
         }
     });
 }
-// //API call for TEMPERATURE weather data
-// function temperatureApiQuery() {
-//     //AJAX url: uses variables set by user
-//     var tempQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=TAVG&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
-//     //AJAX call
-//     $.ajax({
-//         url:tempQueryURL,
-//         headers:{ token:token },
-//         error: function(jqHXR, exception){
-//             if(jqHXR.status == 400){
-//                 tempApiError = "Bad Request: It's possible that dates are out of range. Please select new dates.";
-//             } else if (jqHXR.status == 404){
-//                 tempApiError = "Data not found. It's possible that dates are out of range of weather information available. Please try new dates."
-//             } else if (jqHXR.status == 0 || jqHXR == 500){
-//                 tempApiError = "NOAA Weather Source Server is likely down. Please try again later."
-//             } else if (jqHXR.status == 502){
-//                 tempApiError = "high traffic to NOAA weather Server has prevented a data request. Please try again later."
-//             }
-//         },
-//         //handler function that runs only when api completed successfully
-//         complete: function (jqHXR){
-//             //when api complete, query database to collect the data
-//             firebaseTempQuery();
-//         }
-//     }).done(function(response){
-//         //holds JSON object with relevant data
-//         var tempData = response.results;
-//         //Storing into FIREBASE
-//         var database = firebase.database();
-//         //looping through ajax JSON to store relevant data (date, temp) in dateArray
-//         for(var i = 0; i < tempData.length; i++){
-//             //date formatted into Years first and then months, so organized in asc manner in firebase
-//             var date = moment(tempData[i].date).format('YYYY-MM');
-//             //formats dates for display in chart
-//             var dateDisplay = moment(tempData[i].date).format('MMM-YYYY');
-//             //referencing the database node where data is to be stored. Creates new node for new date
-//             var value = database.ref("weather/temperature/commodity/"+commodityName+"/location/"+locName+"/"+date);
-//             //sets new property in firebase node at tempValue reference
-//             value.set({temp: tempData[i].value});
-//         }
-//     });
-// };
-// //AJAX query url for PRECIPITATION weather data
-// function precipitationApiQuery() {
-//     //AJAX url: uses variables set by user
-//     var prcpQueryURL = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid="+dataSet+"&datatypeid=PRCP&stationid="+stn+"&units=metric&startdate="+startDate+"&enddate="+endDate+"&limit="+limit;
-//     //AJAX call
-//     $.ajax({
-//         url:prcpQueryURL,
-//         headers:{ token:token },
-//         error: function (jqHXR, exception){
-//             if(jqHXR.status == 400){
-//                 precipApiError = "Bad Request: It's possible that dates are out of range. Please select new dates.";
-//             } else if (jqHXR.status == 404){
-//                 precipApiError = "Data not found. It's possible that dates are out of range of weather information available. Please try new dates."
-//             } else if (jqHXR.status == 0 || jqHXR == 500){
-//                 precipApiError = "NOAA Weather Source Server is likely down. Please try again later."
-//             } else if (jqHXR.status == 502){
-//                 precipApiError = "high traffic to NOAA weather Server has prevented a data request. Please try again later."
-//             }
-//         },
-//         //handler function that runs only when api completed successfully
-//         complete: function (jqHXR){
-//             //when api complete, query database to collect the data
-//             firebasePrecipQuery();
-//         }
-//     }).done(function(response){
-//         //holds JSON object with relevant data
-//         var prcpData = response.results;
-//         //storing into firebase database
-//         var database = firebase.database();
-//         //looping through ajax JSON to store relevant data (date, temp) in dateArray
-//         for(var i = 0; i < prcpData.length; i++){
-//             //date formatted into Years first and then months, so organized in asc manner in firebase
-//             var date = moment(prcpData[i].date).format('YYYY-MM');
-//             //referencing the database node where data is to be stored. Creates new node for new date
-//             var value = database.ref("weather/precipitation/commodity/"+commodityName+"/location/"+locName+"/"+date);
-//             //sets new property in firebase node at tempValue reference
-//             value.set({precip: prcpData[i].value});
-//         }
-//     });
-// };
 //AJAX query for finance data
 function financeApiQuery() {
     //AJAX url: uses variables set by user
@@ -357,7 +275,7 @@ function firebasePrecipQuery() {
     ref.orderByKey().startAt(startDateMonths).endAt(endDateMonths).once('value').then(function(snapshot){
         //store data array
         var rawPrecipData = snapshot.val();
-        console.log(rawPrecipData)
+
         //iterates through properties of JSON object returned by firebase
         for(var prop in rawPrecipData){
             //checks if property exists
@@ -401,27 +319,27 @@ function tempDataCheck(){
     startRef.once('value').then(function(snapshot){
         //exist method checks if referenced node contains data, assigns boolean
         startDateExist = snapshot.exists();
-        console.log("TEMPERATURE startDateExist inside ref function")
-        console.log(startDateExist)
+
+
         if(startDateExist){
             endRef.once('value').then(function(snapshot){
                 endDateExist = snapshot.exists();
-                console.log("TEMPERATURE endDateExist inside ref function")
-                console.log(endDateExist);
+
+
                 if(endDateExist){
-                    console.log("querying TEMPERATURE FIREBASE")
+
                     //execute function that queries database
                     firebaseTempQuery();
                 } else {
-                    console.log("TEMPERATURE startDate found, endDate NOT found, calling API")
+
                     // run temperature API function
                     weatherApiCall(tempQueryURL, tempApiError, firebaseTempQuery, 'temperature', 'temp');
                 }
             });
         //if data does not exist
         } else {
-            console.log("startDateExist: "+startDateExist);
-            console.log("TEMP startDate NOT found, running API call")
+
+
             //functions call Api for Temp or Precip
             weatherApiCall(tempQueryURL, tempApiError, firebaseTempQuery, 'temperature', 'temp');
         }
@@ -444,23 +362,23 @@ function precipDataCheck(){
         if(startDateExist){
             endRef.once('value').then(function(snapshot){
                 endDateExist = snapshot.exists();
-                console.log("PRECIPITATION endDateExist inside ref function")
-                console.log(endDateExist);
+
+
                 if(endDateExist){
-                    console.log("querying PRECIPITATION FIREBASE")
+
                     //execute function that queries database
                     firebasePrecipQuery();
                 } else {
-                    console.log("PRECIPITATION startDate found, endDate NOT found, calling API")
+
                     // run temperature API function
                     weatherApiCall(precipQueryURL, precipApiError, firebasePrecipQuery, 'precipitation', 'precip');
                 }
             });
         //if data does not exist
         } else {
-            console.log("PRECIPITATION startDateExist: "+startDateExist);
-            console.log("PRECIPITATION endDateExist: "+endDateExist)
-            console.log("PRECIPITATION startDate NOT found, running API call")
+
+
+
             // run temperature API function
             weatherApiCall(precipQueryURL, precipApiError, firebasePrecipQuery, 'precipitation', 'precip');
         }
@@ -478,26 +396,26 @@ function financeDataCheck(){
     startRef.once('value').then(function(snapshot){
         //exist method checks if referenced node contains data, assigns boolean
         startDateExist = snapshot.exists();
-        console.log("FINANCE startDateExist inside ref function")
-        console.log(startDateExist)
+
+
         if(startDateExist){
             endRef.once('value').then(function(snapshot){
                 endDateExist = snapshot.exists();
-                console.log("FINANCE endDateExist inside ref function")
-                console.log(endDateExist);
+
+
                 if(endDateExist){
-                    console.log("querying FINANCE  FIREBASE")
+
                     //execute function that queries database
                     firebaseFinanceQuery();
                 } else {
-                    console.log("FINANCE startDate found, endDate NOT found, calling API")
+
                     // run temperature API function
                     financeApiQuery();
                 }
             });
         //if data does not exist
         } else {
-            console.log("FINANCE  startDate NOT found, running API call")
+
             // run temperature API function
             financeApiQuery();
         }
