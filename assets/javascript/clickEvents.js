@@ -87,10 +87,10 @@ $(document).on('click', '.commodityButton', function () {
         commodities.splice(commodities.indexOf(index), 1);
         // console.log(commodities);
         for (i = 0; i < commodities.length; i++) {
-            
+
             var tempIcon = '#' + commodities[i] + 'Icon';
             var tempButton = '#' + commodities[i] + 'Button';
-            
+
             $(tempIcon).addClass('fadeOutIcon');
             $(tempButton).addClass('disabled');
         }
@@ -113,7 +113,7 @@ $('.datepicker').change(function(){
     }
     if($('#endDate').val() == ''){
         userSelections.endDate = false;
-    } 
+    }
 
 checkCompletedInputs()
 })
@@ -125,7 +125,7 @@ function checkCompletedInputs() {
 
         } else {
             if (!$('#addChartButton').hasClass('disabled')){
-              $('#addChartButton').addClass('disabled');  
+              $('#addChartButton').addClass('disabled');
             }
         }
 };
