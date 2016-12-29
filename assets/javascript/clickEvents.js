@@ -18,9 +18,16 @@ $('#addChartButton').on('click', function () {
     // checkComplete checks if all data is ready for plotting.  Using setInterval checkComplete checks every 100ms if tempDateArray is the same length as the difference in dates+1.  if it is it displays chart.
     var checkComplete = setInterval(function(){
         console.log('checking completion')
-        if (tempDateArray.length == moment(endDate).diff(moment(startDate), 'months')+1){
+        //conditional runs if all types of data has finished being collected from Firebase
+        if (tempDataDelivered && precipDataDelivered && financeDataDelivered){
+            //stops timer function
             clearInterval(checkComplete);
+            //runs function that plots data
             displayChart();
+            //returns delivered data variables to false for next use
+            tempDataDelivered = false;
+            precipDataDelivered = false;
+            financeDataDelivered = false;
         }
     },100);
 });
