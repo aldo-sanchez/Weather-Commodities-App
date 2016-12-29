@@ -160,9 +160,11 @@ function locationApiQuery() {
          }).done(function(response){
         //name of location
         console.log(response)
+        //variables store name, and location data for weather station from API
          locName = response.name;
          latitude = response.latitude;
          longitude = response.longitude;
+         //runs weatherForecastApi after all variables stored
          weatherForecastApi();
     });
 }
