@@ -41,7 +41,12 @@ var precipQueryURL;
 //initializing database node reference
 var firebaseTempReference;
 var firebasePrecipReference;
+//data delivered variables check if firebase has returned data from query, to signal function to graph
+var tempDataDelivered = false;
+var precipDataDelivered = false;
+var financeDataDelivered = false;
 
+//function assigns commodity variables
 function assignCommodityFinance() {
 
     if (commodityName == 'corn'){
@@ -278,7 +283,10 @@ function firebaseTempQuery() {
             var dateDisplay = moment(dateArray[i]).format('MMM-YYYY');
             tempDateArray[i] = dateDisplay;
         }
-    })
+    }).then(function(){  // function runs after firebase data finished being queried
+            //denotes temperature data has been delivered, for checkComplete() (clickEvents.js line 19)
+            tempDataDelivered = true;
+        });
 }
 function firebasePrecipQuery() {
     //reference data path, to reach specific date array
@@ -298,7 +306,10 @@ function firebasePrecipQuery() {
                 precipArray.push(value.precip)
             }
         }
-    });
+    }).then(function(){  // function runs after firebase data finished being queried
+            //denotes precipitation data has been delivered, for checkComplete() (clickEvents.js line 19)
+            precipDataDelivered = true;
+        });
 }
 function firebaseFinanceQuery() {
     //reference data path, to reach specific date array
@@ -317,7 +328,10 @@ function firebaseFinanceQuery() {
                 priceArray.push(value.price)
             }
         }
-    })
+    }).then(function(){  // function runs after firebase data finished being queried
+            //denotes finance data has been delivered, for checkComplete() (clickEvents.js line 19)
+            financeDataDelivered = true;
+        });
 }
 //checks if temperature data exists in Database
 function tempDataCheck(){
@@ -331,27 +345,19 @@ function tempDataCheck(){
     startRef.once('value').then(function(snapshot){
         //exist method checks if referenced node contains data, assigns boolean
         startDateExist = snapshot.exists();
-
-
         if(startDateExist){
             endRef.once('value').then(function(snapshot){
                 endDateExist = snapshot.exists();
-
-
                 if(endDateExist){
-
                     //execute function that queries database
                     firebaseTempQuery();
                 } else {
-
                     // run temperature API function
                     weatherApiCall(tempQueryURL, tempApiError, firebaseTempQuery, 'temperature', 'temp');
                 }
             });
         //if data does not exist
         } else {
-
-
             //functions call Api for Temp or Precip
             weatherApiCall(tempQueryURL, tempApiError, firebaseTempQuery, 'temperature', 'temp');
         }
@@ -374,23 +380,16 @@ function precipDataCheck(){
         if(startDateExist){
             endRef.once('value').then(function(snapshot){
                 endDateExist = snapshot.exists();
-
-
                 if(endDateExist){
-
                     //execute function that queries database
                     firebasePrecipQuery();
                 } else {
-
                     // run temperature API function
                     weatherApiCall(precipQueryURL, precipApiError, firebasePrecipQuery, 'precipitation', 'precip');
                 }
             });
         //if data does not exist
         } else {
-
-
-
             // run temperature API function
             weatherApiCall(precipQueryURL, precipApiError, firebasePrecipQuery, 'precipitation', 'precip');
         }
@@ -408,26 +407,19 @@ function financeDataCheck(){
     startRef.once('value').then(function(snapshot){
         //exist method checks if referenced node contains data, assigns boolean
         startDateExist = snapshot.exists();
-
-
         if(startDateExist){
             endRef.once('value').then(function(snapshot){
                 endDateExist = snapshot.exists();
-
-
                 if(endDateExist){
-
                     //execute function that queries database
                     firebaseFinanceQuery();
                 } else {
-
                     // run temperature API function
                     financeApiQuery();
                 }
             });
         //if data does not exist
         } else {
-
             // run temperature API function
             financeApiQuery();
         }
