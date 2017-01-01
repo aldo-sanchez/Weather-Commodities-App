@@ -34,6 +34,7 @@ google.charts.load('current', { 'packages': ['line'] });
 // initialization - variables and states
 $(document).ready(function () {
     initialize();
+    $('.progress').hide();
 })
 function initialize() {
 
