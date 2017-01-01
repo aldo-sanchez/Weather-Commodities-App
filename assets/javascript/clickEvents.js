@@ -4,6 +4,8 @@ var firstRound = true;
 
 // addChartButton click event
 $('#addChartButton').on('click', function () {
+
+    $('.progress').show();
     // look at values for start and end dates.
     var checkStartDate = $('#startDate').val();
     var checkEndDate = $('#endDate').val();
@@ -47,6 +49,8 @@ function displayChart(){
     }
     // we remove the glow effect from addChartButton
     $('#addChartButton').removeClass('glowEffect');
+    $('.progress').hide();
+
     // We set first round to false.
     firstRound = false;
 };

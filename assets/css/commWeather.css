@@ -7,6 +7,15 @@ header, main, footer {
 	text-align: center;
 }
 
+.progress{
+  background-color: #fff3e0;
+  display: none;
+}
+
+.progress .indeterminate{
+  background-color: #e65100;
+}
+
 .resetText{
 	padding-right: 30px;
 }
