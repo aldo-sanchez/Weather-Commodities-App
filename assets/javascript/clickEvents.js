@@ -150,7 +150,7 @@ function checkCompletedInputs() {
 };
 
 function openErrorModal(){
-    $('#errorText').html('A timeout error has been encountered. It is possible data for range of dates is not available in the APIs.      <p>Please try a different date range.</p>')
+    $('#errorText').html('A timeout error has been encountered. It is possible data for range of dates is not available in the APIs.      <p>Please try a different date range or location.</p>')
     $('#errorModal').modal();
     $('#errorModal').modal('open');
     $('#addChartButton').removeClass('glowEffect');
