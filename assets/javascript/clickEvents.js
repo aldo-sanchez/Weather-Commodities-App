@@ -1,10 +1,10 @@
 // list of click events for commweather.  Includes some logic.
 // sets first round to true.  this is used to know if we have to destroy a chart... if a chart does not exist chart.js will not let you destroy a chart and throw an error.
 var firstRound = true;
+var checkCompleteTimer;
 
 // addChartButton click event
 $('#addChartButton').on('click', function () {
-
     $('.progress').show();
     // look at values for start and end dates.
     var checkStartDate = $('#startDate').val();
@@ -18,6 +18,7 @@ $('#addChartButton').on('click', function () {
     gatherData();
 
     // checkComplete checks if all data is ready for plotting.  Using setInterval checkComplete checks every 100ms if tempDateArray is the same length as the difference in dates+1.  if it is it displays chart.
+    checkCompleteTimer = 0;
     var checkComplete = setInterval(function(){
         console.log('checking completion')
         //conditional runs if all types of data has finished being collected from Firebase
@@ -31,7 +32,14 @@ $('#addChartButton').on('click', function () {
             precipDataDelivered = false;
             financeDataDelivered = false;
         }
+        checkCompleteTimer++;
+        if(checkCompleteTimer >= 70){
+            console.log('could not find');
+            clearInterval(checkComplete);
+            openErrorModal();
+        }
     },100);
+    console.log(checkCompleteTimer);
 });
 
 
@@ -140,3 +148,11 @@ function checkCompletedInputs() {
             }
         }
 };
+
+function openErrorModal(){
+    $('#errorText').html('A timeout error has been encountered. It is possible data for range of dates is not available in the APIs.      <p>Please try a different date range.</p>')
+    $('#errorModal').modal();
+    $('#errorModal').modal('open');
+    $('#addChartButton').removeClass('glowEffect');
+    $('.progress').hide();
+}
